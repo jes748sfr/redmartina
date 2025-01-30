@@ -3,32 +3,67 @@
 namespace App\Http\Controllers;
 
 use App\Models\actividades;
-use App\Models\convocatoria;
-use App\Models\marianas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
 
 class ActividadesController extends Controller
 {
     //
     public function index()
     {
-        $actividades = actividades::all();
-        return response()->json([
-            'success' => true,
-            'data' => $actividades,
-            'message' => 'Actividades encontradas exitosamente',
-        ], 201);
+        $actividades = actividades::orderBy('created_at', 'desc')->get();
+        $noticias = actividades::where('noticia', true)
+                         ->orderBy('created_at', 'desc')
+                         ->take(3)
+                         ->get();
+
+        // Procesar el cuerpo de las noticias
+        foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+        }
+                  
+        return view("paginas_publicas.actividades_red", compact('actividades','noticias'));
+    }
+
+    public function inicio()
+    {
+        $noticias = actividades::where('noticia', true)
+                         ->orderBy('created_at', 'desc')
+                         ->take(3)
+                         ->get();
+
+
+                         
+        return view("index", compact('noticias'));
+    }
+
+    function truncateHtml($html, $limit = 100) {
+        $text = strip_tags($html); // Quita las etiquetas HTML
+        $truncated = Str::limit($text, $limit); // Aplica el límite
+        return $truncated;
+    }
+
+    public function index_logeado()
+    {
+        $actividades = actividades::orderBy('created_at', 'desc')->get();
+        
+        foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+        }
+
+        return view("actividades.index", compact('actividades'));
     }
 
     public function create()
     {
-        //
+        return view("actividades.create");
     }
 
     public function store(Request $request)
     {
             $request->validate([
-                'id_usu' => 'required|int',
                 'titulo' => 'required|string|max:255',
                 'cuerpo' => 'string',
                 'noticia' => 'required|boolean',
@@ -37,26 +72,56 @@ class ActividadesController extends Controller
         try {
             $actividad = new actividades();
 
-            $actividad->id_usu = $request->id_usu;
+            $actividad->id_usu = Auth::id();
             $actividad->titulo = $request->titulo;
             $actividad->cuerpo = $request->cuerpo;
             $actividad->noticia = $request->noticia;
 
             $actividad->save();
 
-            return response()->json([
+            $actividades = actividades::orderBy('created_at', 'desc')->get();
+        
+            foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+            }
+
+            //return view("actividades.index", compact('actividades'));
+            return redirect()->route('actividades.auth')->with('success', 'Actividad creada exitosamente');
+
+            /* return response()->json([
                 'success' => true,
                 'data' => $actividad,
                 'message' => 'Actividad creada exitosamente',
-            ], 201);
+            ], 201); */
         } catch (\Exception $e) {
-            // Manejo de errores
-            return response()->json([
+            /* return response()->json([
                 'success' => false,
                 'message' => 'Hubo un error al crear la actividad',
                 'error' => $e->getMessage(),
-            ], 500);
+            ], 500); */
+
+            $actividades = actividades::orderBy('created_at', 'desc')->get();
+        
+            foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+            }
+
+            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al crear la actividad');
         }
+    }
+
+    public function show(string $id)
+    {
+        $actividad = actividades::find($id);
+
+        return view("paginas_publicas.actividades_red", compact('actividad'));
+    }
+
+    public function edit(string $id)
+    {
+        $actividad = actividades::find($id);
+
+        return view("actividades.edit", compact('actividad'));
     }
 
     public function update(Request $request, $id)
@@ -80,18 +145,35 @@ class ActividadesController extends Controller
 
             $actividad->save();
 
-            return response()->json([
+            $actividades = actividades::orderBy('created_at', 'desc')->get();
+        
+            foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+            }
+
+            //return view("actividades.index", compact('actividades'));
+            return redirect()->route('actividades.auth')->with('success', 'Actividad actualizada exitosamente');
+
+            /* return response()->json([
                 'success' => true,
                 'data' => $actividad,
                 'message' => 'Actividad actualizada exitosamente',
-            ], 201);
+            ], 201); */
         } catch (\Exception $e) {
             // Manejo de errores
-            return response()->json([
+           /*  return response()->json([
                 'success' => false,
                 'message' => 'Hubo un error al actualizar la actividad',
                 'error' => $e->getMessage(),
-            ], 500);
+            ], 500); */
+
+            $actividades = actividades::orderBy('created_at', 'desc')->get();
+        
+            foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+            }
+
+            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al actualizar la actividad');
         }
     }
 
@@ -106,60 +188,59 @@ class ActividadesController extends Controller
 
             $actividad->delete();
 
+            $actividades = actividades::orderBy('created_at', 'desc')->get();
+        
+            foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+            }
+
+            //return view("actividades.index", compact('actividades'));
+            return redirect()->route('actividades.auth')->with('success', 'Actividad eliminada exitosamente');
+
             // Respuesta de éxito
-            return response()->json([
+            /* return response()->json([
                 'success' => true,
                 'message' => 'Actividad eliminada exitosamente',
-            ], 200);
+            ], 200); */
         } catch (\Exception $e) {
             // Manejo de errores
-            return response()->json([
+            /* return response()->json([
                 'success' => false,
                 'message' => 'Hubo un error al eliminar la actividad',
                 'error' => $e->getMessage(),
-            ], 500);
+            ], 500); */
+
+            $actividades = actividades::orderBy('created_at', 'desc')->get();
+        
+            foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+            }
+
+            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al eliminar la actividad');
         }
         
     }
 
-    public function search(Request $request)
+    public function search_actividad(Request $request)
     {
+        // Validar el término de búsqueda
         $request->validate([
-            'keyword' => 'required|string|min:3',
+            'keyword' => 'required|string|min:1',
         ]);
 
-        $keyword = $request->input('keyword');
+        // Obtener el término de búsqueda
+        $query = $request->input('keyword');
 
-        // Buscar coincidencias en cada modelo
-        $actividades = Actividades::where('titulo', 'LIKE', "%{$keyword}%")
-            ->orWhere('cuerpo', 'LIKE', "%{$keyword}%")
-            ->get();
+        // Realizar la búsqueda con Scout
+        $actividades = actividades::search($query)->get();
 
-        $marianas = marianas::where('titulo', 'LIKE', "%{$keyword}%")
-            ->orWhere('cuerpo', 'LIKE', "%{$keyword}%")
-            ->get();
+        foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+        }
 
-        $convocatorias = convocatoria::where('titulo', 'LIKE', "%{$keyword}%")
-            ->orWhere('cuerpo', 'LIKE', "%{$keyword}%")
-            ->get();
+        $totalResultados = $actividades->count();
 
-        // Combinar resultados
-        $resultados = [
-            'actividades' => $actividades,
-            'marianas' => $marianas,
-            'convocatorias' => $convocatorias,
-        ];
-
-        // Calcular el total de resultados
-        $totalResultados = $actividades->count() + $marianas->count() + $convocatorias->count();
-
-        // return response()->json([
-        //     'success' => true,
-        //     'data' => $resultados,
-        //     'message' => 'Resultados encontrados exitosamente',
-        // ], 200);
-
-        return view("paginas_publicas.busqueda_publica", compact('resultados','keyword','totalResultados'));
+        // Pasar las variables necesarias a la vista
+        return view("actividades.index", compact('actividades', 'totalResultados', 'query'));
     }
-
 }

@@ -1,0 +1,39 @@
+html {
+    scroll-behavior: smooth;
+}
+.img-corner {
+  position: absolute;
+  top: 10px; /* Espacio desde la parte superior */
+  right: 10px; /* Espacio desde la derecha */
+  width: 50px; /* Tamaño de la imagen */
+  height: 50px; /* Tamaño de la imagen */
+  border-radius: 50%; /* Hace la imagen circular */
+  object-fit: cover; /* Ajusta la imagen dentro del contenedor */
+}
+.border-dot{
+  border-style: double;
+  border-color: #4DA1A9;
+  border-width: 4px;
+}
+
+.degradado-1 {
+  background: linear-gradient(to bottom right, #2E5077, #4DA1A9);
+}
+
+.degradado-2 {
+  background: linear-gradient(to bottom right, #4DA1A9, #79D7B3);
+}
+
+.degradado-3 {
+  background: linear-gradient(to bottom right, #79D7B3, #F6F4F0);
+}
+
+.card {
+transition: transform 0.5s ease, box-shadow 0.5s ease;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.05); /* Levanta la tarjeta hacia arriba */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+}

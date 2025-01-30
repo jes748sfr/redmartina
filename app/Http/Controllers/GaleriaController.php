@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\actividades;
 use App\Models\galeria;
 use Illuminate\Http\Request;
 
@@ -11,12 +12,18 @@ class GaleriaController extends Controller
     public function index()
     {
         //$actividades = actividades::all();
-        $galeria = galeria::all();
-        return response()->json([
+        $galerias = galeria::all();
+        $noticias = actividades::where('noticia', true)
+                         ->orderBy('created_at', 'desc')
+                         ->take(3)
+                         ->get();
+
+        return view("paginas_publicas.galeria_publica", compact('galerias','noticias'));
+        /* return response()->json([
             'success' => true,
             'data' => $galeria,
             'message' => 'Galerias encontradas exitosamente',
-        ], 201);
+        ], 201); */
     }
 
     public function store(Request $request)

@@ -1,14 +1,14 @@
 <?php
 
 use App\Http\Controllers\ActividadesController;
+use App\Http\Controllers\BuscadorController;
 use App\Http\Controllers\ConvocatoriaController;
-use App\Http\Controllers\MarianasController;
+use App\Http\Controllers\GaleriaController;
+use App\Http\Controllers\MartianasController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('index');
-});
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -24,21 +24,36 @@ Route::middleware('auth')->group(function () {
 //     return view('index');
 // });
 
-Route::get('actividades', [ActividadesController::class, 'index']);
-Route::post('actividades/store', [ActividadesController::class, 'store']);
-Route::put('actividades/update/{id}', [ActividadesController::class, 'update']);
-Route::delete('actividades/delete/{id}', [ActividadesController::class, 'destroy']);
+Route::get('/', [ActividadesController::class, 'inicio']);
 
-Route::get('convocatorias', [ConvocatoriaController::class, 'index']);
+Route::get('actividades', [ActividadesController::class, 'index'])->name('actividades');
+
+Route::get('actividades/show/{id}', [ActividadesController::class, 'show'])->name('visualizar_actividades');
+
+Route::middleware('auth')->group(function () {
+    Route::get('actividades/crear', [ActividadesController::class, 'create'])->name('crear_Actividad');
+    Route::post('actividades/store', [ActividadesController::class, 'store'])->name('actividades.store');
+    Route::get('actividades/edit/{id}', [ActividadesController::class, 'edit'])->name('editar_Actividad');
+    Route::put('actividades/update/{id}', [ActividadesController::class, 'update'])->name('actividades.update');
+    Route::delete('actividades/delete/{id}', [ActividadesController::class, 'destroy'])->name('actividades.delete');
+
+    Route::get('actividades/auth', [ActividadesController::class, 'index_logeado'])->name('actividades.auth');
+});
+
+Route::get('convocatorias', [ConvocatoriaController::class, 'index'])->name('convocatorias');
 Route::post('convocatorias/store', [ConvocatoriaController::class, 'store']);
 Route::put('convocatorias/update/{id}', [ConvocatoriaController::class, 'update']);
 Route::delete('convocatorias/delete/{id}', [ConvocatoriaController::class, 'destroy']);
 
-Route::get('marianas', [MarianasController::class, 'index']);
-Route::post('marianas/store', [MarianasController::class, 'store']);
-Route::put('marianas/update/{id}', [MarianasController::class, 'update']);
-Route::delete('marianas/delete/{id}', [MarianasController::class, 'destroy']);
+Route::get('martianas', [MartianasController::class, 'index'])->name('martianas');
+Route::post('martianas/store', [MartianasController::class, 'store']);
+Route::put('martianas/update/{id}', [MartianasController::class, 'update']);
+Route::delete('martianas/delete/{id}', [MartianasController::class, 'destroy']);
 
-Route::post('search', [ActividadesController::class, 'search'])->name('buscar');
+Route::get('galeria', [GaleriaController::class, 'index'])->name('galeria');
+
+Route::post('search', [BuscadorController::class, 'search'])->name('buscar');
+
+Route::post('search/actividad', [ActividadesController::class, 'search_actividad'])->name('buscar_actividad');
 
 require __DIR__.'/auth.php';

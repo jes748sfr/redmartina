@@ -13,14 +13,14 @@ class documentacion_m extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'id_marianas',
+        'id_martianas',
         'archivo',
     ];
     
     protected $dates = ['deleted_at'];
 
-    public function mariana()
+    public function martiana()
     {
-        return $this->belongsTo(marianas::class, 'id_marianas');
+        return $this->belongsTo(martianas::class, 'id_martianas');
     }
 }

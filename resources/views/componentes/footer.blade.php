@@ -20,17 +20,17 @@
                 <div class="col mb-3">
                     <ul class="nav flex-column">
                         <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Inicio</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Historia</a></li>
+                        <li class="nav-item mb-2"><a href="{{ url('/#historia') }}" class="nav-link p-0 text-body-secondary">Historia</a></li>
                         <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Galería</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Directorio</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Convocatorias</a></li>
+                        <li class="nav-item mb-2"><a href="{{ url('/#directorio') }}" class="nav-link p-0 text-body-secondary">Directorio</a></li>
+                        <li class="nav-item mb-2"><a href="{{ route('convocatorias') }}" class="nav-link p-0 text-body-secondary">Convocatorias</a></li>
                     </ul>
                 </div>
               
                 <div class="col mb-3">
                     <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Actividades de la red</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Actividades martinas</a></li>
+                        <li class="nav-item mb-2"><a href="{{ route('actividades') }}" class="nav-link p-0 text-body-secondary">Actividades de la red</a></li>
+                        <li class="nav-item mb-2"><a href="{{ route('martianas') }}" class="nav-link p-0 text-body-secondary">Actividades martianas</a></li>
                     </ul>
                 </div>
             </div>

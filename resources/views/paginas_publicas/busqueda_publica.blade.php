@@ -35,22 +35,55 @@
 <body>
 
   <div class="container busqueda-container mt-5 pt-5">
-    <h1>Resultados de búsqueda: {{ $keyword }}</h1>
+    <h1>Resultados de búsqueda: {{ $query }}</h1>
     <h6>{{ $totalResultados }} coincidencias</h6>
-    @foreach($resultados as $tipo => $coleccion)
-              <h6 class="mt-4">{{ ucfirst($tipo) }}</h2>
-              @foreach($coleccion as $resultado)
-                  <div class="row">
+
+    @if($totalResultados > 0)
+        @if(!$resultados['actividades']->isEmpty())
+            <h2>Actividades</h2>
+            @foreach($resultados['actividades'] as $actividad)
+                <div class="row">
                     <div class="col-sm-12">
-                        <a href="{{ ucfirst($tipo) }}/{{ $resultado->id }}">
-                            <h6>{{ $resultado->titulo }}</h6>
+                        <a href="actividades/show/{{ $actividad->id }}">
+                            <h6>{{ $actividad->titulo }}</h6>
                         </a>
-                        <p>{{ $resultado->cuerpo }}</p>
+                        <p>{!! $actividad->cuerpo_truncado !!}</p>
                     </div>
                 </div>
-              @endforeach
-      @endforeach
-  </div>
+            @endforeach
+        @endif
+
+        @if(!$resultados['martianas']->isEmpty())
+            <h2>Martianas</h2>
+            @foreach($resultados['martianas'] as $martina)
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a href="martiana/{{ $martina->id }}">
+                            <h6>{{ $martina->titulo }}</h6>
+                        </a>
+                        <p>{!! $martina->cuerpo_truncado !!}</p>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+
+        @if(!$resultados['convocatorias']->isEmpty())
+            <h2>Convocatorias</h2>
+            @foreach($resultados['convocatorias'] as $convocatoria)
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a href="convocatoria/{{ $convocatoria->id }}">
+                            <h6>{{ $convocatoria->titulo }}</h6>
+                        </a>
+                        <p>{!! $convocatoria->cuerpo_truncado !!}</p>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+    @else
+        <p>No se encontraron resultados.</p>
+    @endif
+</div>
 
 </body>
 @include('componentes.footer')

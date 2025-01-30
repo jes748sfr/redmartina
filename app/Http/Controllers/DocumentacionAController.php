@@ -19,11 +19,52 @@ class DocumentacionAController extends Controller
         ], 201);
     }
 
-    public function store(Request $request)
+    public function store_img(Request $request)
     {
             $request->validate([
                 'id_actividades' => 'required|int',
-                'archivo' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf,doc,docx'],
+                'archivo' => ['required', 'file', 'mimes:jpeg,png,jpg','max:12000'],
+            ]);
+
+        try {
+            $documentacion_a = new documentacion_a();
+
+            if ($request->hasFile('archivo')) {
+                $archivo = $request->file('archivo');
+                //Mantener el nombre original
+                //$nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
+                $nombreArchivo = 'archivo_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
+                $ruta = public_path('documentacion_a/');
+                $archivo->move($ruta, $nombreArchivo);
+                $archivo_n = $nombreArchivo;
+            }
+
+            $documentacion_a->id_actividades = $request->id_actividades;
+            $documentacion_a->archivo = $archivo_n;
+
+
+            $documentacion_a->save();
+
+            return response()->json([
+                'success' => true,
+                'data' => $documentacion_a,
+                'message' => 'Documento de Actividad agregado exitosamente',
+            ], 201);
+        } catch (\Exception $e) {
+            // Manejo de errores
+            return response()->json([
+                'success' => false,
+                'message' => 'Hubo un error al agregar el documento de actividad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function store_file(Request $request)
+    {
+            $request->validate([
+                'id_actividades' => 'required|int',
+                'archivo' => ['required', 'file', 'mimes:pdf','max:5000'],
             ]);
 
         try {

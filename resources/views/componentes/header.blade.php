@@ -107,16 +107,16 @@
         <a href="{{ url('/#historia') }}" class="nav-link {{ Request::is('/#historia') ? '' : '' }}">Historia</a>
       </li>
       <li class="nav-item">
-        <a href="{{ url('nosotros') }}" class="nav-link {{ Request::is('nosotros') ? '' : '' }}">Actividades de la Red</a>
+        <a href="{{ route('actividades') }}" class="nav-link {{ Request::routeIs('actividades') ? 'active' : '' }}">Actividades de la Red</a>
       </li>
       <li class="nav-item">
-        <a href="{{ url('nosotros') }}" class="nav-link {{ Request::is('nosotros') ? '' : '' }}">Actividades martianas</a>
+        <a href="{{ route('martianas') }}" class="nav-link {{ Request::routeIs('martianas') ? 'active' : '' }}">Actividades martianas</a>
       </li>
       <li class="nav-item">
-        <a href="{{ url('nosotros') }}" class="nav-link {{ Request::is('nosotros') ? '' : '' }}">Convocatorias</a>
+        <a href="{{ route('convocatorias') }}" class="nav-link {{ Request::routeIs('convocatorias') ? 'active' : '' }}">Convocatorias</a>
       </li>
       <li class="nav-item">
-        <a href="{{ url('nosotros') }}" class="nav-link {{ Request::is('nosotros') ? '' : '' }}">Galería</a>
+        <a href="{{ route('galeria') }}" class="nav-link {{ Request::routeIs('galeria') ? 'active' : '' }}">Galería</a>
       </li>
       <li class="nav-item">
         <a href="{{ url('/#directorio') }}" class="nav-link {{ Request::is('directorio') ? '' : '' }}">Directorio</a>
@@ -126,8 +126,12 @@
     <!-- Formulario de búsqueda -->
     <form class="d-flex" method="POST" action="{{ route('buscar') }}" role="search">
       @csrf
-      <input name="keyword" type="search" autocomplete="off" class="form-control me-2" placeholder="Buscar..." aria-label="Buscar">
-      <button class="btn btn-outline-light" type="submit">Buscar</button>
+      <input name="keyword" type="search" autocomplete="off" class="form-control me-2 rounded-pill" placeholder="Buscar..." aria-label="Buscar">
+      <button class="btn btn-outline-light rounded-pill" type="submit">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+        </svg>
+      </button>
     </form>
   </div>
 </nav>

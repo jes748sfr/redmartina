@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\actividades;
 use App\Models\convocatoria;
 use Illuminate\Http\Request;
 
@@ -11,11 +12,16 @@ class ConvocatoriaController extends Controller
     public function index()
     {
         $convocatorias = convocatoria::all();
-        return response()->json([
+        $noticias = actividades::where('noticia', true)
+                         ->orderBy('created_at', 'desc')  // Asegúrate de que el campo 'fecha' esté en tu base de datos
+                         ->take(3)  // Limitar a 3 resultados
+                         ->get();
+        /* return response()->json([
             'success' => true,
             'data' => $convocatorias,
             'message' => 'Convocatorias encontradas exitosamente',
-        ], 201);
+        ], 201); */
+        return view("paginas_publicas.convocatorias_publicas", compact('convocatorias','noticias'));
     }
 
     public function store(Request $request)

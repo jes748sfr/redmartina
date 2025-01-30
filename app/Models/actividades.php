@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class actividades extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use Searchable;
 
     protected $fillable = [
         'id_usu',
@@ -28,6 +30,14 @@ class actividades extends Model
     public function documentacionAs()
     {
         return $this->hasMany(documentacion_a::class, 'id_actividades');
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'titulo' => $this->titulo,
+            'cuerpo' => $this->cuerpo,
+        ];
     }
 
 }

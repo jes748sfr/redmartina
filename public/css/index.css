@@ -1,0 +1,33 @@
+html {
+    scroll-behavior: smooth;
+}
+.img-corner {
+  position: absolute;
+  top: 10px; /* Espacio desde la parte superior */
+  right: 10px; /* Espacio desde la derecha */
+  width: 50px; /* Tamaño de la imagen */
+  height: 50px; /* Tamaño de la imagen */
+  border-radius: 50%; /* Hace la imagen circular */
+  object-fit: cover; /* Ajusta la imagen dentro del contenedor */
+}
+.border-dot{
+  border-style: double;
+  border-color: #4DA1A9;
+  border-width: 4px;
+}
+
+.image-container {
+  width: 150px;  /* Ajusta este valor según el tamaño que quieras para las imágenes */
+  height: 150px; /* Debe ser igual al ancho para mantener la proporción cuadrada */
+  border-radius: 50%;  /* Esto hará que el contenedor sea un círculo */
+  overflow: hidden;  /* Para que la imagen no se desborde del círculo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container img {
+  width: 100%;  /* Hace que la imagen ocupe todo el contenedor */
+  height: 100%;  /* Asegura que la imagen mantenga las proporciones y no se distorsione */
+  object-fit: cover;  /* Esto asegura que la imagen mantenga sus proporciones y se recorte si es necesario */
+}

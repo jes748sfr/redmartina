@@ -62,9 +62,9 @@ class User extends Authenticatable
         return $this->hasMany(actividades::class, 'id_usu');
     }
 
-    public function marianas()
+    public function martianas()
     {
-        return $this->hasMany(marianas::class, 'id_usu');
+        return $this->hasMany(martianas::class, 'id_usu');
     }
 
     public function galerias()

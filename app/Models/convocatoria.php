@@ -6,12 +6,14 @@ use App\Http\Controllers\DocumentacionCController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class convocatoria extends Model
 {
     //
     use HasFactory;
     use SoftDeletes;
+    use Searchable;
 
     protected $fillable = [
         'id_usu',
@@ -28,6 +30,14 @@ class convocatoria extends Model
     public function documentacionCs()
     {
         return $this->hasMany(documentacion_c::class, 'id_convocatoria');
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'titulo' => $this->titulo,
+            'cuerpo' => $this->cuerpo,
+        ];
     }
 
 }

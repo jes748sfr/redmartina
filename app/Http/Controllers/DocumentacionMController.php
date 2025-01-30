@@ -15,14 +15,14 @@ class DocumentacionMController extends Controller
         return response()->json([
             'success' => true,
             'data' => $documentacion_m,
-            'message' => 'Documentaciones de actividad mariana encontrada exitosamente',
+            'message' => 'Documentaciones de actividad martiana encontrada exitosamente',
         ], 201);
     }
 
     public function store(Request $request)
     {
             $request->validate([
-                'id_marianas' => 'required|int',
+                'id_martianas' => 'required|int',
                 'archivo' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf,doc,docx'],
             ]);
 
@@ -39,7 +39,7 @@ class DocumentacionMController extends Controller
                 $archivo_n = $nombreArchivo;
             }
 
-            $documentacion_m->id_marianas = $request->id_marianas;
+            $documentacion_m->id_martianas = $request->id_martianas;
             $documentacion_m->archivo = $archivo_n;
 
 
@@ -48,13 +48,13 @@ class DocumentacionMController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $documentacion_m,
-                'message' => 'Documento de actividad mariana agregada exitosamente',
+                'message' => 'Documento de actividad martiana agregada exitosamente',
             ], 201);
         } catch (\Exception $e) {
             // Manejo de errores
             return response()->json([
                 'success' => false,
-                'message' => 'Hubo un error al agregar el documento de actividad mariana',
+                'message' => 'Hubo un error al agregar el documento de actividad martiana',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -70,7 +70,7 @@ class DocumentacionMController extends Controller
             $documentacion_m = documentacion_m::find($id);
 
             if (!$documentacion_m) {
-                return response()->json(['message' => 'Documentación de actividad mariana no encontrada'], 404);
+                return response()->json(['message' => 'Documentación de actividad martiana no encontrada'], 404);
             }
 
             // Eliminar el archivo previo si existe
@@ -96,13 +96,13 @@ class DocumentacionMController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $documentacion_m,
-                'message' => 'Documentación de actividad mariana actualizada exitosamente',
+                'message' => 'Documentación de actividad martiana actualizada exitosamente',
             ], 201);
         } catch (\Exception $e) {
             // Manejo de errores
             return response()->json([
                 'success' => false,
-                'message' => 'Hubo un error al actualizar la documentacion de actividad mariana',
+                'message' => 'Hubo un error al actualizar la documentacion de actividad martiana',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -114,7 +114,7 @@ class DocumentacionMController extends Controller
             $documentacion_m = documentacion_m::find($id);
 
             if (!$documentacion_m) {
-                return response()->json(['message' => 'Documentación de actividad mariana no encontrada'], 404);
+                return response()->json(['message' => 'Documentación de actividad martiana no encontrada'], 404);
             }
 
             $documentacion_m->delete();
@@ -122,13 +122,13 @@ class DocumentacionMController extends Controller
             // Respuesta de éxito
             return response()->json([
                 'success' => true,
-                'message' => 'Documentación de actividad mariana eliminada exitosamente',
+                'message' => 'Documentación de actividad martiana eliminada exitosamente',
             ], 200);
         } catch (\Exception $e) {
             // Manejo de errores
             return response()->json([
                 'success' => false,
-                'message' => 'Hubo un error al eliminar la documentacion de actividad mariana',
+                'message' => 'Hubo un error al eliminar la documentacion de actividad martiana',
                 'error' => $e->getMessage(),
             ], 500);
         }
