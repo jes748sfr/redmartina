@@ -29,7 +29,7 @@ class martianas extends Model
 
     public function documentacionMs()
     {
-        return $this->hasMany(documentacion_m::class, 'id_martianas');
+        return $this->hasMany(documentacion_martianas::class, 'id_martianas');
     }
 
     public function toSearchableArray()

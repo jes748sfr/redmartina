@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\actividades;
+use App\Models\documentacion_actividades;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -13,11 +14,15 @@ class ActividadesController extends Controller
     //
     public function index()
     {
-        $actividades = actividades::orderBy('created_at', 'desc')->get();
+        $actividades = actividades::orderBy('fecha', 'desc')->get();
         $noticias = actividades::where('noticia', true)
-                         ->orderBy('created_at', 'desc')
-                         ->take(3)
-                         ->get();
+                    ->orderBy('fecha', 'desc')
+                    ->take(3)
+                    ->with(['documentacionAs' => function ($query) {
+                        $query->select('id_actividades', 'archivo')
+                              ->whereRaw("archivo NOT LIKE '%.pdf'"); // Excluir PDFs
+                    }])
+                    ->get();
 
         // Procesar el cuerpo de las noticias
         foreach ($actividades as $actividad) {
@@ -30,9 +35,16 @@ class ActividadesController extends Controller
     public function inicio()
     {
         $noticias = actividades::where('noticia', true)
-                         ->orderBy('created_at', 'desc')
-                         ->take(3)
-                         ->get();
+                    ->orderBy('fecha', 'desc')
+                    ->take(4)
+                    ->with(['documentacionAs' => function ($query) {
+                        $query->select('id_actividades', 'archivo'); // Asegúrate de que estos campos existen en la tabla
+                    }])
+                    ->get();
+
+        foreach ($noticias as $noticia) {
+            $noticia->cuerpo_truncado = $this->truncateHtml($noticia->cuerpo, 100);
+        }
 
 
                          
@@ -47,7 +59,7 @@ class ActividadesController extends Controller
 
     public function index_logeado()
     {
-        $actividades = actividades::orderBy('created_at', 'desc')->get();
+        $actividades = actividades::orderBy('fecha', 'desc')->get();
         
         foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
@@ -67,6 +79,8 @@ class ActividadesController extends Controller
                 'titulo' => 'required|string|max:255',
                 'cuerpo' => 'string',
                 'noticia' => 'required|boolean',
+                'fecha' => 'required|date',
+                'agregar_file'  => 'required',
             ]);
 
         try {
@@ -76,19 +90,59 @@ class ActividadesController extends Controller
             $actividad->titulo = $request->titulo;
             $actividad->cuerpo = $request->cuerpo;
             $actividad->noticia = $request->noticia;
+            $actividad->fecha = $request->fecha;
 
             $actividad->save();
 
-            $actividades = actividades::orderBy('created_at', 'desc')->get();
+            // Obtener el ID de la actividad recién creada
+            $actividadId = $actividad->id;
+
+            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
         
             foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
             }
 
             //return view("actividades.index", compact('actividades'));
-            return redirect()->route('actividades.auth')->with('success', 'Actividad creada exitosamente');
+            return redirect()->route('actividades.auth')->with('success', 'Actividad creada exitosamente'); */
 
-            /* return response()->json([
+            $AgregarFile = $request->agregar_file;
+
+            if ($AgregarFile == 0) {
+
+                $script = "<script>
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: '¡Se ha creado la actividad correctamente!',
+                    icon: 'success',
+                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
+                    showConfirmButton: false, // Oculta el botón de 'OK'
+                    timer: 1000, // Desaparece en 1 segundo
+                    timerProgressBar: true,
+                    backdrop: false, // No oscurece la pantalla
+                    allowOutsideClick: true,
+                    customClass: {
+                        popup: 'swal-popup', 
+                        title: 'swal-title', 
+                        text: 'swal-text',
+                    },
+                }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
+                setTimeout(() => {
+                    // Borrar el mensaje flash después de la alerta
+                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
+                }, 1200); // 1.2 segundos después de mostrar el mensaje
+            });
+        </script>";
+
+            // Pasar el script a la vista
+            return redirect()->route('actividades.auth')->with('script', $script);
+
+            }else{
+                return redirect()->route('documentacion_actividad.crear', ['id' => $actividadId]);
+            }
+
+            /* return response()->json([  documentacion_actividad.crear
                 'success' => true,
                 'data' => $actividad,
                 'message' => 'Actividad creada exitosamente',
@@ -100,28 +154,65 @@ class ActividadesController extends Controller
                 'error' => $e->getMessage(),
             ], 500); */
 
-            $actividades = actividades::orderBy('created_at', 'desc')->get();
+            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
         
             foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
             }
 
-            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al crear la actividad');
+            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al crear la actividad'); */
+
+            $script = "<script>
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un error al crear la actividad',
+                icon: 'error',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                backdrop: false,
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'swal-popup', 
+                    title: 'swal-title', 
+                    text: 'swal-text',
+                },
+            }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
+                setTimeout(() => {
+                    // Borrar el mensaje flash después de la alerta
+                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
+                }, 1200); // 1.2 segundos después de mostrar el mensaje
+            });
+        </script>";
+
+        return redirect()->route('actividades.auth')->with('script', $script);
+
         }
     }
 
     public function show(string $id)
     {
         $actividad = actividades::find($id);
+        $documentos_actividad = documentacion_actividades::where('id_actividades', $id)->get();
 
-        return view("paginas_publicas.actividades_red", compact('actividad'));
+        return view("paginas_publicas.actividades_red", compact('actividad','documentos_actividad'));
     }
 
     public function edit(string $id)
     {
         $actividad = actividades::find($id);
 
-        return view("actividades.edit", compact('actividad'));
+        $documento_actividad = documentacion_actividades::where('id_actividades', $id)->exists();
+
+        if ($documento_actividad) {
+            $documento = true;
+        } else {
+            $documento = false;
+        }
+
+        return view("actividades.edit", compact('actividad','documento'));
     }
 
     public function update(Request $request, $id)
@@ -130,6 +221,7 @@ class ActividadesController extends Controller
             'titulo' => 'required|string|max:255',
             'cuerpo' => 'string',
             'noticia' => 'required|boolean',
+            'fecha' => 'required',
         ]);
 
         try {
@@ -142,17 +234,48 @@ class ActividadesController extends Controller
             $actividad->titulo = $request->titulo;
             $actividad->cuerpo = $request->cuerpo;
             $actividad->noticia = $request->noticia;
+            $actividad->fecha = $request->fecha;
 
             $actividad->save();
 
-            $actividades = actividades::orderBy('created_at', 'desc')->get();
+            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
         
             foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
-            }
+            }*/
 
             //return view("actividades.index", compact('actividades'));
-            return redirect()->route('actividades.auth')->with('success', 'Actividad actualizada exitosamente');
+            //return redirect()->route('actividades.auth')->with('success', 'Actividad actualizada exitosamente');
+
+            $script = "<script>
+            Swal.fire({
+                title: '¡Éxito!',
+                text: '¡Los datos fueron actualizados correctamente!',
+                icon: 'success',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                backdrop: false,
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'swal-popup',
+                    title: 'swal-title',
+                    text: 'swal-text',
+                },
+            }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
+                setTimeout(() => {
+                    // Borrar el mensaje flash después de la alerta
+                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
+                }, 1200); // 1.2 segundos después de mostrar el mensaje
+            });
+        </script>";
+
+            // Pasar el script a la vista
+            session()->flash('script', $script);
+            return redirect()->route('actividades.auth');
+            //->with('script', $script);
 
             /* return response()->json([
                 'success' => true,
@@ -167,13 +290,44 @@ class ActividadesController extends Controller
                 'error' => $e->getMessage(),
             ], 500); */
 
-            $actividades = actividades::orderBy('created_at', 'desc')->get();
+            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
         
             foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
-            }
+            } */
 
-            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al actualizar la actividad');
+            //return redirect()->route('actividades.auth')->with('error', 'Hubo un error al actualizar la actividad');
+
+            $script = "<script>
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un error al actualizar la actividad',
+                icon: 'error',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                backdrop: false,
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'swal-popup', 
+                    title: 'swal-title', 
+                    text: 'swal-text',
+                },
+            }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
+                setTimeout(() => {
+                    // Borrar el mensaje flash después de la alerta
+                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
+                }, 1200); // 1.2 segundos después de mostrar el mensaje
+            });
+        </script>";
+
+        // Pasar el script a la vista
+        session()->flash('script', $script);
+        return redirect()->route('actividades.auth');
+        //->with('script', $script);
+
         }
     }
 
@@ -188,14 +342,42 @@ class ActividadesController extends Controller
 
             $actividad->delete();
 
-            $actividades = actividades::orderBy('created_at', 'desc')->get();
+            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
         
             foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
             }
 
             //return view("actividades.index", compact('actividades'));
-            return redirect()->route('actividades.auth')->with('success', 'Actividad eliminada exitosamente');
+            return redirect()->route('actividades.auth')->with('success', 'Actividad eliminada exitosamente'); */
+
+            $script = "<script>
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: '¡Se ha eliminado correctamente la actividad!',
+                    icon: 'success',
+                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
+                    showConfirmButton: false, // Oculta el botón de 'OK'
+                    timer: 1000, // Desaparece en 1 segundo
+                    timerProgressBar: true,
+                    backdrop: false, // No oscurece la pantalla
+                    allowOutsideClick: true,
+                    customClass: {
+                        popup: 'swal-popup', 
+                        title: 'swal-title', 
+                        text: 'swal-text',
+                    },
+                }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
+                setTimeout(() => {
+                    // Borrar el mensaje flash después de la alerta
+                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
+                }, 1200); // 1.2 segundos después de mostrar el mensaje
+            });
+        </script>";
+
+            // Pasar el script a la vista
+            return redirect()->route('actividades.auth')->with('script', $script);
 
             // Respuesta de éxito
             /* return response()->json([
@@ -210,13 +392,41 @@ class ActividadesController extends Controller
                 'error' => $e->getMessage(),
             ], 500); */
 
-            $actividades = actividades::orderBy('created_at', 'desc')->get();
+            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
         
             foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
             }
 
-            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al eliminar la actividad');
+            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al eliminar la actividad'); */
+
+            $script = "<script>
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un error al eliminar la actividad',
+                icon: 'error',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                backdrop: false,
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'swal-popup', 
+                    title: 'swal-title', 
+                    text: 'swal-text',
+                },
+            }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
+                setTimeout(() => {
+                    // Borrar el mensaje flash después de la alerta
+                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
+                }, 1200); // 1.2 segundos después de mostrar el mensaje
+            });
+        </script>";
+
+        // Pasar el script a la vista
+        return redirect()->route('actividades.auth')->with('script', $script);
         }
         
     }

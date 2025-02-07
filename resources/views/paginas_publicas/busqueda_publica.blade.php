@@ -44,7 +44,7 @@
             @foreach($resultados['actividades'] as $actividad)
                 <div class="row">
                     <div class="col-sm-12">
-                        <a href="actividades/show/{{ $actividad->id }}">
+                        <a href="{{ route('visualizar_actividades', ['id' => $actividad->id]) }}">
                             <h6>{{ $actividad->titulo }}</h6>
                         </a>
                         <p>{!! $actividad->cuerpo_truncado !!}</p>
@@ -58,7 +58,7 @@
             @foreach($resultados['martianas'] as $martina)
                 <div class="row">
                     <div class="col-sm-12">
-                        <a href="martiana/{{ $martina->id }}">
+                        <a href="{{ route('visualizar_martianas', ['id' => $martina->id]) }}">
                             <h6>{{ $martina->titulo }}</h6>
                         </a>
                         <p>{!! $martina->cuerpo_truncado !!}</p>
@@ -72,7 +72,7 @@
             @foreach($resultados['convocatorias'] as $convocatoria)
                 <div class="row">
                     <div class="col-sm-12">
-                        <a href="convocatoria/{{ $convocatoria->id }}">
+                        <a href="{{ route('visualizar_convocatorias', ['id' => $convocatoria->id]) }}">
                             <h6>{{ $convocatoria->titulo }}</h6>
                         </a>
                         <p>{!! $convocatoria->cuerpo_truncado !!}</p>

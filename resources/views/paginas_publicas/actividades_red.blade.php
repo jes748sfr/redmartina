@@ -15,15 +15,52 @@
 @include('componentes.header')
 <body>
   @if(isset($actividad))
-    <div class="container mt-4">
-            <div class="card-header">
-                {{ $actividad->header }}
-            </div>
-            <div class="card-body">
-                <h3 class="card-title">{{ $actividad->titulo }}</h3>
-                <p class="card-text">{!! $actividad->cuerpo !!}</p>
-            </div>
+  <div class="container mt-4">
+    <div class="card-header">
+        {{ $actividad->header }}
     </div>
+    <div class="card-body">
+        <h3 class="card-title">{{ $actividad->titulo }}</h3>
+
+        {{-- Mostrar imágenes arriba del cuerpo --}}
+        @php
+            $imagenes = $documentos_actividad->filter(function ($documento) {
+                return in_array(pathinfo($documento->archivo, PATHINFO_EXTENSION), ['jpeg', 'jpg', 'png']);
+            });
+        @endphp
+
+        @if ($imagenes->isNotEmpty())
+            <div class="mb-3">
+                @foreach ($imagenes as $documento)
+                    <img src="{{ asset('documentacion_actividades/' . $documento->archivo) }}" class="img-fluid rounded" alt="Imagen">
+                @endforeach
+            </div>
+        @endif
+
+        {{-- Cuerpo de la actividad --}}
+        <p class="card-text">{!! $actividad->cuerpo !!}</p>
+
+        {{-- Mostrar PDFs abajo del cuerpo --}}
+        @php
+            $pdfs = $documentos_actividad->filter(function ($documento) {
+                return pathinfo($documento->archivo, PATHINFO_EXTENSION) === 'pdf';
+            });
+        @endphp
+
+        @if ($pdfs->isNotEmpty())
+            <div class="mt-4">
+                <h5>Documentos adjuntos:</h5>
+                @foreach ($pdfs as $documento)
+                    <p>
+                        <a href="{{ asset('documentacion_actividades/' . $documento->archivo) }}" target="_blank">
+                            📄 Ver PDF ({{ $documento->archivo }})
+                        </a>
+                    </p>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</div>
   @else
     <div class="container mb-2">
         <div class="row g-5 mt-2">

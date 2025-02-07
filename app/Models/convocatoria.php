@@ -29,7 +29,7 @@ class convocatoria extends Model
 
     public function documentacionCs()
     {
-        return $this->hasMany(documentacion_c::class, 'id_convocatoria');
+        return $this->hasMany(documentacion_convocatorias::class, 'id_convocatoria');
     }
 
     public function toSearchableArray()

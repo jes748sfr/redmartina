@@ -21,39 +21,78 @@ class FotosController extends Controller
 
     public function store(Request $request)
     {
-            $request->validate([
-                'id_galeria' => 'required|int',
-                'imagen' => ['required', 'file', 'mimes:jpeg,png,jpg'],
-            ]);
-
+        $request->validate([
+            'id_galeria' => 'required|int',
+            'imagen' => ['required'],
+            'imagen.*' => [
+                'file',
+                function ($attribute, $file, $fail) {
+                    $maxSize = ($file->getClientOriginalExtension() === 'pdf') ? 5120 : 12288; // 5MB para PDF, 12MB para imágenes
+                    if ($file->getSize() > $maxSize * 1024) {
+                        return $fail("La imagen {$file->getClientOriginalName()} excede el tamaño permitido.");
+                    }
+                },
+                'mimes:jpeg,png,jpg,pdf'
+            ],
+        ]);
+    
         try {
-            $foto = new fotos();
-
+            $archivosGuardados = [];
+    
             if ($request->hasFile('imagen')) {
-                $imagen = $request->file('imagen');
-                //Mantener el nombre original
-                //$nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
-                $nombreArchivo = 'archivo_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
-                $ruta = public_path('img/galeria/');
-                $imagen->move($ruta, $nombreArchivo);
-                $imagen_n = $nombreArchivo;
+                foreach ($request->file('imagen') as $imagen) {
+                    $extension = $imagen->getClientOriginalExtension();
+                    $nombreArchivo = 'imagen_' . uniqid() . '.' . $extension;
+                    $ruta = public_path('img/galeria/');
+                    $imagen->move($ruta, $nombreArchivo);
+    
+                    $documentacion = new fotos();
+                    $documentacion->id_galeria = $request->id_galeria;
+                    $documentacion->imagen = $nombreArchivo;
+                    $documentacion->save();
+    
+                    $archivosGuardados[] = $documentacion;
+                }
             }
-
-            $foto->id_galeria = $request->id_galeria;
-            $foto->imagen = $request->imagen_n;
-
-            $foto->save();
-
-            return response()->json([
+    
+            /* return response()->json([
                 'success' => true,
-                'data' => $foto,
-                'message' => 'Foto creada exitosamente',
-            ], 201);
+                'data' => $archivosGuardados,
+                'message' => 'Archivos subidos correctamente',
+            ], 201); */
+
+            $script = "<script>
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: '¡Se ha agregado la foto a la galeria correctamente!',
+                    icon: 'success',
+                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
+                    showConfirmButton: false, // Oculta el botón de 'OK'
+                    timer: 1000, // Desaparece en 1 segundo
+                    timerProgressBar: true,
+                    backdrop: false, // No oscurece la pantalla
+                    allowOutsideClick: true,
+                    customClass: {
+                        popup: 'swal-popup', 
+                        title: 'swal-title', 
+                        text: 'swal-text',
+                    },
+                }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
+                setTimeout(() => {
+                    // Borrar el mensaje flash después de la alerta
+                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
+                }, 1200); // 1.2 segundos después de mostrar el mensaje
+            });
+        </script>";
+
+            // Pasar el script a la vista
+            return redirect()->route('editar_Galeria', ['id' => $request->id_galeria])->with('script', $script);
+    
         } catch (\Exception $e) {
-            // Manejo de errores
             return response()->json([
                 'success' => false,
-                'message' => 'Hubo un error al crear la foto',
+                'message' => 'Error al subir los archivos',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -73,20 +112,19 @@ class FotosController extends Controller
             }
 
             // Eliminar el archivo previo si existe
-            $rutaArchivoPrevio = public_path('img/galeria/' . $foto->archivo);
+            $rutaArchivoPrevio = public_path('img/galeria/' . $foto->imagen);
             if (file_exists($rutaArchivoPrevio)) {
                 unlink($rutaArchivoPrevio);
             }
 
-            if ($request->hasFile('archivo')) {
-                $archivo = $request->file('archivo');
-                //Mantener el nombre original
-                //$nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
-                $nombreArchivo = 'archivo_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
+            if ($request->hasFile('imagen')) {
+                $archivo = $request->file('imagen');
+                $nombreArchivo = 'imagen_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
                 $ruta = public_path('img/galeria/');
                 $archivo->move($ruta, $nombreArchivo);
                 $archivo_n = $nombreArchivo;
             }
+            $foto->imagen = $archivo_n;
 
             $foto->imagen = $archivo_n;
 

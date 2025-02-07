@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('titulo');
             $table->text('cuerpo')->nullable(true);
             $table->boolean('noticia')->default(false);
+            $table->date('fecha');
             $table->timestamps();
             $table->softDeletes();
             

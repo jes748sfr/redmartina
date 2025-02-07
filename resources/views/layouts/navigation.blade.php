@@ -21,6 +21,33 @@
                         {{ __('Actividades') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('martianas.auth')" :active="request()->routeIs('martianas.auth')">
+                        {{ __('Martianas') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('convocatorias.auth')" :active="request()->routeIs('convocatorias.auth')">
+                        {{ __('Convocatorias') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('galerias.auth')" :active="request()->routeIs('galerias.auth')">
+                        {{ __('Galerias') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('directorios.auth')" :active="request()->routeIs('directorios.auth')">
+                        {{ __('Directorios') }}
+                    </x-nav-link>
+                </div>
+                @hasrole('Admin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('Ver_usuarios')" :active="request()->routeIs('Ver_usuarios')">
+                            {{ __('Usuarios') }}
+                        </x-nav-link>
+                    </div>
+                @endhasrole
             </div>
 
             <!-- Settings Dropdown -->
@@ -75,6 +102,26 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('actividades.auth')" :active="request()->routeIs('actividades.auth')">
+                {{ __('Actividades') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('martianas.auth')" :active="request()->routeIs('martianas.auth')">
+                {{ __('Martianas') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('convocatorias.auth')" :active="request()->routeIs('convocatorias.auth')">
+                {{ __('Convocatorias') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('galerias.auth')" :active="request()->routeIs('galerias.auth')">
+                {{ __('Galerias') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('directorios.auth')" :active="request()->routeIs('directorios.auth')">
+                {{ __('Directorios') }}
+            </x-responsive-nav-link>
+            @hasrole('Admin')
+                <x-responsive-nav-link :href="route('Ver_usuarios')" :active="request()->routeIs('Ver_usuarios')">
+                    {{ __('Usuarios') }}
+                </x-responsive-nav-link>
+            @endhasrole
         </div>
 
         <!-- Responsive Settings Options -->

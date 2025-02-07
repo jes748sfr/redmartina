@@ -37,11 +37,21 @@
                             <select 
                                 id="noticia" 
                                 name="noticia" 
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
+                                class="w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
                                 required>
                                     <option value="1" {{ $actividad->noticia == 1 ? 'selected' : '' }}>Sí</option>
                                     <option value="0" {{ $actividad->noticia == 0 ? 'selected' : '' }}>No</option>
                             </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="fecha" class="block text-gray-700 font-bold mb-2">fecha:</label>
+                            <input 
+                                type="date" 
+                                id="fecha" 
+                                name="fecha" 
+                                class="w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
+                                required value="{{ old('fecha', $actividad->fecha) }}">
                         </div>
 
                         <button 
@@ -50,6 +60,11 @@
                             Guardar
                         </button>
                     </form>
+                    @if($documento == true)
+                        <a class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600" href="{{ route('documentacion_actividad.edit', ['id' => $actividad->id]) }}">Editar archivos</a>
+                    @else
+                        <a class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600" href=" {{ route('documentacion_actividad.crear', ['id' => $actividad->id]) }}">Agregar archivos</a>
+                    @endif
                 </div>
             </div>
         </div>

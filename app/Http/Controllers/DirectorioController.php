@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\actividades;
 use App\Models\directorio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DirectorioController extends Controller
 {
@@ -11,18 +13,39 @@ class DirectorioController extends Controller
     public function index()
     {
         //$actividades = actividades::all();
-        $directorio = directorio::all();
-        return response()->json([
+        $directorios = directorio::all();
+        $noticias = actividades::where('noticia', true)
+                    ->orderBy('fecha', 'desc')
+                    ->take(3)
+                    ->with(['documentacionAs' => function ($query) {
+                        $query->select('id_actividades', 'archivo')
+                              ->whereRaw("archivo NOT LIKE '%.pdf'"); // Excluir PDFs
+                    }])
+                    ->get();
+       
+        return view("paginas_publicas.directorio_publico", compact('directorios','noticias'));
+/*         return response()->json([
             'success' => true,
             'data' => $directorio,
             'message' => 'Directorio encontrado exitosamente',
-        ], 201);
+        ], 201); */
+    }
+
+    public function index_logeado()
+    {
+        $directorios = directorio::orderBy('created_at', 'desc')->get();
+
+        return view("directorios.index", compact('directorios'));
+    }
+
+    public function create()
+    {
+        return view("directorios.create");
     }
 
     public function store(Request $request)
     {
             $request->validate([
-                'id_usu' => 'required|int',
                 'area' => 'required|string|max:255',
                 'imagen' => ['file', 'mimes:jpeg,png,jpg', 'max:12288'],
                 'nombre' => 'required|string|max:255',
@@ -32,18 +55,19 @@ class DirectorioController extends Controller
 
         try {
             $directorio = new directorio();
+            $archivo_n = null;
 
             if ($request->hasFile('imagen')) {
                 $imagen = $request->file('imagen');
                 //Mantener el nombre original
                 //$nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
-                $nombreArchivo = 'archivo_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
+                $nombreArchivo = 'imagen_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
                 $ruta = public_path('img/directorio/');
                 $imagen->move($ruta, $nombreArchivo);
                 $archivo_n = $nombreArchivo;
             }
 
-            $directorio->id_usu = $request->id_usu;
+            $directorio->id_usu = Auth::id();
             $directorio->area = $request->area;
             $directorio->imagen = $archivo_n;
             $directorio->nombre = $request->nombre;
@@ -67,6 +91,13 @@ class DirectorioController extends Controller
         }
     }
 
+    public function edit(string $id)
+    {
+        $directorio = directorio::find($id);
+
+        return view("directorios.edit", compact('directorio'));
+    }
+
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -79,6 +110,7 @@ class DirectorioController extends Controller
 
         try {
             $directorio = directorio::find($id);
+            $archivo_n = null;
 
             if (!$directorio) {
                 return response()->json(['message' => 'Directorio no encontrado'], 404);
@@ -94,7 +126,7 @@ class DirectorioController extends Controller
                 $archivo_n = $nombreArchivo;
             }
 
-            $directorio->id_usu = $request->id_usu;
+            $directorio->id_usu = $directorio->id_usu;
             $directorio->area = $request->area;
             $directorio->imagen = $archivo_n;
             $directorio->nombre = $request->nombre;

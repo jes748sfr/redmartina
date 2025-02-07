@@ -1,5 +1,6 @@
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 100px;
 }
 .img-corner {
   position: absolute;
@@ -31,3 +32,4 @@ html {
   height: 100%;  /* Asegura que la imagen mantenga las proporciones y no se distorsione */
   object-fit: cover;  /* Esto asegura que la imagen mantenga sus proporciones y se recorte si es necesario */
 }
+

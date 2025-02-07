@@ -15,18 +15,89 @@
 </head>
 @include('componentes.header')
 <body>
-    <div class="container mb-2">
-        <div class="row g-3 mt-2">
-            <div class="col-md-8">
+  @if(isset($martiana))
+  <div class="container mt-4">
+    <div class="card-header">
+        {{ $martiana->header }}
+    </div>
+    <div class="card-body">
+        <h3 class="card-title">{{ $martiana->titulo }}</h3>
 
+        {{-- Mostrar imágenes arriba del cuerpo --}}
+        @php
+            $imagenes = $documentos_martiana->filter(function ($documento) {
+                return in_array(pathinfo($documento->archivo, PATHINFO_EXTENSION), ['jpeg', 'jpg', 'png']);
+            });
+        @endphp
+
+        @if ($imagenes->isNotEmpty())
+            <div class="mb-3">
+                @foreach ($imagenes as $documento)
+                    <img src="{{ asset('documentacion_martianas/' . $documento->archivo) }}" class="img-fluid rounded" alt="Imagen">
+                @endforeach
             </div>
+        @endif
+
+        {{-- Cuerpo de la actividad --}}
+        <p class="card-text">{!! $martiana->cuerpo !!}</p>
+
+        {{-- Mostrar PDFs abajo del cuerpo --}}
+        @php
+            $pdfs = $documentos_martiana->filter(function ($documento) {
+                return pathinfo($documento->archivo, PATHINFO_EXTENSION) === 'pdf';
+            });
+        @endphp
+
+        @if ($pdfs->isNotEmpty())
+            <div class="mt-4">
+                <h5>Documentos adjuntos:</h5>
+                @foreach ($pdfs as $documento)
+                    <p>
+                        <a href="{{ asset('documentacion_martianas/' . $documento->archivo) }}" target="_blank">
+                            📄 Ver PDF ({{ $documento->archivo }})
+                        </a>
+                    </p>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</div>
+  @else
+    <div class="container mb-2">
+        <div class="row g-5 mt-2">
+          <div class="col-md-8">
+            <div class="container">
+                <div class="row">
+                    @foreach($martianas as $index => $martiana)
+                        <div id="cartas" class="col-12 col-md-4 mb-3">
+                          <a class="link-offset-2 link-underline link-underline-opacity-0" href="{{ route('visualizar_martianas', $martiana->id) }}">
+                            <div class="card mb-3 h-100 d-flex flex-column" style="max-width: 18rem;">
+                                <!-- Asignar un degradado dinámico según el índice -->
+                                <div class="card-header @if($index % 3 == 0) degradado-1
+                                                       @elseif($index % 3 == 1) degradado-2
+                                                       @else degradado-3 @endif">
+                                    {{ $martiana->header }}
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $martiana->titulo }}</h5>
+                                    <p class="card-text">
+                                      {!! $martiana->cuerpo_truncado !!}
+                                    </p>
+                                </div>
+                            </div>
+                          </a>  
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
         
             <div class="col-md-4">
               @include('componentes.noticias', ['noticias' => $noticias])
             </div>
           </div>
     </div>    
-
+  @endif
 </body>
 @include('componentes.footer')
 <!-- Bootstrap JS, Popper.js, and jQuery -->

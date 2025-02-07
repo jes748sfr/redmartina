@@ -5,12 +5,25 @@
         </h2>
         <link rel="stylesheet" href="@sweetalert2/theme-material-ui/material-ui.css">
     </x-slot>
+    <style>
+        .swal-popup {
+            @apply bg-white shadow-lg rounded-xl p-6; /* Fondo blanco con sombra y bordes redondeados */
+        }
+
+        .swal-title {
+            @apply text-2xl font-bold text-gray-800; /* Texto grande y negrita */
+        }
+
+        .swal-text {
+            @apply text-lg text-gray-600; /* Texto mediano y gris */
+        }
+    </style>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('actividades.store') }}" method="POST">
+                    <form id="actividadForm" action="{{ route('actividades.store') }}" method="POST">
                         @csrf
                         
                         <div class="mb-4">
@@ -45,8 +58,21 @@
                             </select>
                         </div>
 
+                        <div class="mb-4">
+                            <label for="fecha" class="block text-gray-700 font-bold mb-2">Fecha:</label>
+                            <input 
+                                type="date" 
+                                id="fecha" 
+                                name="fecha" 
+                                class="w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
+                                required>
+                        </div>
+
+                        <input type="hidden" name="agregar_file" id="agregar_file" value="0">
+
                         <button 
-                            type="submit" 
+                            type="button" 
+                            id="submitButton"
                             class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600">
                             Guardar
                         </button>
@@ -68,5 +94,58 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe inmediatamente
+
+            var titulo = document.getElementById('titulo').value;
+            var fecha = document.getElementById('fecha').value;
+            var noticia = document.getElementById('noticia').value;
+
+            if (!titulo || !fecha || !noticia) {
+                Swal.fire({
+                    title: 'Espera...',
+                    text: 'Por favor completa todos los campos requeridos',
+                    icon: 'error',
+                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
+                    showConfirmButton: false, // Oculta el botón de 'OK'
+                    timer: 3000,
+                    timerProgressBar: true,
+                    backdrop: false, // No oscurece la pantalla
+                    allowOutsideClick: true,
+                    customClass: {
+                        popup: 'swal-popup', 
+                        title: 'swal-title', 
+                        text: 'swal-text',
+                    },
+                });
+                //Swal.fire('Error', 'Por favor completa todos los campos requeridos.', 'error');
+                return; // Detiene el flujo si algún campo requerido está vacío
+            }
+
+            Swal.fire({
+                    title: 'Una cosa mas...',
+                    text: '¿Quieres agregar fotos o documentos a esta actividad?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí',
+                    cancelButtonText: 'No',
+                    customClass: {
+                        popup: 'swal-popup', 
+                        title: 'swal-title', 
+                        text: 'swal-text',
+                    },
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, enviamos el formulario
+                    document.getElementById('agregar_file').value = '1';
+                    document.getElementById('actividadForm').submit();
+                } else {
+                    // Si el usuario cancela, no se hace nada
+                    document.getElementById('actividadForm').submit();
+                }
+            });
+        });
+    </script>
 
 </x-app-layout>

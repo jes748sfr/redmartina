@@ -158,50 +158,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    @if (session('success'))
-        <script>
-            Swal.fire({
-                title: '¡Éxito!',
-                text: "{{ session('success') }}",
-                icon: 'success',
-                position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                showConfirmButton: false, // Oculta el botón de "OK"
-                timer: 1000, // Desaparece en 3 segundos
-                timerProgressBar: true,
-                backdrop: false, // No oscurece la pantalla
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-            history.replaceState({}, document.title, window.location.pathname);
-        });
-        </script>
-    @endif
-
-    @if (session('error'))
-        <script>
-            Swal.fire({
-                title: 'Error',
-                text: "{{ session('error') }}",
-                icon: 'error',
-                position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                showConfirmButton: false, // Oculta el botón de "OK"
-                timer: 1000, // Desaparece en 3 segundos
-                timerProgressBar: true,
-                backdrop: false, // No oscurece la pantalla
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-            history.replaceState({}, document.title, window.location.pathname);
-        });
-        </script>
+    @if(session('script'))
+        {!! session('script') !!}
+        @php
+        session()->forget('script'); // Eliminar el mensaje después de mostrarlo
+        @endphp
     @endif
 
     <div class="py-12">

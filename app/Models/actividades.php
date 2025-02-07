@@ -29,7 +29,7 @@ class actividades extends Model
 
     public function documentacionAs()
     {
-        return $this->hasMany(documentacion_a::class, 'id_actividades');
+        return $this->hasMany(documentacion_actividades::class, 'id_actividades');
     }
 
     public function toSearchableArray()

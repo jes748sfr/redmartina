@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('id_usu')->constrained('users')->cascadeOnDelete();
             $table->string('titulo');
             $table->text('cuerpo')->nullable(true);
+            $table->date('fecha');
             $table->timestamps();
             $table->softDeletes();
 

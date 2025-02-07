@@ -15,7 +15,66 @@
 </head>
 @include('componentes.header')
 <body>
-    <div class="container mb-2">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-12 text-center heading-section ftco-animate">
+              <h2 class="mb-4"><span>Noticias</span> Recientes</h2>
+          </div>
+          <hr style="width: 80%;">
+        </div>
+        <div class="row justify-content-center w-100">
+          @forelse($noticias as $noticia)
+            <div class="card mx-3 mb-3" style="width: 18rem;">
+              {{-- <img src="..." class="card-img-top" alt="..."> --}}
+              @php
+                $imagen = $noticia->documentacionAs->isNotEmpty() 
+                          ? 'documentacion_actividades/' .$noticia->documentacionAs->first()->archivo 
+                          : 'img/assets/icono.jpg'; // Imagen por defecto si no hay imágenes
+                $nombreArchivo = pathinfo($imagen, PATHINFO_FILENAME);
+                $extension = pathinfo($imagen, PATHINFO_EXTENSION);
+
+                $imagen = ($extension == 'pdf') 
+                          ? 'img/assets/icono.jpg' 
+                          : $imagen;
+              @endphp
+              <img src="{{ asset($imagen) }}" class="card-img-top" alt="Imagen de la actividad" style="width: 100%; height: 180px; object-fit: cover;">
+              <div class="card-body d-flex flex-column">
+                <!-- Contenido principal -->
+                <div class="flex-grow-1">
+                    <h5 class="card-title">{{ Str::limit($noticia->titulo, 50, '...') }}</h5>
+                    <p class="card-text">{!! $noticia->cuerpo_truncado !!}</p>
+                </div>
+            
+                <!-- Metadatos (fecha y botón) alineados al final -->
+                <div class="mt-auto">
+                    <p class="card-text text-muted mb-2">{{ $noticia->fecha }}</p>
+                    <a href="{{ route('visualizar_actividades', ['id' => $noticia->id]) }}" class="btn btn-primary">Continuar leyendo</a>
+                </div>
+            </div>
+            </div>
+          @empty
+            @for ($i = 0; $i < 4; $i++)
+              <div class="card mx-3 mb-3" style="width: 18rem;" aria-hidden="true">
+                <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Cargando...</title><rect width="100%" height="100%" fill="#868e96"></rect></svg>
+                <div class="card-body">
+                  <h5 class="card-title placeholder-glow">
+                    <span class="placeholder col-6"></span>
+                  </h5>
+                  <p class="card-text placeholder-glow">
+                    <span class="placeholder col-7"></span>
+                    <span class="placeholder col-4"></span>
+                    <span class="placeholder col-4"></span>
+                    <span class="placeholder col-6"></span>
+                    <span class="placeholder col-8"></span>
+                  </p>
+                  <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-6"></a>
+                </div>
+              </div>
+            @endfor
+          @endforelse
+        </div>
+      </div>
+      <div class="container mb-2">
         <div class="row g-3 mt-2">
             <div class="col-md-8">
         
@@ -49,48 +108,57 @@
                 <blockquote class="blockquote">
                   <p>La Red Internacional de Cátedras Martianas cuenta con un directorio que ha ido creciendo, el cual facilita la comunicación inmediata. </p>
                 </blockquote>
-
-                <div class="d-flex justify-content-center p-4">
-                  <h3 id="directorio">Directorio.</h3>
-                </div>
-                <hr>
-                <div class="container pb-3">
-                  <div class="row g-3 d-flex justify-content-center">
-                    <div class="col-md-4">
-                      <div class="card shadow-lg">
-                          <div class="card-body">
-                            <div class="d-flex justify-content-center pb-3">
-                              <div class="image-container rounded-circle border-dot">
-                                <img class="img-fluid" src="{{ asset('img/assets/icono.jpg') }}" alt="">
-                              </div>
-                            </div>
-                            <h6 class="card-subtitle mb-2 text-muted">Coordinador de la Red Internacional de Cátedras Martianas</h6>
-                            <p class="card-text">Dr. Mario Alberto Nájera Espinoza</p>
-                          </div>
-                      </div>
-                    </div>  
-                    <div class="col-md-4">
-                      <div class="card shadow-lg">
-                        <div class="card-body">
-                          <div class="d-flex justify-content-center pb-3">
-                            <div class="image-container rounded-circle border-dot">
-                              <img class="img-fluid" src="https://media.licdn.com/dms/image/v2/C5603AQHXJg1w-Hz2Mw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1524142435954?e=1743033600&v=beta&t=hANFI-HCPzsIfuOepQsP83cgdbOrztZvpS-W83brMu4" alt="">
-                            </div>
-                          </div>
-                          <h6 class="card-subtitle mb-2 text-muted">Asistente de coordinación de la Red Internacional de Cátedras Martianas</h6>
-                          <p class="card-text">Mtra. Oralia Chantal Rodríguez Saucedo</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
             </div>
         
             <div class="col-md-4">
-              @include('componentes.noticias', ['noticias' => $noticias])
+              <div class="position-sticky" style="top: 5rem;">
+            
+                <div class="p-4">
+                  <h4 class="fst-italic">Red Universitaria</h4>
+                  <ol class="list-unstyled mb-0">
+                    <li class="views-row views-row-1 views-row-odd views-row-first p-2">  
+                        <div class="views-field views-field-field-banner">
+                            <div class="field-content">
+                                <a href="http://catedramarti.srp.ucr.ac.cr/marti2.html">
+                                    <img typeof="foaf:Image" src="{{ asset('img/assets/red_universitaria1.jpg') }}" width="280" height="97" alt="">
+                                </a>
+                            </div>  
+                        </div>
+                    </li>
+                    <li class="views-row views-row-2 views-row-even p-2">  
+                        <div class="views-field views-field-field-banner">
+                            <div class="field-content">
+                                <a href="http://www.martiano.cu/">
+                                    <img typeof="foaf:Image" src="{{ asset('img/assets/red_universitaria2.jpg') }}" width="280" height="97" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="views-row views-row-3 views-row-odd p-2">  
+                        <div class="views-field views-field-field-banner">
+                            <div class="field-content">
+                                <a href="http://www.josemarti.cu/">
+                                    <img typeof="foaf:Image" src="{{ asset('img/assets/red_universitaria3.jpg') }}" width="280" height="97" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="views-row views-row-4 views-row-even views-row-last p-2">  
+                        <div class="views-field views-field-field-banner">
+                            <div class="field-content">
+                                <a href="http://www.cmarti.cucsh.udg.mx/">
+                                    <img typeof="foaf:Image" src="{{ asset('img/assets/red_universitaria4.jpg') }}" width="280" height="97" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                  </ol>
+                </div>
+            
+              </div>
             </div>
           </div>
-    </div>    
+    </div>  
 
 </body>
 @include('componentes.footer')
