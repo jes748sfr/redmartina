@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\convocatoria;
 use App\Models\documentacion_convocatorias;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DocumentacionConvocatoriasController extends Controller
 {
@@ -28,7 +29,18 @@ class DocumentacionConvocatoriasController extends Controller
 
     public function store_img(Request $request)
     {
-        $request->validate([
+
+        $mensajes = [
+            'id_actividades.required' => 'La actividad es obligatoria.',
+            'id_actividades.int' => 'El ID de la actividad debe ser un número entero.',
+
+            'archivo.required' => 'Debe adjuntar al menos un archivo.',
+
+            'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
+            'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'id_convocatoria' => 'required|int',
             'archivo' => ['required'],
             'archivo.*' => [
@@ -41,7 +53,13 @@ class DocumentacionConvocatoriasController extends Controller
                 },
                 'mimes:jpeg,png,jpg,pdf'
             ],
-        ]);
+        ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('documentacion_convocatoria.crear', ['id' => $request->id_convocatoria]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         try {
             $archivosGuardados = [];
@@ -107,7 +125,18 @@ class DocumentacionConvocatoriasController extends Controller
 
     public function store_2(Request $request)
     {
-        $request->validate([
+
+        $mensajes = [
+            'id_actividades.required' => 'La actividad es obligatoria.',
+            'id_actividades.int' => 'El ID de la actividad debe ser un número entero.',
+
+            'archivo.required' => 'Debe adjuntar al menos un archivo.',
+
+            'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
+            'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'id_convocatoria' => 'required|int',
             'archivo' => ['required'],
             'archivo.*' => [
@@ -120,7 +149,13 @@ class DocumentacionConvocatoriasController extends Controller
                 },
                 'mimes:jpeg,png,jpg,pdf'
             ],
-        ]);
+        ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('documentacion_convocatoria.edit', ['id' => $request->id_convocatoria]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
     
         try {
             $archivosGuardados = [];
@@ -245,6 +280,11 @@ class DocumentacionConvocatoriasController extends Controller
 
             if (!$documentacion_convocatorias) {
                 return response()->json(['message' => 'Documentacion de convocatoria no encontrada'], 404);
+            }
+
+            $rutaAnterior = public_path('documentacion_convocatorias/' . $documentacion_convocatorias->archivo);
+            if (file_exists($rutaAnterior)) {
+                unlink($rutaAnterior);
             }
 
             $documentacion_convocatorias->delete();

@@ -7,6 +7,7 @@ use App\Models\documentacion_martianas;
 use App\Models\martianas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class MartianasController extends Controller
@@ -58,12 +59,24 @@ class MartianasController extends Controller
 
     public function store(Request $request)
     {
-            $request->validate([
+        $mensajes = [
+            'titulo.required' => 'El titulo es obligatorio.',
+            'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
+            'fecha.required' => 'Debes ingresar una fecha válido.',
+        ];
+
+        $validator = Validator::make($request->all(), [
                 'titulo' => 'required|string|max:255',
-                'cuerpo' => 'string',
+                'cuerpo' => 'nullable|string',
                 'fecha' => 'required|date',
                 'agregar_file'  => 'required',
-            ]);
+            ], $mensajes);
+
+            if ($validator->fails()) {
+                return redirect()->route('crear_Martiana') // Cambia por la ruta de tu formulario
+                    ->withErrors($validator) // Enviar errores a la vista
+                    ->withInput();
+            }
 
         try {
             $martiana = new martianas();
@@ -198,11 +211,25 @@ class MartianasController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $mensajes = [
+            'titulo.required' => 'El titulo es obligatorio.',
+            'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
+            'noticia.required' => 'Especifique si la actividad es una noticia.',
+            'fecha.required' => 'Debes ingresar una fecha válido.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'titulo' => 'required|string|max:255',
-            'cuerpo' => 'string',
+            'cuerpo' => 'nullable|string',
             'fecha' => 'required',
-        ]);
+        ], $mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('editar_Martiana', ['id' => $id]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
+
 
         try {
             $martiana = martianas::find($id);

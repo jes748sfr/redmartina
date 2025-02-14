@@ -11,6 +11,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/actividades.css') }}">
+    <style>
+        .image-container {
+    width: 200px; /* Ajusta según necesites */
+    height: 200px; /* Mantén proporción cuadrada */
+    overflow: hidden;
+    border-radius: 10px; /* Bordes redondeados */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0; /* Fondo de seguridad */
+}
+
+.optimized-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Recorta la imagen sin deformarla */
+    border-radius: 10px;
+}
+    </style>
 
 </head>
 @include('componentes.header')
@@ -31,9 +50,11 @@
         @endphp
 
         @if ($imagenes->isNotEmpty())
-            <div class="mb-3">
+            <div class="mb-3 d-flex flex-wrap justify-content-center gap-2">
                 @foreach ($imagenes as $documento)
-                    <img src="{{ asset('documentacion_martianas/' . $documento->archivo) }}" class="img-fluid rounded" alt="Imagen">
+                    <div class="image-container">
+                        <img src="{{ asset('documentacion_martianas/' . $documento->archivo) }}" class="optimized-img" alt="Imagen">
+                    </div>
                 @endforeach
             </div>
         @endif

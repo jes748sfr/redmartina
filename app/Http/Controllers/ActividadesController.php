@@ -6,6 +6,7 @@ use App\Models\actividades;
 use App\Models\documentacion_actividades;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 
@@ -75,13 +76,26 @@ class ActividadesController extends Controller
 
     public function store(Request $request)
     {
-            $request->validate([
+        $mensajes = [
+            'titulo.required' => 'El titulo es obligatorio.',
+            'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
+            'noticia.required' => 'Especifique si la actividad es una noticia.',
+            'fecha.required' => 'Debes ingresar una fecha válido.',
+        ];
+
+            $validator = Validator::make($request->all(), [
                 'titulo' => 'required|string|max:255',
-                'cuerpo' => 'string',
+                'cuerpo' => 'nullable|string',
                 'noticia' => 'required|boolean',
                 'fecha' => 'required|date',
                 'agregar_file'  => 'required',
-            ]);
+            ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('crear_Actividad') // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         try {
             $actividad = new actividades();
@@ -217,12 +231,25 @@ class ActividadesController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $mensajes = [
+            'titulo.required' => 'El titulo es obligatorio.',
+            'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
+            'noticia.required' => 'Especifique si la actividad es una noticia.',
+            'fecha.required' => 'Debes ingresar una fecha válido.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'titulo' => 'required|string|max:255',
-            'cuerpo' => 'string',
+            'cuerpo' => 'nullable|string',
             'noticia' => 'required|boolean',
             'fecha' => 'required',
-        ]);
+        ], $mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('editar_Actividad', ['id' => $id]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         try {
             $actividad = actividades::find($id);

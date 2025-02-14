@@ -156,6 +156,25 @@
     }
         </style>
     </x-slot>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (navigator.connection) {
+                let tipoConexion = navigator.connection.effectiveType; // 4g, 3g, 2g, slow-2g
+                let velocidadEstimada = navigator.connection.downlink; // Mbps aproximados
+        
+                console.log("Tipo de conexión:", tipoConexion);
+                console.log("Velocidad estimada:", velocidadEstimada + " Mbps");
+        
+                // Si la conexión es lenta, podrías ocultar imágenes
+                if (tipoConexion === "2g" || tipoConexion === "slow-2g" || velocidadEstimada < 1) {
+                    document.querySelectorAll("#carrusel").forEach(el => el.style.display = "none");
+                    console.log("Conexión lenta detectada, ocultando imágenes.");
+                }
+            } else {
+                console.log("No se pudo detectar la conexión de red.");
+            }
+        });
+        </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -173,7 +192,10 @@
                     <!-- Formulario de búsqueda -->
                 </div> --}}
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+                    @php
+                        $esMovil = request()->header('User-Agent') && preg_match('/(android|iphone|ipad|mobile)/i', request()->header('User-Agent'));
+                    @endphp
                     @forelse($galerias as $galeria)
                         <div class="max-w-sm h-[350px] min-h-[350px] p-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col justify-between">
                             <div>
@@ -183,7 +205,7 @@
                                     </h5>
                                 </a>                      
                                 <div class="mb-0">
-                                    <div class="relative">
+                                    <div class="relative" id="carrusel">
                                         <div class="carousel-container overflow-hidden relative h-[200px]" data-id="{{ $galeria->id }}" data-current-index="0">
                                             <!-- Carrusel de imágenes -->
                                             <div class="carousel-wrapper flex transition-transform duration-700 ease-in-out">

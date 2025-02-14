@@ -10,7 +10,7 @@ class BuscadorController extends Controller
     public function search(Request $request){
         // Validar el término de búsqueda
         $request->validate([
-            'keyword' => 'required|string|min:1',
+            'keyword' => 'required|string|min:3',
         ]);
 
         // Obtener el término de búsqueda

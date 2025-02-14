@@ -54,44 +54,36 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">    
-                    <div class="relative overflow-x-auto">
-                        <table class="w-full text-sm text-left rtl:text-right text-white dark:text-black border border-gray-300">
+                <div class="p-6 text-gray-900">
+                    
+                    <!-- Tabla (visible solo en pantallas medianas y grandes) -->
+                    <div class="relative overflow-x-auto hidden md:block">
+                        <table class="w-full text-sm text-left text-white dark:text-black border border-gray-300 min-w-max">
                             <thead class="text-xs text-white uppercase bg-black dark:bg-gray-50 dark:text-black border-b border-gray-300">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 p-2 border-r border-gray-300">
-                                        <div class="text-center">Nombre</div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 p-2 border-r border-gray-300">
-                                        <div class="text-center">Correo</div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 p-2 border-r border-gray-300">
-                                        <div class="text-center">Tipo</div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 p-2 border-r border-gray-300">
-                                        <div class="text-center">Fecha de creación</div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 p-2">
-                                        <div class="text-center">Estado</div>
-                                    </th>
+                                    <th class="px-4 py-3 border-r border-gray-300 text-center">Nombre</th>
+                                    <th class="px-4 py-3 border-r border-gray-300 text-center">Correo</th>
+                                    <th class="px-4 py-3 border-r border-gray-300 text-center">Tipo</th>
+                                    <th class="px-4 py-3 border-r border-gray-300 text-center">Fecha de creación</th>
+                                    <th class="px-4 py-3 text-center">Estado</th>
                                 </tr>
                             </thead>
-                            <tbody class="space-y-2">
+                            <tbody>
                                 @foreach ($usuarios as $usuario)
                                     <tr class="bg-black border-b dark:bg-gray-50 dark:border-gray-200 border-gray-800">
-                                        <th scope="row" class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-gray-900 p-2 border-r border-gray-300">
-                                            <div class="text-center">{{ $usuario->name }}</div>
-                                        </th>
-                                        <td class="px-6 py-4 p-2 border-r border-gray-300">
-                                            <div class="text-center">{{ $usuario->email }}</div>
+                                        <td class="px-4 py-3 font-medium text-white dark:text-gray-900 text-center border-r border-gray-300">
+                                            {{ $usuario->name }}
                                         </td>
-                                        <td class="px-6 py-4 p-2 border-r border-gray-300">
-                                            <div class="text-center">{{ $usuario->roles->pluck('name')->implode(', ') }}</div>
+                                        <td class="px-4 py-3 text-center border-r border-gray-300 truncate max-w-[200px]">
+                                            {{ $usuario->email }}
                                         </td>
-                                        <td class="px-6 py-4 p-2 border-r border-gray-300">
-                                            <div class="text-center">{{ $usuario->created_at->format('y-m-d') }}</div>
+                                        <td class="px-4 py-3 text-center border-r border-gray-300 truncate max-w-[150px]">
+                                            {{ $usuario->roles->pluck('name')->implode(', ') }}
                                         </td>
-                                        <td class="px-6 py-4 text-center p-2">
+                                        <td class="px-4 py-3 text-center border-r border-gray-300">
+                                            {{ $usuario->created_at->format('y-m-d') }}
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
                                             <button class="toggle-status flex items-center justify-center mx-auto" 
                                                 data-id="{{ $usuario->id }}" 
                                                 data-status="{{ $usuario->deleted_at ? 'offline' : 'online' }}">
@@ -106,12 +98,37 @@
                                 @endforeach    
                             </tbody>
                         </table>
-                        
-                    </div>  
+                    </div>
+    
+                    <!-- Tarjetas (visible solo en pantallas pequeñas) -->
+                    <div class="block md:hidden space-y-4">
+                        @foreach ($usuarios as $usuario)
+                            <div class="bg-white shadow-md rounded-lg border border-gray-300 p-4">
+                                <p class="text-gray-900"><strong>Nombre:</strong> {{ $usuario->name }}</p>
+                                <p class="text-gray-900"><strong>Correo:</strong> {{ $usuario->email }}</p>
+                                <p class="text-gray-900"><strong>Tipo:</strong> {{ $usuario->roles->pluck('name')->implode(', ') }}</p>
+                                <p class="text-gray-900"><strong>Fecha de creación:</strong> {{ $usuario->created_at->format('y-m-d') }}</p>
+                                <div class="flex items-center">
+                                    <span class="mr-2"><strong>Estado:</strong></span>
+                                    <button class="toggle-status flex items-center justify-center" 
+                                        data-id="{{ $usuario->id }}" 
+                                        data-status="{{ $usuario->deleted_at ? 'offline' : 'online' }}">
+                                        @if( $usuario->deleted_at )
+                                            <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> Inhabilitado
+                                        @else
+                                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> Habilitado
+                                        @endif
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+    
                 </div>
             </div>
         </div>
     </div>
+    
 
     <div class="fixed bottom-4 right-4">
         <a href="{{ route('usuarios.create') }}" id="btn_agregar" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 overflow-hidden">

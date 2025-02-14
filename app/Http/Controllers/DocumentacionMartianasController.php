@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\documentacion_martianas;
 use App\Models\martianas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DocumentacionMartianasController extends Controller
 {
@@ -28,7 +29,17 @@ class DocumentacionMartianasController extends Controller
 
     public function store_img(Request $request)
     {
-        $request->validate([
+        $mensajes = [
+            'id_actividades.required' => 'La actividad es obligatoria.',
+            'id_actividades.int' => 'El ID de la actividad debe ser un número entero.',
+
+            'archivo.required' => 'Debe adjuntar al menos un archivo.',
+
+            'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
+            'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'id_martianas' => 'required|int',
             'archivo' => ['required'],
             'archivo.*' => [
@@ -41,7 +52,13 @@ class DocumentacionMartianasController extends Controller
                 },
                 'mimes:jpeg,png,jpg,pdf'
             ],
-        ]);
+        ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('documentacion_martiana.crear', ['id' => $request->id_martianas]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         try {
             $archivosGuardados = [];
@@ -107,7 +124,17 @@ class DocumentacionMartianasController extends Controller
 
     public function store_2(Request $request)
     {
-        $request->validate([
+        $mensajes = [
+            'id_actividades.required' => 'La actividad es obligatoria.',
+            'id_actividades.int' => 'El ID de la actividad debe ser un número entero.',
+
+            'archivo.required' => 'Debe adjuntar al menos un archivo.',
+
+            'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
+            'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'id_martianas' => 'required|int',
             'archivo' => ['required'],
             'archivo.*' => [
@@ -120,7 +147,13 @@ class DocumentacionMartianasController extends Controller
                 },
                 'mimes:jpeg,png,jpg,pdf'
             ],
-        ]);
+        ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('documentacion_martiana.edit', ['id' => $request->id_martianas]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
     
         try {
             $archivosGuardados = [];
@@ -244,6 +277,11 @@ public function destroy($id)
         if (!$documentacion_martianas) {
             return response()->json(['message' => 'Documentacion de actividad martiana no encontrada'], 404);
         }
+
+        $rutaAnterior = public_path('documentacion_martianas/' . $documentacion_martianas->archivo);
+            if (file_exists($rutaAnterior)) {
+                unlink($rutaAnterior);
+            }
 
         $documentacion_martianas->delete();
 

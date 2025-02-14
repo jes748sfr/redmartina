@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_usu')->constrained('users')->cascadeOnDelete();
             $table->string('area');
+            $table->string('pais');
             $table->string('imagen')->nullable(true);
             $table->string('nombre');
             $table->string('correo')->unique()->nullable(true);

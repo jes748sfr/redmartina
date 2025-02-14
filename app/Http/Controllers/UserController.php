@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -46,7 +47,7 @@ class UserController extends Controller
                 'message' => 'Error al modificar el estado del usuario.',
                 'error' => $e->getMessage()
             ], 500);
-        } 
+        }
     }
 
     public function create(Request $request)
@@ -56,12 +57,41 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        $mensajes = [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.string' => 'El nombre debe ser una cadena de texto.',
+            'name.max' => 'El nombre no puede tener más de 255 caracteres.',
+            'name.regex' => 'El nombre solo puede contener letras y espacios.',
+        
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.string' => 'El correo electrónico debe ser una cadena de texto.',
+            'email.lowercase' => 'El correo debe estar en minúsculas.',
+            'email.email' => 'El correo electrónico no es válido.',
+            'email.max' => 'El correo no puede tener más de 255 caracteres.',
+            'email.unique' => 'El correo electrónico ya está en uso.',
+        
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'password.regex' => 'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial.',
+            'password.rules' => 'La contraseña no cumple con los requisitos de seguridad.',
+        
+            'role.required' => 'El rol es obligatorio.',
+            'role.string' => 'El rol debe ser una cadena de texto.',
+            'role.exists' => 'El rol seleccionado no es válido.'
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
+            'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults(), 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
             'role' => ['required', 'string', 'exists:roles,name'],
-        ]);
+        ], $mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('usuarios.create') // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         try{
 

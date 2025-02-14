@@ -5,6 +5,37 @@
         </h2>
     </x-slot>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if ($errors->any())
+<script>
+    let errorMessages = `
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="text-sm">• {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                `;
+
+    Swal.fire({
+                title: 'Espera...',
+                html: errorMessages,
+                icon: 'error',
+                position: 'top-end', // Coloca la alerta en la esquina superior derecha
+                showConfirmButton: false, // Oculta el botón de 'OK'
+                timer: 3000,
+                timerProgressBar: true,
+                backdrop: false, // No oscurece la pantalla
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'swal-popup', 
+                    title: 'swal-title', 
+                    text: 'swal-text',
+                },
+            });
+</script>
+@endif
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -37,7 +68,7 @@
                             <select 
                                 id="noticia" 
                                 name="noticia" 
-                                class="w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
+                                class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2" 
                                 required>
                                     <option value="1" {{ $actividad->noticia == 1 ? 'selected' : '' }}>Sí</option>
                                     <option value="0" {{ $actividad->noticia == 0 ? 'selected' : '' }}>No</option>
@@ -50,13 +81,13 @@
                                 type="date" 
                                 id="fecha" 
                                 name="fecha" 
-                                class="w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
+                                class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2"  
                                 required value="{{ old('fecha', $actividad->fecha) }}">
                         </div>
 
                         <button 
                             type="submit" 
-                            class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600">
+                            class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 mb-4">
                             Guardar
                         </button>
                     </form>

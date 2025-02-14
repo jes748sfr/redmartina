@@ -7,6 +7,7 @@ use App\Models\fotos;
 use App\Models\galeria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class GaleriaController extends Controller
 {
@@ -14,7 +15,7 @@ class GaleriaController extends Controller
     public function index()
     {
         //$actividades = actividades::all();
-        $galerias = galeria::all();
+        $galerias = galeria::with('fotos')->orderBy('created_at', 'desc')->get();
         $noticias = actividades::where('noticia', true)
                          ->orderBy('created_at', 'desc')
                          ->take(3)
@@ -42,7 +43,17 @@ class GaleriaController extends Controller
 
     public function store(Request $request)
     {
-            $request->validate([
+        $mensajes = [
+            'titulo.required' => 'El titulo es obligatorio.',
+            'titulo.max' => 'El titulo de la galeria no debe sobrepasar los 255 caracteres.',
+
+            'imagen.required' => 'Debe adjuntar al menos un imagen.',
+
+            'imagen.*.file' => 'Cada imagen debe ser un imagen válido.',
+            'imagen.*.mimes' => 'Solo se permiten imagen en formato: jpeg, png, jpg o pdf.',
+        ];
+
+            $validator = Validator::make($request->all(), [
                 'titulo' => 'required|string|max:255',
                 'imagen' => ['required'],
                 'imagen.*' => [
@@ -55,7 +66,13 @@ class GaleriaController extends Controller
                     },
                     'mimes:jpeg,png,jpg,pdf'
                 ],
-            ]);
+            ], $mensajes);
+
+            if ($validator->fails()) {
+                return redirect()->route('crear_Galeria') // Cambia por la ruta de tu formulario
+                    ->withErrors($validator) // Enviar errores a la vista
+                    ->withInput();
+            }
 
         try {
 
@@ -132,9 +149,25 @@ class GaleriaController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $mensajes = [
+            'titulo.required' => 'El titulo es obligatorio.',
+            'titulo.max' => 'El titulo de la galeria no debe sobrepasar los 255 caracetres.',
+
+            'imagen.required' => 'Debe adjuntar al menos un imagen.',
+
+            'imagen.*.file' => 'Cada imagen debe ser un imagen válido.',
+            'imagen.*.mimes' => 'Solo se permiten imagen en formato: jpeg, png, jpg o pdf.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'titulo' => 'required|string|max:255',
-        ]);
+        ], $mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('editar_Galeria', ['id' => $id]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         try {
             $galeria = galeria::find($id);

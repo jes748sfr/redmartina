@@ -172,7 +172,7 @@
                     <!-- Formulario de búsqueda -->
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
                     @forelse($directorios as $directorio)
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col justify-between">
                             <div>
@@ -183,7 +183,7 @@
                                 </a>
                                 <p class="mb-3 font-normal text-gray-700">{{ Str::limit($directorio->area, 50, '...') }}</p>
                                 <p class="mb-3 font-normal text-gray-700">{{ Str::limit($directorio->correo ?? 'Correo no registrado', 50, '...') }}</p>
-                                <p class="mb-3 font-normal text-gray-700">{{ Str::limit($directorio->correo ?? 'Descripcion no registrado', 50, '...') }}</p>
+                                <p class="mb-3 font-normal text-gray-700">{{ Str::limit($directorio->descripcion ?? 'Descripcion no registrado', 50, '...') }}</p>
                             </div>
                             <div class="mt-auto flex gap-2">
                                 <a href="{{ route('editar_Directorio', ['id' => $directorio->id]) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-full hover:bg-blue-700">

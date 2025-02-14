@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\fotos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FotosController extends Controller
 {
@@ -21,7 +22,17 @@ class FotosController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $mensajes = [
+            'titulo.required' => 'El titulo es obligatorio.',
+            'titulo.max' => 'El titulo de la galeria no debe sobrepasar los 255 caracteres.',
+
+            'imagen.required' => 'Debe adjuntar al menos un imagen.',
+
+            'imagen.*.file' => 'Cada imagen debe ser un imagen válido.',
+            'imagen.*.mimes' => 'Solo se permiten imagen en formato: jpeg, png, jpg o pdf.',
+        ];
+        
+        $validator = Validator::make($request->all(), [
             'id_galeria' => 'required|int',
             'imagen' => ['required'],
             'imagen.*' => [
@@ -34,7 +45,13 @@ class FotosController extends Controller
                 },
                 'mimes:jpeg,png,jpg,pdf'
             ],
-        ]);
+        ], $mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('editar_Galeria', ['id' => $request->id_galeria]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
     
         try {
             $archivosGuardados = [];
@@ -152,6 +169,12 @@ class FotosController extends Controller
 
             if (!$foto) {
                 return response()->json(['message' => 'Foto no encontrada'], 404);
+            }
+
+            // Eliminar el archivo previo si existe
+            $rutaArchivoPrevio = public_path('img/galeria/' . $foto->imagen);
+            if (file_exists($rutaArchivoPrevio)) {
+                unlink($rutaArchivoPrevio);
             }
 
             $foto->delete();

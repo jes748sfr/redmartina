@@ -8,6 +8,7 @@ use App\Models\documentacion_convocatorias;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ConvocatoriaController extends Controller
 {
@@ -57,12 +58,25 @@ class ConvocatoriaController extends Controller
 
     public function store(Request $request)
     {
-            $request->validate([
+        $mensajes = [
+            'titulo.required' => 'El titulo es obligatorio.',
+            'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
+            'noticia.required' => 'Especifique si la actividad es una noticia.',
+            'fecha.required' => 'Debes ingresar una fecha válido.',
+        ];
+
+        $validator = Validator::make($request->all(), [
                 'titulo' => 'required|string|max:255',
-                'cuerpo' => 'string',
+                'cuerpo' => 'nullable|string',
                 'fecha' => 'required|date',
                 'agregar_file'  => 'required',
-            ]);
+            ],$mensajes);
+
+            if ($validator->fails()) {
+                return redirect()->route('crear_Convocatoria') // Cambia por la ruta de tu formulario
+                    ->withErrors($validator) // Enviar errores a la vista
+                    ->withInput();
+            }
 
         try {
             $convocatoria = new convocatoria();
@@ -197,11 +211,24 @@ class ConvocatoriaController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $mensajes = [
+            'titulo.required' => 'El titulo es obligatorio.',
+            'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
+            'noticia.required' => 'Especifique si la actividad es una noticia.',
+            'fecha.required' => 'Debes ingresar una fecha válido.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'titulo' => 'required|string|max:255',
-            'cuerpo' => 'string',
+            'cuerpo' => 'nullable|string',
             'fecha' => 'required',
-        ]);
+        ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('editar_Convocatoria', ['id' => $id]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         try {
             $convocatoria = convocatoria::find($id);

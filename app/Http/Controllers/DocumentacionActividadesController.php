@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\actividades;
 use App\Models\documentacion_actividades;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DocumentacionActividadesController extends Controller
 {
@@ -28,7 +29,17 @@ class DocumentacionActividadesController extends Controller
 
     public function store_img(Request $request)
     {
-        $request->validate([
+        $mensajes = [
+            'id_actividades.required' => 'La actividad es obligatoria.',
+            'id_actividades.int' => 'El ID de la actividad debe ser un número entero.',
+
+            'archivo.required' => 'Debe adjuntar al menos un archivo.',
+
+            'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
+            'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'id_actividades' => 'required|int',
             'archivo' => ['required'],
             'archivo.*' => [
@@ -41,7 +52,13 @@ class DocumentacionActividadesController extends Controller
                 },
                 'mimes:jpeg,png,jpg,pdf'
             ],
-        ]);
+        ], $mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('documentacion_actividad.crear', ['id' => $request->id_actividades]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         try {
             $archivosGuardados = [];
@@ -107,7 +124,17 @@ class DocumentacionActividadesController extends Controller
 
     public function store_2(Request $request)
     {
-        $request->validate([
+        $mensajes = [
+            'id_actividades.required' => 'La actividad es obligatoria.',
+            'id_actividades.int' => 'El ID de la actividad debe ser un número entero.',
+
+            'archivo.required' => 'Debe adjuntar al menos un archivo.',
+
+            'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
+            'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+        ];
+
+        $validator = Validator::make($request->all(), [
             'id_actividades' => 'required|int',
             'archivo' => ['required'],
             'archivo.*' => [
@@ -120,7 +147,13 @@ class DocumentacionActividadesController extends Controller
                 },
                 'mimes:jpeg,png,jpg,pdf'
             ],
-        ]);
+        ], $mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('documentacion_actividad.edit', ['id' => $request->id_actividades]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
     
         try {
             $archivosGuardados = [];
@@ -284,6 +317,12 @@ class DocumentacionActividadesController extends Controller
 
             if (!$documentacion_actividades) {
                 return response()->json(['message' => 'Documentacion de actividad no encontrada'], 404);
+            }
+
+            // Eliminar archivo anterior si existe
+            $rutaAnterior = public_path('documentacion_actividades/' . $documentacion_actividades->archivo);
+            if (file_exists($rutaAnterior)) {
+                unlink($rutaAnterior);
             }
 
             $documentacion_actividades->delete();

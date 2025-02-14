@@ -26,6 +26,35 @@
         @endphp
     @endif
 
+    @if ($errors->any())
+<script>
+    let errorMessages = `
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="text-sm">• {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                `;
+
+    Swal.fire({
+                title: 'Espera...',
+                html: errorMessages,
+                icon: 'error',
+                position: 'top-end', // Coloca la alerta en la esquina superior derecha
+                showConfirmButton: false, // Oculta el botón de 'OK'
+                timer: 3000,
+                timerProgressBar: true,
+                backdrop: false, // No oscurece la pantalla
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'swal-popup', 
+                    title: 'swal-title', 
+                    text: 'swal-text',
+                },
+            });
+</script>
+@endif
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -190,61 +219,74 @@
             let id = this.getAttribute("data-id");
             let url = `/galerias/subir_archivos/delete/${id}`;
 
-            if (confirm("¿Estás seguro de eliminar este archivo?")) {
-                let formData = new FormData();
-                formData.append("_method", "DELETE");
+            Swal.fire({
+    title: '¿Estás seguro de eliminar este archivo?',
+    text: '¡Esta acción no se puede deshacer!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    reverseButtons: true,
+    customClass: {
+        popup: 'swal-popup',
+        title: 'swal-title',
+        text: 'swal-text',
+    }
+}).then((result) => {
+    if (result.isConfirmed) {
+        let formData = new FormData();
+        formData.append("_method", "DELETE");
 
-                fetch(url, {
-                    method: "POST", // Usamos POST con _method: "DELETE"
-                    body: formData,
-                    headers: {
-                        "X-CSRF-TOKEN": csrfToken
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        //alert("Archivo eliminado correctamente.");
-                        Swal.fire({
-                            title: 'Se ha eliminado correctamente.',
-                            text: 'Archivo eliminado correctamente.',
-                            icon: 'success',
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 1000,
-                            timerProgressBar: true,
-                            backdrop: false,
-                            allowOutsideClick: true,
-                            customClass: {
-                                popup: 'swal-popup', 
-                                title: 'swal-title', 
-                                text: 'swal-text',
-                            },
-                        });
-                        location.reload();
-                    } else {
-                        //alert("Error al eliminar archivo.");
-                        Swal.fire({
-                            title: 'Error...',
-                            text: 'surgio un error durante el proceso de borrado del archivo.',
-                            icon: 'error',
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 1000,
-                            timerProgressBar: true,
-                            backdrop: false,
-                            allowOutsideClick: true,
-                            customClass: {
-                                popup: 'swal-popup', 
-                                title: 'swal-title', 
-                                text: 'swal-text',
-                            },
-                        });
-                        console.error("Error:", data);
-                    }
-                })
-                .catch(error => console.error("Error en la solicitud:", error));
+        fetch(url, {
+            method: "POST", // Usamos POST con _method: "DELETE"
+            body: formData,
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
             }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: 'Se ha eliminado correctamente.',
+                    text: 'Archivo eliminado correctamente.',
+                    icon: 'success',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1000,
+                    timerProgressBar: true,
+                    backdrop: false,
+                    allowOutsideClick: true,
+                    customClass: {
+                        popup: 'swal-popup', 
+                        title: 'swal-title', 
+                        text: 'swal-text',
+                    },
+                });
+                location.reload();
+            } else {
+                Swal.fire({
+                    title: 'Error...',
+                    text: 'Surgió un error durante el proceso de borrado del archivo.',
+                    icon: 'error',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1000,
+                    timerProgressBar: true,
+                    backdrop: false,
+                    allowOutsideClick: true,
+                    customClass: {
+                        popup: 'swal-popup', 
+                        title: 'swal-title', 
+                        text: 'swal-text',
+                    },
+                });
+                console.error("Error:", data);
+            }
+        })
+        .catch(error => console.error("Error en la solicitud:", error));
+    }
+});
         });
     });
 });

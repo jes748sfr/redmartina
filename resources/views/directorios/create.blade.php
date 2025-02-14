@@ -3,37 +3,54 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Crear un apartado en el directorio') }}
         </h2>
-        <link rel="stylesheet" href="@sweetalert2/theme-material-ui/material-ui.css">
     </x-slot>
-    <style>
-        .swal-popup {
-            @apply bg-white shadow-lg rounded-xl p-6; /* Fondo blanco con sombra y bordes redondeados */
-        }
 
-        .swal-title {
-            @apply text-2xl font-bold text-gray-800; /* Texto grande y negrita */
-        }
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        .swal-text {
-            @apply text-lg text-gray-600; /* Texto mediano y gris */
-        }
-    </style>
+    @if ($errors->any())
+        <script>
+            let errorMessages = `
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li class="text-sm">• {{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        `;
+
+            Swal.fire({
+                        title: 'Espera...',
+                        html: errorMessages,
+                        icon: 'error',
+                        position: 'top-end', // Coloca la alerta en la esquina superior derecha
+                        showConfirmButton: false, // Oculta el botón de 'OK'
+                        timer: 3000,
+                        timerProgressBar: true,
+                        backdrop: false, // No oscurece la pantalla
+                        allowOutsideClick: true,
+                        customClass: {
+                            popup: 'swal-popup', 
+                            title: 'swal-title', 
+                            text: 'swal-text',
+                        },
+                    });
+        </script>
+    @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form id="convocatoriaForm" action="{{ route('directorios.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('directorios.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
                         <div class="mb-4">
-                            <label for="area" class="block text-gray-700 font-bold mb-2">Area:</label>
+                            <label for="area" class="block text-gray-700 font-bold mb-2">Area o cátedra:</label>
                             <input 
                                 type="text" 
                                 id="area" 
                                 name="area" 
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
-                                required>
+                                required value="{{ old('area') }}">
                         </div>
 
                         <div class="mb-4">
@@ -43,7 +60,7 @@
                                 id="nombre" 
                                 name="nombre" 
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
-                                required>
+                                required value="{{ old('nombre') }}">
                         </div>
 
                         <div class="mb-4">
@@ -53,12 +70,21 @@
                                 id="correo" 
                                 name="correo" 
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
-                                >
+                                value="{{ old('correo') }}">
                         </div>
 
                         <div class="mb-4">
-                            <label for="descripcion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your message</label>
-                            <textarea id="descripcion" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+                            <label for="descripcion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripcion:</label>
+                            <textarea id="descripcion" name="descripcion" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write your thoughts here...">{{ old('descripcion') }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <select name="pais" id="pais" class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2" >
+                                <option value="" disabled selected>Seleccione un país</option>
+                                @foreach ($paises as $pais)
+                                    <option value="{{ $pais['nombre'] }}">{{ $pais['nombre'] }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <label for="imagen" class="block text-lg font-medium text-gray-700">Seleccionar imagen:</label>
@@ -79,92 +105,81 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-        document.getElementById('submitButton').addEventListener('click', function (event) {
-            event.preventDefault(); // Evita que el formulario se envíe inmediatamente
+        document.getElementById('imagen').addEventListener('change', function(event) {
+            let previewContainer = document.getElementById('preview');
+            previewContainer.innerHTML = ''; // Limpiar previas selecciones
 
-            var area = document.getElementById('area').value;
-            var nombre = document.getElementById('nombre').value;
+            Array.from(event.target.files).forEach(file => {
+                let fileType = file.type;
+                let reader = new FileReader();
 
-            if (!area || !nombre) {
-                Swal.fire({
-                    title: 'Espera...',
-                    text: 'Por favor completa todos los campos requeridos',
-                    icon: 'error',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 3000,
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                });
-                //Swal.fire('Error', 'Por favor completa todos los campos requeridos.', 'error');
-                return; // Detiene el flujo si algún campo requerido está vacío
-            }
-            Swal.fire({
-                    title: '¿Desea confirmar el nuevo apartado?',
-                    text: '¿Quieres agregar fotos o documentos a esta actividad?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Sí',
-                    cancelButtonText: 'No',
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, enviamos el formulario
-                    //document.getElementById('agregar_file').value = '1';
-                    document.getElementById('convocatoriaForm').submit();
-                } else {
-                    // Si el usuario cancela, no se hace nada
-                    //document.getElementById('convocatoriaForm').submit();
-                    event.preventDefault();
+                if (fileType.includes("image")) {
+                    // Si es imagen, mostrar previsualización
+                    reader.onload = function(e) {
+                        let imgElement = document.createElement('img');
+                        imgElement.src = e.target.result;
+                        imgElement.className = "w-20 h-20 object-cover rounded-md border";
+                        previewContainer.appendChild(imgElement);
+                    };
+                    reader.readAsDataURL(file);
+                } else if (fileType === "application/pdf") {
+                    // Si es PDF, mostrar ícono de archivo
+                    let pdfIcon = document.createElement('div');
+                    pdfIcon.innerHTML = `
+                    <div class="w-20 h-20 flex items-center justify-center rounded-md border">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-red-500">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                        </svg>
+                    </div>
+                    `;
+                    previewContainer.appendChild(pdfIcon);
                 }
             });
         });
     </script>
-
-<script>
-    document.getElementById('imagen').addEventListener('change', function(event) {
-let previewContainer = document.getElementById('preview');
-previewContainer.innerHTML = ''; // Limpiar previas selecciones
-
-Array.from(event.target.files).forEach(file => {
-    let fileType = file.type;
-    let reader = new FileReader();
-
-    if (fileType.includes("image")) {
-        // Si es imagen, mostrar previsualización
-        reader.onload = function(e) {
-            let imgElement = document.createElement('img');
-            imgElement.src = e.target.result;
-            imgElement.className = "w-20 h-20 object-cover rounded-md border";
-            previewContainer.appendChild(imgElement);
-        };
-        reader.readAsDataURL(file);
-    } else if (fileType === "application/pdf") {
-        // Si es PDF, mostrar ícono de archivo
-        let pdfIcon = document.createElement('div');
-        pdfIcon.innerHTML = `
-        <div class="w-20 h-20 flex items-center justify-center rounded-md border">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-red-500">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-            </svg>
-        </div>
-        `;
-        previewContainer.appendChild(pdfIcon);
-    }
-});
-});
+    <script>
+        document.querySelector("form").addEventListener("submit", function(e) {
+            e.preventDefault(); // Evita el envío normal del formulario
+    
+            let formData = new FormData(this);
+            let submitButton = document.getElementById("submitButton");
+            submitButton.disabled = true; // Desactiva el botón mientras se envía
+    
+            fetch("{{ route('directorios.store') }}", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                submitButton.disabled = false; // Reactivar botón
+                document.querySelectorAll(".error-message").forEach(el => el.remove()); // Limpiar errores anteriores
+    
+                if (!data.success) {
+                    if (data.errors) {
+                        for (let field in data.errors) {
+                            let input = document.querySelector(`[name="${field}"]`);
+                            if (input) {
+                                let errorDiv = document.createElement("div");
+                                errorDiv.className = "error-message text-red-500 text-sm mt-1";
+                                errorDiv.innerText = data.errors[field][0];
+                                input.insertAdjacentElement("afterend", errorDiv);
+                            }
+                        }
+                    }
+                } else {
+                    alert("¡Directorio creado con éxito!");
+                    location.reload(); // Recargar página tras éxito
+                }
+            })
+            .catch(error => {
+                console.error("Error en la petición:", error);
+                submitButton.disabled = false;
+            });
+        });
     </script>
-
 </x-app-layout>
