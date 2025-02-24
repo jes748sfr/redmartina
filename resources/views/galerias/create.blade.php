@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Crear galeria') }}
+            {{ __('Crear galería') }}
         </h2>
         <link rel="stylesheet" href="@sweetalert2/theme-material-ui/material-ui.css">
     </x-slot>

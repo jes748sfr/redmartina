@@ -77,7 +77,7 @@
 
                         <div class="mb-4">
                             <label for="descripcion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your message</label>
-                            <textarea id="descripcion" name="descripcion" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write your thoughts here...">{{ old('descripcion', $directorio->descripcion) }}</textarea>
+                            <textarea id="descripcion" name="descripcion" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Describa la catedra o caracteristicas que desemeña en el area">{{ old('descripcion', $directorio->descripcion) }}</textarea>
                         </div>
 
                         <div class="mb-4">
@@ -86,6 +86,15 @@
                                 @foreach ($paises as $pais)
                                     <option value="{{ $pais['nombre'] }}" {{ $directorio->pais == $pais['nombre'] ? 'selected' : '' }}>{{ $pais['nombre'] }}</option>
                                 @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <select name="nivel" id="nivel" class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2" >
+                                <option value="" disabled selected>Nivel del directorio</option>
+                                    <option value="1" {{ $directorio->nivel == 1 ? 'selected' : '' }}>Nivel 1</option>
+                                    <option value="2" {{ $directorio->nivel == 2 ? 'selected' : '' }}>Nivel 2</option>
+                                    <option value="3" {{ $directorio->nivel == 3 ? 'selected' : '' }}>Nivel 3</option>
                             </select>
                         </div>
 

@@ -132,7 +132,7 @@ Route::get('directorio', [DirectorioController::class, 'index'])->name('director
 
 Route::post('search', [BuscadorController::class, 'search'])->name('buscar');
 
-Route::post('search/actividad', [ActividadesController::class, 'search_actividad'])->name('buscar_actividad');
+Route::match(['get', 'post'],'search/actividad', [ActividadesController::class, 'search_actividad'])->name('buscar_actividad');
 Route::post('search/convocatoria', [ConvocatoriaController::class, 'search_convocatoria'])->name('buscar_convocatoria');
 Route::post('search/martiana', [MartianasController::class, 'search_martiana'])->name('buscar_martiana');
 

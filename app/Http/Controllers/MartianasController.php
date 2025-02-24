@@ -16,16 +16,11 @@ class MartianasController extends Controller
     public function index()
     {
         //$actividades = actividades::all();
-        $martianas = martianas::all();
+        $martianas = martianas::orderBy('fecha', 'desc')->paginate(24);
         $noticias = actividades::where('noticia', true)
                          ->orderBy('created_at', 'desc')  // Asegúrate de que el campo 'fecha' esté en tu base de datos
                          ->take(3)  // Limitar a 3 resultados
                          ->get();
-        /* return response()->json([
-            'success' => true,
-            'data' => $martianas,
-            'message' => 'Actividades martianas encontradas exitosamente',
-        ], 201); */
 
         // Procesar el cuerpo de las noticias
         foreach ($martianas as $martiana) {
@@ -43,7 +38,7 @@ class MartianasController extends Controller
 
     public function index_logeado()
     {
-        $martianas = martianas::orderBy('fecha', 'desc')->get();
+        $martianas = martianas::orderBy('fecha', 'desc')->paginate(24);
         
         foreach ($martianas as $martiana) {
             $martiana->cuerpo_truncado = $this->truncateHtml($martiana->cuerpo, 100);
@@ -62,11 +57,12 @@ class MartianasController extends Controller
         $mensajes = [
             'titulo.required' => 'El titulo es obligatorio.',
             'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
+            'titulo.regex' => 'El título debe contener al menos dos palabras, una vocal, una consonante y solo puede incluir letras, números, espacios y los siguientes signos permitidos: , . - : ; ( ) \' " ',
             'fecha.required' => 'Debes ingresar una fecha válido.',
         ];
 
         $validator = Validator::make($request->all(), [
-                'titulo' => 'required|string|max:255',
+                'titulo' => 'required|string|max:255|regex:/^(?=.*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])(?=.*[aeiouáéíóúAEIOUÁÉÍÓÚ])[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s,.\-:;()\'"]+$/u',
                 'cuerpo' => 'nullable|string',
                 'fecha' => 'required|date',
                 'agregar_file'  => 'required',
@@ -214,12 +210,12 @@ class MartianasController extends Controller
         $mensajes = [
             'titulo.required' => 'El titulo es obligatorio.',
             'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
-            'noticia.required' => 'Especifique si la actividad es una noticia.',
+            'titulo.regex' => 'El título debe contener al menos dos palabras, una vocal, una consonante y solo puede incluir letras, números, espacios y los siguientes signos permitidos: , . - : ; ( ) \' " ',
             'fecha.required' => 'Debes ingresar una fecha válido.',
         ];
 
         $validator = Validator::make($request->all(), [
-            'titulo' => 'required|string|max:255',
+            'titulo' => 'required|string|max:255|regex:/^(?=.*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])(?=.*[aeiouáéíóúAEIOUÁÉÍÓÚ])[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s,.\-:;()\'"]+$/u',
             'cuerpo' => 'nullable|string',
             'fecha' => 'required',
         ], $mensajes);
@@ -439,22 +435,33 @@ class MartianasController extends Controller
 
     public function search_martiana(Request $request)
     {
-        // Validar el término de búsqueda
-        $request->validate([
-            'keyword' => 'required|string|min:1',
-        ]);
+        $mensajes = [
+            'keyword.required' => 'Se requiere agregar un texto.',
+            'keyword.string' => 'El dato a buscar debe ser un texto.',
+            'keyword.min' => 'Su busqueda debe contener minimo 3 caracteres.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'keyword' => 'required|string|min:3',
+        ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('martianas.auth') // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         // Obtener el término de búsqueda
         $query = $request->input('keyword');
 
         // Realizar la búsqueda con Scout
-        $martianas = martianas::search($query)->get();
+        $martianas = martianas::search($query)->paginate(24);
 
         foreach ($martianas as $martiana) {
             $martiana->cuerpo_truncado = $this->truncateHtml($martiana->cuerpo, 100);
         }
 
-        $totalResultados = $martianas->count();
+        $totalResultados = $martianas->total();
 
         // Pasar las variables necesarias a la vista
         return view("martianas.index", compact('martianas', 'totalResultados', 'query'));

@@ -76,7 +76,8 @@
                             <input 
                                 type="text" 
                                 id="name" 
-                                name="name" 
+                                name="name"
+                                value="{{ old('name') }}"
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
                                 required>
                         </div>
@@ -86,7 +87,8 @@
                             <input 
                                 type="email" 
                                 id="email" 
-                                name="email" 
+                                name="email"
+                                value="{{ old('email') }}"
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
                                 required>
                         </div>

@@ -1,197 +1,53 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Galeria') }}
+            {{ __('Galería') }}
         </h2>
         <link href="{{ asset('vendor/lightbox2-2.11.5/dist/css/lightbox.min.css') }}" rel="stylesheet" />
         <style>
 
-        .swal-popup {
-            @apply bg-white shadow-lg rounded-xl p-6; /* Fondo blanco con sombra y bordes redondeados */
-        }
+            .swal-popup {
+                @apply bg-white shadow-lg rounded-xl p-6;
+            }
 
-        .swal-title {
-            @apply text-2xl font-bold text-gray-800; /* Texto grande y negrita */
-        }
+            .swal-title {
+                @apply text-2xl font-bold text-gray-800;
+            }
 
-        .swal-text {
-            @apply text-lg text-gray-600; /* Texto mediano y gris */
-        }
+            .swal-text {
+                @apply text-lg text-gray-600;
+            }
 
-
-            #btn_regresar {
-    width: 48px;
-}
-
-/* Expansión del botón al pasar el mouse */
-#btn_regresar:hover {
-    width: 140px; /* Espacio suficiente para el texto */
-    background-color: white;
-    color: cadetblue;
-    border-color: cadetblue;
-    border-width: 2px;
-}
-
-/* Mostrar texto al hacer hover */
-#btn_regresar:hover #btn_regresar_texto {
-    display: inline;
-}
-
-/* Ocultar ícono al mostrar texto */
-#btn_regresar:hover #btn_regresar_icono {
-    opacity: 0;
-}
-
-/* Transición suave del ícono */
-#btn_regresar_icono {
-    transition: opacity 0.3s;
-}
-
-/* Texto visible al hacer hover */
-#btn_regresar:hover .text-content {
-    opacity: 1;
-}
-
-/* Asegurar que el SVG desaparezca al hacer hover */
-#btn_regresar:hover #btn_regresar_icono {
-    display: none;
-}
-            /* Botón inicial con ancho reducido */
-            #btn_agregar {
+            /* Botón estilo */
+            #btn_agregar, #btn_buscar, #btn_regresar {
                 width: 48px;
             }
-        
-            /* Expansión del botón al pasar el mouse */
-            #btn_agregar:hover {
-                width: 140px; /* Espacio suficiente para el texto */
+
+            #btn_agregar:hover, #btn_buscar:hover, #btn_regresar:hover {
+                width: 140px;
                 background-color: white;
                 color: cadetblue;
                 border-color: cadetblue;
                 border-width: 2px;
             }
-        
-            /* Mostrar texto al hacer hover */
-            #btn_agregar:hover #btn_texto {
-                display: inline;
+
+            @media (max-width: 640px) {
+                /* Ocultar carrusel de imágenes en móviles */
+                #carrusel {
+                    display: none;
+                }
+
+                /* Asegurar que el botón de agregar y otros botones estén centrados */
+                #btn_agregar:hover, #btn_buscar:hover, #btn_regresar:hover {
+                    justify-content: center;
+                }
             }
-        
-            /* Ocultar ícono al mostrar texto */
-            #btn_agregar:hover #btn_icono {
-                opacity: 0;
-            }
-        
-            /* Transición suave del ícono */
-            #btn_icono {
-                transition: opacity 0.3s;
-            }
-        
-            /* Alinear el texto y mantener estilos */
-            .text-content {
-                white-space: nowrap; /* Evitar saltos de línea */
-                opacity: 0;
-                transition: opacity 0.3s;
-            }
-        
-            /* Texto visible al hacer hover */
-            #btn_agregar:hover .text-content {
-                opacity: 1;
-            }
-
-            /* Botón inicial con ancho reducido */
-    #btn_buscar {
-        width: 48px;
-    }
-
-    /* Expansión del botón al pasar el mouse */
-    #btn_buscar:hover {
-        width: 140px;
-        background-color: white;
-        color: cadetblue;
-        border-color: cadetblue;
-        border-width: 2px;
-    }
-
-    /* Mostrar texto al hacer hover */
-    #btn_buscar:hover #btn_buscar_texto {
-        display: inline;
-    }
-
-    /* Ocultar ícono al mostrar texto */
-    #btn_buscar:hover #btn_buscar_icono {
-        opacity: 0;
-    }
-
-    /* Transición suave del ícono */
-    #btn_buscar_icono {
-        transition: opacity 0.3s;
-    }
-
-    /* Texto visible al hacer hover */
-    #btn_buscar:hover .text-content {
-        opacity: 1;
-    }
-
-    @media (max-width: 640px) {
-    #btn_agregar:hover {
-        justify-content: center;
-    }
-
-    #btn_buscar:hover {
-        justify-content: center;
-    }
-
-    #btn_regresar:hover {
-        justify-content: center;
-    }
-}
-
-/* Asegurar que el SVG desaparezca */
-    #btn_agregar:hover #btn_icono,
-    #btn_buscar:hover #btn_buscar_icono {
-        display: none;
-    }
-
-    #btn_regresar:hover #btn_regresar_icono{
-        display: none;
-    }
         </style>
     </x-slot>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            if (navigator.connection) {
-                let tipoConexion = navigator.connection.effectiveType; // 4g, 3g, 2g, slow-2g
-                let velocidadEstimada = navigator.connection.downlink; // Mbps aproximados
-        
-                console.log("Tipo de conexión:", tipoConexion);
-                console.log("Velocidad estimada:", velocidadEstimada + " Mbps");
-        
-                // Si la conexión es lenta, podrías ocultar imágenes
-                if (tipoConexion === "2g" || tipoConexion === "slow-2g" || velocidadEstimada < 1) {
-                    document.querySelectorAll("#carrusel").forEach(el => el.style.display = "none");
-                    console.log("Conexión lenta detectada, ocultando imágenes.");
-                }
-            } else {
-                console.log("No se pudo detectar la conexión de red.");
-            }
-        });
-        </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @if(session('script'))
-        {!! session('script') !!}
-        @php
-        session()->forget('script'); // Eliminar el mensaje después de mostrarlo
-        @endphp
-    @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                {{-- <div class="p-6 bg-white border-b border-gray-200">
-                    <!-- Formulario de búsqueda -->
-                </div> --}}
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
                     @php
                         $esMovil = request()->header('User-Agent') && preg_match('/(android|iphone|ipad|mobile)/i', request()->header('User-Agent'));
@@ -200,7 +56,7 @@
                         <div class="max-w-sm h-[350px] min-h-[350px] p-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col justify-between">
                             <div>
                                 <a href="{{ route('editar_Galeria', ['id' => $galeria->id]) }}">
-                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-center min-h-[64px]">
+                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate min-h-[48px]">
                                         {{ Str::limit($galeria->titulo, 50, '...') }}
                                     </h5>
                                 </a>                      
@@ -251,6 +107,9 @@
                         </div>
                     @endforelse
                 </div>
+                <div class="mt-6">
+                    {{ $galerias->links() }}
+                </div> 
             </div>
         </div>
     </div>

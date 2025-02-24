@@ -165,6 +165,35 @@
         @endphp
     @endif
 
+    @if ($errors->any())
+<script>
+    let errorMessages = `
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="text-sm">• {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                `;
+
+    Swal.fire({
+                title: 'Espera...',
+                html: errorMessages,
+                icon: 'error',
+                position: 'top-end', // Coloca la alerta en la esquina superior derecha
+                showConfirmButton: false, // Oculta el botón de 'OK'
+                timer: 1500,
+                timerProgressBar: true,
+                backdrop: false, // No oscurece la pantalla
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'swal-popup', 
+                    title: 'swal-title', 
+                    text: 'swal-text',
+                },
+            });
+</script>
+@endif
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -215,11 +244,11 @@
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col justify-between">
                             <div>
                                 <a href="{{ route('editar_Convocatoria', ['id' => $convocatoria->id]) }}">
-                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-center min-h-[64px]">
+                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate min-h-[48px]">
                                         {{ Str::limit($convocatoria->titulo, 50, '...') }}
                                     </h5>
                                 </a>
-                                <p class="mb-3 font-normal text-gray-700">{!! $convocatoria->cuerpo_truncado !!}</p>
+                                <p class="mb-3 font-normal text-gray-700 text-justify">{!! $convocatoria->cuerpo_truncado !!}</p>
                             </div>
                             <div class="mt-auto flex gap-2">
                                 <a href="{{ route('editar_Convocatoria', ['id' => $convocatoria->id]) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-full hover:bg-blue-700">
@@ -244,6 +273,13 @@
                         </div>
                     @endforelse
                 </div>
+                <div class="mt-6">
+                    @if(isset($query))
+                        {{ $convocatorias->appends(['keyword' => $query])->links() }}
+                    @else
+                        {{ $convocatorias->links() }}
+                    @endif
+                </div> 
             </div>
         </div>
     </div>

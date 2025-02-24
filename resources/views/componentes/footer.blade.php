@@ -12,14 +12,14 @@
                     <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
                     </div>
                     <hr class="w-100 clearfix d-md-none" />
-                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
                         <h6 class="text-uppercase mb-4 font-weight-bold text-center">Contenido</h6>
                         <p><a class="nav-link" href="{{ url('/') }}" class="text-white">Inicio</a></p>
                         <p><a class="nav-link" href="{{ url('/#historia') }}" class="text-white">Historia</a></p>
                         <p><a class="nav-link" href="{{ route('actividades') }}" class="text-white">Actividades de la red</a></p>
                         <p><a class="nav-link" href="{{ route('martianas') }}" class="text-white">Actividades martianas</a></p>
                     </div>
-                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
                         <p><a class="nav-link" href="{{ route('convocatorias') }}" class="text-white">Convocatorias</a></p>
                         <p><a class="nav-link" href="{{ route('galeria') }}" class="text-white">Galería</a></p>
                         <p><a class="nav-link" href="{{ route('directorio') }}" class="text-white">Directorio</a></p>

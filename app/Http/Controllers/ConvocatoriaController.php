@@ -15,7 +15,7 @@ class ConvocatoriaController extends Controller
     //
     public function index()
     {
-        $convocatorias = convocatoria::all();
+        $convocatorias = convocatoria::orderBy('fecha', 'desc')->paginate(24);
         $noticias = actividades::where('noticia', true)
                          ->orderBy('created_at', 'desc')  // Asegúrate de que el campo 'fecha' esté en tu base de datos
                          ->take(3)  // Limitar a 3 resultados
@@ -42,7 +42,7 @@ class ConvocatoriaController extends Controller
 
     public function index_logeado()
     {
-        $convocatorias = convocatoria::orderBy('fecha', 'desc')->get();
+        $convocatorias = convocatoria::orderBy('fecha', 'desc')->paginate(24);
         
         foreach ($convocatorias as $convocatoria) {
             $convocatoria->cuerpo_truncado = $this->truncateHtml($convocatoria->cuerpo, 100);
@@ -61,12 +61,12 @@ class ConvocatoriaController extends Controller
         $mensajes = [
             'titulo.required' => 'El titulo es obligatorio.',
             'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
-            'noticia.required' => 'Especifique si la actividad es una noticia.',
+            'titulo.regex' => 'El título debe contener al menos dos palabras, una vocal, una consonante y solo puede incluir letras, números, espacios y los siguientes signos permitidos: , . - : ; ( ) \' " ',
             'fecha.required' => 'Debes ingresar una fecha válido.',
         ];
 
         $validator = Validator::make($request->all(), [
-                'titulo' => 'required|string|max:255',
+                'titulo' => 'required|string|max:255|regex:/^(?=.*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])(?=.*[aeiouáéíóúAEIOUÁÉÍÓÚ])[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s,.\-:;()\'"]+$/u',
                 'cuerpo' => 'nullable|string',
                 'fecha' => 'required|date',
                 'agregar_file'  => 'required',
@@ -214,15 +214,17 @@ class ConvocatoriaController extends Controller
         $mensajes = [
             'titulo.required' => 'El titulo es obligatorio.',
             'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
-            'noticia.required' => 'Especifique si la actividad es una noticia.',
+            'titulo.regex' => 'El título debe contener al menos dos palabras, una vocal, una consonante y solo puede incluir letras, números, espacios y los siguientes signos permitidos: , . - : ; ( ) \' " ',
             'fecha.required' => 'Debes ingresar una fecha válido.',
         ];
 
         $validator = Validator::make($request->all(), [
-            'titulo' => 'required|string|max:255',
-            'cuerpo' => 'nullable|string',
-            'fecha' => 'required',
-        ],$mensajes);
+                'titulo' => 'required|string|max:255|regex:/^(?=.*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])(?=.*[aeiouáéíóúAEIOUÁÉÍÓÚ])[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s,.\-:;()\'"]+$/u',
+                'cuerpo' => 'nullable|string',
+                'fecha' => 'required|date',
+                'agregar_file'  => 'required',
+            ],$mensajes);
+
 
         if ($validator->fails()) {
             return redirect()->route('editar_Convocatoria', ['id' => $id]) // Cambia por la ruta de tu formulario
@@ -438,22 +440,33 @@ class ConvocatoriaController extends Controller
 
     public function search_convocatoria(Request $request)
     {
-        // Validar el término de búsqueda
-        $request->validate([
-            'keyword' => 'required|string|min:1',
-        ]);
+        $mensajes = [
+            'keyword.required' => 'Se requiere agregar un texto.',
+            'keyword.string' => 'El dato a buscar debe ser un texto.',
+            'keyword.min' => 'Su busqueda debe contener minimo 3 caracteres.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'keyword' => 'required|string|min:3',
+        ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('convocatorias.auth') // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         // Obtener el término de búsqueda
         $query = $request->input('keyword');
 
         // Realizar la búsqueda con Scout
-        $convocatorias = convocatoria::search($query)->get();
+        $convocatorias = convocatoria::search($query)->paginate(24);
 
         foreach ($convocatorias as $convocatoria) {
             $convocatoria->cuerpo_truncado = $this->truncateHtml($convocatoria->cuerpo, 100);
         }
 
-        $totalResultados = $convocatorias->count();
+        $totalResultados = $convocatorias->total();
 
         // Pasar las variables necesarias a la vista
         return view("convocatorias.index", compact('convocatorias', 'totalResultados', 'query'));

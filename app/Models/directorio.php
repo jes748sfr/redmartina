@@ -15,6 +15,7 @@ class directorio extends Model
     protected $fillable = [
         'id_usu',
         'area',
+        'nivel',
         'imagen',
         'nombre',
         'correo',

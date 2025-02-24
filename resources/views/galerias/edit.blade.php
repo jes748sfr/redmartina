@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Editar fotos de la galeria') }}
+            {{ __('Editar fotos de la galería') }}
         </h2>
         <link href="{{ asset('vendor/lightbox2-2.11.5/dist/css/lightbox.min.css') }}" rel="stylesheet" />
     </x-slot>
@@ -82,7 +82,7 @@
                         </button>
                     </form>
                     
-                    <h3 class="text-lg font-semibold">Imagenes actuales</h3>
+                    <h3 class="text-lg font-semibold">Imágenes actuales</h3>
                     <ul id="archivoLista" class="mt-4 space-y-4">
                         @foreach ($documentos_galeria as $documento)
                             <li class="flex flex-wrap items-center justify-between gap-4 border-b pb-2">

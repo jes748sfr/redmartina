@@ -61,7 +61,7 @@ class UserController extends Controller
             'name.required' => 'El nombre es obligatorio.',
             'name.string' => 'El nombre debe ser una cadena de texto.',
             'name.max' => 'El nombre no puede tener más de 255 caracteres.',
-            'name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'name.regex' => 'El nombre solo puede contener letras y un solo espacio entre palabras.',
         
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.string' => 'El correo electrónico debe ser una cadena de texto.',
@@ -81,9 +81,9 @@ class UserController extends Controller
         ];
 
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^(?!.*\s{2,})[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/u'],
             'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults(), 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults(), 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/'],
             'role' => ['required', 'string', 'exists:roles,name'],
         ], $mensajes);
 

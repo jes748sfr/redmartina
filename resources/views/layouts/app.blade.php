@@ -34,4 +34,54 @@
             </main>
         </div>
     </body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cards = document.querySelectorAll(".activity-card");
+            let currentIndex = 0;
+        
+            function showCard(index, direction) {
+                cards.forEach((card, i) => {
+                    card.classList.remove("animate__backInLeft", "animate__backInRight", "hidden", "active");
+        
+                    if (i === index) {
+                        card.classList.add("active");
+                        card.classList.remove("left", "right");
+        
+                        // Aplica la animación según la dirección
+                        if (direction === "next") {
+                            card.classList.add("animate__animated", "animate__backInRight");
+                        } else {
+                            card.classList.add("animate__animated", "animate__backInLeft");
+                        }
+                    } else if (i < index) {
+                        card.classList.add("left");
+                    } else {
+                        card.classList.add("right");
+                    }
+                });
+            }
+        
+            // Botón "Next" (Siguiente)
+            document.querySelectorAll(".next-btn").forEach((btn) => {
+                btn.addEventListener("click", function () {
+                    const nextIndex = (currentIndex + 1) % cards.length;
+                    showCard(nextIndex, "next");
+                    currentIndex = nextIndex;
+                });
+            });
+        
+            // Botón "Prev" (Anterior)
+            document.querySelectorAll(".prev-btn").forEach((btn) => {
+                btn.addEventListener("click", function () {
+                    const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
+                    showCard(prevIndex, "prev");
+                    currentIndex = prevIndex;
+                });
+            });
+        
+            // Inicializa la primera tarjeta
+            showCard(currentIndex, "next");
+        });
+        </script>
+        
 </html>

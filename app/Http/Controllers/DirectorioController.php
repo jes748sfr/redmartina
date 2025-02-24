@@ -13,36 +13,34 @@ class DirectorioController extends Controller
 {
     //directorio
     public function index()
-    {
-        //$actividades = actividades::all();
-        $directorios = directorio::orderBy('pais')->get()->groupBy('pais');
+{
+    // Agrupar solo el nivel 3 por país
+    $directorios = directorio::where('nivel', 3)
+        ->orderBy('pais')
+        ->get()
+        ->groupBy('pais');
 
-    // Obtener los dos usuarios específicos
-    $usuariosDestacados = directorio::whereIn('area', [
-        'Coordinador de la Red Internacional de Cátedras Martianas',
-        'Asistente de coordinación de la Red Internacional de Cátedras Martianas'
-    ])->orderByRaw("FIELD(area, 'Coordinador de la Red Internacional de Cátedras Martianas', 'Asistente de coordinación de la Red Internacional de Cátedras Martianas')")->get();
+    // Obtener los usuarios destacados sin agrupación por país
+    $usuariosDestacados = directorio::whereIn('nivel', [1, 2])
+        ->orderBy('nivel') // Ordenar por nivel para priorizar el nivel 1 sobre el 2
+        ->get();
 
-        $noticias = actividades::where('noticia', true)
-                    ->orderBy('fecha', 'desc')
-                    ->take(3)
-                    ->with(['documentacionAs' => function ($query) {
-                        $query->select('id_actividades', 'archivo')
-                              ->whereRaw("archivo NOT LIKE '%.pdf'"); // Excluir PDFs
-                    }])
-                    ->get();
-       
-        return view("paginas_publicas.directorio_publico", compact('directorios','noticias','usuariosDestacados'));
-/*         return response()->json([
-            'success' => true,
-            'data' => $directorio,
-            'message' => 'Directorio encontrado exitosamente',
-        ], 201); */
-    }
+    $noticias = actividades::where('noticia', true)
+        ->orderBy('fecha', 'desc')
+        ->take(3)
+        ->with(['documentacionAs' => function ($query) {
+            $query->select('id_actividades', 'archivo')
+                ->whereRaw("archivo NOT LIKE '%.pdf'"); // Excluir PDFs
+        }])
+        ->get();
+
+    return view("paginas_publicas.directorio_publico", compact('directorios', 'noticias', 'usuariosDestacados'));
+}
+
 
     public function index_logeado()
     {
-        $directorios = directorio::orderBy('created_at', 'desc')->get();
+        $directorios = directorio::orderBy('created_at', 'desc')->paginate(24);
 
         return view("directorios.index", compact('directorios'));
     }
@@ -68,8 +66,12 @@ class DirectorioController extends Controller
 
     $mensajes = [
         'area.required' => 'El área es obligatoria.',
+        'area.regex' => 'El área solo puede contener letras, espacios y los siguientes símbolos permitidos: & . , - / ()',
+        'nivel.required' => 'Se requiere el nivel en el directorio.',
+        'nivel.integer' => 'El nivel debe ser numerico.',
         'pais.required' => 'El pais es obligatorio.',
         'nombre.required' => 'El nombre no puede estar vacío.',
+        'nombre.regex' => 'El nombre debe contener solo letras, espacios, apóstrofes y guiones, con al menos 3 caracteres.',
         'correo.email' => 'Debes ingresar un correo válido.',
         'correo.unique' => 'Este correo ya está registrado.',
         'imagen.mimes' => 'La imagen debe ser en formato JPEG, JPG o PNG.',
@@ -77,10 +79,11 @@ class DirectorioController extends Controller
     ];
 
     $validator = Validator::make($request->all(), [
-        'area' => 'required|string|max:255',
+        'area' => 'required|string|max:255|regex:/^(?!.*\d)(?!.*[^A-Za-zÁÉÍÓÚáéíóúÑñ\s&.,\-\/()]).*$/u',
+        'nivel' => 'required|integer',
         'pais' => 'required|string|max:255',
         'imagen' => ['file', 'mimes:jpeg,png,jpg', 'max:12288'],
-        'nombre' => 'required|string|max:255',
+        'nombre' => 'required|string|max:255|regex:/^(?=.{3,})(?!.*\d)(?!.*[^A-Za-zÁÉÍÓÚáéíóúÑñ\s\'-.]).*$/u',
         'correo' => 'nullable|email|unique:directorios,correo|max:255',
         'descripcion' => 'nullable|string|max:255',
     ], $mensajes);
@@ -113,6 +116,7 @@ class DirectorioController extends Controller
 
         $directorio->id_usu = Auth::id();
         $directorio->area = $request->area;
+        $directorio->nivel = $request->nivel;
         $directorio->pais = $request->pais;
         $directorio->imagen = $archivo_n;
         $directorio->nombre = $request->nombre;
@@ -183,8 +187,12 @@ class DirectorioController extends Controller
     {
         $mensajes = [
             'area.required' => 'El área es obligatoria.',
+            'area.regex' => 'El área solo puede contener letras, espacios y los siguientes símbolos permitidos: & . , - / ()',
+            'nivel.required' => 'Se requiere el nivel en el directorio.',
+            'nivel.integer' => 'El nivel debe ser numerico.',
             'pais.required' => 'El pais es obligatorio.',
             'nombre.required' => 'El nombre no puede estar vacío.',
+            'nombre.regex' => 'El nombre debe contener solo letras, espacios, apóstrofes y guiones, con al menos 3 caracteres.',
             'correo.email' => 'Debes ingresar un correo válido.',
             'correo.unique' => 'Este correo ya está registrado.',
             'imagen.mimes' => 'La imagen debe ser en formato JPEG, JPG o PNG.',
@@ -192,10 +200,11 @@ class DirectorioController extends Controller
         ];
 
         $validator = Validator::make($request->all(), [
-            'area' => 'required|string|max:255',
+            'area' => 'required|string|max:255|regex:/^(?!.*\d)(?!.*[^A-Za-zÁÉÍÓÚáéíóúÑñ\s&.,\-\/()]).*$/u',
+            'nivel' => 'required|integer',
             'pais' => 'required|string|max:255',
             'imagen' => ['nullable','image', 'mimes:jpeg,png,jpg', 'max:12288'],
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255|regex:/^(?=.{3,})(?!.*\d)(?!.*[^A-Za-zÁÉÍÓÚáéíóúÑñ\s\'-.]).*$/u',
             'correo' => 'nullable|email|max:255|unique:directorios,correo,' . $id,
             'descripcion' => 'nullable|string|max:255',
         ], $mensajes);
@@ -225,6 +234,7 @@ class DirectorioController extends Controller
             }
 
             $directorio->area = $request->area;
+            $directorio->nivel = $request->nivel;
             $directorio->pais = $request->pais;
             $directorio->imagen = $archivo_n;
             $directorio->nombre = $request->nombre;

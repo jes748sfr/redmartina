@@ -15,7 +15,7 @@ class ActividadesController extends Controller
     //
     public function index()
     {
-        $actividades = actividades::orderBy('fecha', 'desc')->get();
+        $actividades = actividades::orderBy('fecha', 'desc')->paginate(24);
         $noticias = actividades::where('noticia', true)
                     ->orderBy('fecha', 'desc')
                     ->take(3)
@@ -60,7 +60,7 @@ class ActividadesController extends Controller
 
     public function index_logeado()
     {
-        $actividades = actividades::orderBy('fecha', 'desc')->get();
+        $actividades = actividades::orderBy('fecha', 'desc')->paginate(24);
         
         foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
@@ -79,15 +79,17 @@ class ActividadesController extends Controller
         $mensajes = [
             'titulo.required' => 'El titulo es obligatorio.',
             'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
+            'titulo.regex' => 'El título debe contener al menos dos palabras, una vocal, una consonante y solo puede incluir letras, números, espacios y los siguientes signos permitidos: , . - : ; ( ) \' " ',
             'noticia.required' => 'Especifique si la actividad es una noticia.',
             'fecha.required' => 'Debes ingresar una fecha válido.',
+            'fecha.before_or_equal' => 'La fecha no puede ser posterior a hoy.',
         ];
 
             $validator = Validator::make($request->all(), [
-                'titulo' => 'required|string|max:255',
+                'titulo' => 'required|string|max:255|regex:/^(?=.*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])(?=.*[aeiouáéíóúAEIOUÁÉÍÓÚ])[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s,.\-:;()\'"]+$/u',
                 'cuerpo' => 'nullable|string',
                 'noticia' => 'required|boolean',
-                'fecha' => 'required|date',
+                'fecha' => 'required|date|before_or_equal:today',
                 'agregar_file'  => 'required',
             ],$mensajes);
 
@@ -101,7 +103,7 @@ class ActividadesController extends Controller
             $actividad = new actividades();
 
             $actividad->id_usu = Auth::id();
-            $actividad->titulo = $request->titulo;
+            $actividad->titulo = trim($request->titulo);
             $actividad->cuerpo = $request->cuerpo;
             $actividad->noticia = $request->noticia;
             $actividad->fecha = $request->fecha;
@@ -234,16 +236,18 @@ class ActividadesController extends Controller
         $mensajes = [
             'titulo.required' => 'El titulo es obligatorio.',
             'titulo.max' => 'El titulo puede contener un maximo de 255 caracteres.',
+            'titulo.regex' => 'El título debe contener al menos dos palabras, una vocal, una consonante y solo puede incluir letras, números, espacios y los siguientes signos permitidos: , . - : ; ( ) \' " ',
             'noticia.required' => 'Especifique si la actividad es una noticia.',
             'fecha.required' => 'Debes ingresar una fecha válido.',
+            'fecha.before_or_equal' => 'La fecha no puede ser posterior a hoy.',
         ];
 
-        $validator = Validator::make($request->all(), [
-            'titulo' => 'required|string|max:255',
-            'cuerpo' => 'nullable|string',
-            'noticia' => 'required|boolean',
-            'fecha' => 'required',
-        ], $mensajes);
+            $validator = Validator::make($request->all(), [
+                'titulo' => 'required|string|max:255|regex:/^(?=.*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])(?=.*[aeiouáéíóúAEIOUÁÉÍÓÚ])[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s,.\-:;()\'"]+$/u',
+                'cuerpo' => 'nullable|string',
+                'noticia' => 'required|boolean',
+                'fecha' => 'required|date|before_or_equal:today',
+            ],$mensajes);
 
         if ($validator->fails()) {
             return redirect()->route('editar_Actividad', ['id' => $id]) // Cambia por la ruta de tu formulario
@@ -460,22 +464,33 @@ class ActividadesController extends Controller
 
     public function search_actividad(Request $request)
     {
-        // Validar el término de búsqueda
-        $request->validate([
-            'keyword' => 'required|string|min:1',
-        ]);
+        $mensajes = [
+            'keyword.required' => 'Se requiere agregar un texto.',
+            'keyword.string' => 'El dato a buscar debe ser un texto.',
+            'keyword.min' => 'Su busqueda debe contener minimo 3 caracteres.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'keyword' => 'required|string|min:3',
+        ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('actividades.auth') // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
         // Obtener el término de búsqueda
         $query = $request->input('keyword');
 
         // Realizar la búsqueda con Scout
-        $actividades = actividades::search($query)->get();
+        $actividades = actividades::search($query)->paginate(24);
 
         foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
         }
 
-        $totalResultados = $actividades->count();
+        $totalResultados = $actividades->total();
 
         // Pasar las variables necesarias a la vista
         return view("actividades.index", compact('actividades', 'totalResultados', 'query'));
