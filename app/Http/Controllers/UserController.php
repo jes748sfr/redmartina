@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -162,5 +163,124 @@ class UserController extends Controller
 
         }
     }
+
+    public function edit($id)
+    {
+        $usuario = User::withTrashed()->findOrFail($id);
+        $roles = Role::all(); // Obtener todos los roles
+        $userRole = $usuario->roles->first()->name ?? ''; // Obtener el rol asignado al usuario
+
+        return view('usuarios.edit', compact('usuario', 'roles', 'userRole'));
+    }
+
+    public function update(Request $request, $id)
+{
+    $mensajes = [
+        'name.required' => 'El nombre es obligatorio.',
+        'name.string' => 'El nombre debe ser una cadena de texto.',
+        'name.max' => 'El nombre no puede tener más de 255 caracteres.',
+        'name.regex' => 'El nombre solo puede contener letras y un solo espacio entre palabras.',
+
+        'email.required' => 'El correo electrónico es obligatorio.',
+        'email.string' => 'El correo electrónico debe ser una cadena de texto.',
+        'email.lowercase' => 'El correo debe estar en minúsculas.',
+        'email.email' => 'El correo electrónico no es válido.',
+        'email.max' => 'El correo no puede tener más de 255 caracteres.',
+        'email.unique' => 'El correo electrónico ya está en uso.',
+
+        'password.confirmed' => 'Las contraseñas no coinciden.',
+        'password.regex' => 'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial.',
+
+        'role.required' => 'El rol es obligatorio.',
+        'role.string' => 'El rol debe ser una cadena de texto.',
+        'role.exists' => 'El rol seleccionado no es válido.'
+    ];
+
+    $usuario = User::findOrFail($id);
+
+    // Validación de los datos
+    $validator = Validator::make($request->all(), [
+        'name' => ['required', 'string', 'max:255', 'regex:/^(?!.*\s{2,})[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/u'],
+        'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:users,email,'.$usuario->id],
+        'password' => ['nullable', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/'],
+        'role' => ['required', 'string', 'exists:roles,name'],
+    ], $mensajes);
+
+    if ($validator->fails()) {
+        return redirect()->route('usuarios.edit', $id)
+            ->withErrors($validator)
+            ->withInput();
+    }
+
+    try {
+        // Actualizar los datos del usuario
+        $usuario->name = $request->name;
+        $usuario->email = $request->email;
+
+        // Solo actualizar la contraseña si el usuario ingresó una nueva
+        if ($request->filled('password')) {
+            $usuario->password = Hash::make($request->password);
+        }
+
+        $usuario->save();
+
+        // Actualizar el rol del usuario
+        $usuario->syncRoles([$request->role]);
+
+        // Script de éxito con SweetAlert
+        $script = "<script>
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El usuario ha sido actualizado correctamente.',
+                icon: 'success',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                backdrop: false,
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'swal-popup', 
+                    title: 'swal-title', 
+                    text: 'swal-text',
+                },
+            }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1200);
+            });
+        </script>";
+
+        return redirect()->route('Ver_usuarios')->with('script', $script);
+    } catch (\Exception $e) {
+        // Script de error con SweetAlert
+        $script = "<script>
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un error al actualizar el usuario.',
+                icon: 'error',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                backdrop: false,
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'swal-popup', 
+                    title: 'swal-title', 
+                    text: 'swal-text',
+                },
+            }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1200);
+            });
+        </script>";
+
+        return redirect()->route('Ver_usuarios')->with('script', $script);
+    }
+}
 
 }

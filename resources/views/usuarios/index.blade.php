@@ -72,7 +72,9 @@
                                 @foreach ($usuarios as $usuario)
                                     <tr class="bg-black border-b dark:bg-gray-50 dark:border-gray-200 border-gray-800">
                                         <td class="px-4 py-3 font-medium text-white dark:text-gray-900 text-center border-r border-gray-300">
-                                            {{ $usuario->name }}
+                                            <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('usuarios.edit', ['id' => $usuario->id]) }}">
+                                                {{ $usuario->name }}
+                                            </a>
                                         </td>
                                         <td class="px-4 py-3 text-center border-r border-gray-300 truncate max-w-[200px]">
                                             {{ $usuario->email }}
@@ -103,24 +105,26 @@
                     <!-- Tarjetas (visible solo en pantallas pequeñas) -->
                     <div class="block md:hidden space-y-4">
                         @foreach ($usuarios as $usuario)
-                            <div class="bg-white shadow-md rounded-lg border border-gray-300 p-4">
-                                <p class="text-gray-900"><strong>Nombre:</strong> {{ $usuario->name }}</p>
-                                <p class="text-gray-900"><strong>Correo:</strong> {{ $usuario->email }}</p>
-                                <p class="text-gray-900"><strong>Tipo:</strong> {{ $usuario->roles->pluck('name')->implode(', ') }}</p>
-                                <p class="text-gray-900"><strong>Fecha de creación:</strong> {{ $usuario->created_at->format('y-m-d') }}</p>
-                                <div class="flex items-center">
-                                    <span class="mr-2"><strong>Estado:</strong></span>
-                                    <button class="toggle-status flex items-center justify-center" 
-                                        data-id="{{ $usuario->id }}" 
-                                        data-status="{{ $usuario->deleted_at ? 'offline' : 'online' }}">
-                                        @if( $usuario->deleted_at )
-                                            <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> Inhabilitado
-                                        @else
-                                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> Habilitado
-                                        @endif
-                                    </button>
+                            <a href="{{ route('usuarios.edit', ['id' => $usuario->id]) }}">
+                                <div class="bg-white shadow-md rounded-lg border border-gray-300 p-4">
+                                    <p class="text-gray-900"><strong>Nombre:</strong> {{ $usuario->name }}</p>
+                                    <p class="text-gray-900"><strong>Correo:</strong> {{ $usuario->email }}</p>
+                                    <p class="text-gray-900"><strong>Tipo:</strong> {{ $usuario->roles->pluck('name')->implode(', ') }}</p>
+                                    <p class="text-gray-900"><strong>Fecha de creación:</strong> {{ $usuario->created_at->format('y-m-d') }}</p>
+                                    <div class="flex items-center">
+                                        <span class="mr-2"><strong>Estado:</strong></span>
+                                        <button class="toggle-status flex items-center justify-center" 
+                                            data-id="{{ $usuario->id }}" 
+                                            data-status="{{ $usuario->deleted_at ? 'offline' : 'online' }}">
+                                            @if( $usuario->deleted_at )
+                                                <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> Inhabilitado
+                                            @else
+                                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> Habilitado
+                                            @endif
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
     

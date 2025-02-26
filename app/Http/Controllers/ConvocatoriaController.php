@@ -199,6 +199,7 @@ class ConvocatoriaController extends Controller
         $convocatoria = convocatoria::find($id);
 
         $documento_convocatoria = documentacion_convocatorias::where('id_convocatoria', $id)->exists();
+        $documentos_convocatoria = documentacion_convocatorias::where('id_convocatoria', $id)->get();
 
         if ($documento_convocatoria) {
             $documento = true;
@@ -206,7 +207,7 @@ class ConvocatoriaController extends Controller
             $documento = false;
         }
 
-        return view("convocatorias.edit", compact('convocatoria','documento'));
+        return view("convocatorias.edit", compact('convocatoria','documento','documentos_convocatoria'));
     }
 
     public function update(Request $request, $id)

@@ -221,6 +221,7 @@ class ActividadesController extends Controller
         $actividad = actividades::find($id);
 
         $documento_actividad = documentacion_actividades::where('id_actividades', $id)->exists();
+        $documentos_actividad = documentacion_actividades::where('id_actividades', $id)->get();
 
         if ($documento_actividad) {
             $documento = true;
@@ -228,7 +229,7 @@ class ActividadesController extends Controller
             $documento = false;
         }
 
-        return view("actividades.edit", compact('actividad','documento'));
+        return view("actividades.edit", compact('actividad','documento','documentos_actividad'));
     }
 
     public function update(Request $request, $id)

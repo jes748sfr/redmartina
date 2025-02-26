@@ -87,14 +87,42 @@
                             </select>
                         </div>
 
-                        <div class="mb-4">
-                            <select name="nivel" id="nivel" class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2" >
+                        <!-- Se muestra en PC (oculto en móviles) -->
+                        <div class="mb-4 hidden sm:flex items-center gap-4">
+                            <select id="nivel_pc" class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2">
                                 <option value="" disabled selected>Nivel del directorio</option>
-                                    <option value="1">Nivel 1</option>
-                                    <option value="2">Nivel 2</option>
-                                    <option value="3">Nivel 3</option>
+                                <option value="1">Nivel 1</option>
+                                <option value="2">Nivel 2</option>
+                                <option value="3">Nivel 3</option>
+                            </select>
+                            <p class="text-sm text-gray-600">
+                                <strong>El nivel seleccionado corresponderá a la posición en el directorio:</strong><br>
+                                <strong>Nivel 1:</strong> Área superior<br>
+                                <strong>Nivel 2:</strong> Área intermedia<br>
+                                <strong>Nivel 3:</strong> Cátedras
+                            </p>
+                        </div>
+
+                        <!-- Se muestra en móviles (oculto en pantallas grandes) -->
+                        <div class="mb-4 flex flex-col sm:hidden items-start gap-4">
+                            <p class="text-sm text-gray-600">
+                                <strong>El nivel seleccionado corresponderá a la posición en el directorio:</strong><br>
+                                <strong>Nivel 1:</strong> Área superior<br>
+                                <strong>Nivel 2:</strong> Área intermedia<br>
+                                <strong>Nivel 3:</strong> Cátedras
+                            </p>
+                            <select id="nivel_mobile" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2">
+                                <option value="" disabled selected>Nivel del directorio</option>
+                                <option value="1">Nivel 1</option>
+                                <option value="2">Nivel 2</option>
+                                <option value="3">Nivel 3</option>
                             </select>
                         </div>
+
+                        <input type="hidden" id="nivel" name="nivel">
+
+
+
 
                         <label for="imagen" class="block text-lg font-medium text-gray-700">Seleccionar imagen:</label>
                         <input type="file" id="imagen" name="imagen" accept="image/*" 
@@ -191,4 +219,29 @@
             });
         });
     </script>
+
+<script>
+    // Función para actualizar el valor del input oculto
+    function actualizarNivel() {
+        var nivelSeleccionado = null;
+
+        // Verificar cuál select está visible y obtener el valor seleccionado
+        if (window.innerWidth >= 640) {  // Dispositivo de escritorio (PC)
+            nivelSeleccionado = document.getElementById('nivel_pc').value;
+        } else {  // Dispositivo móvil
+            nivelSeleccionado = document.getElementById('nivel_mobile').value;
+        }
+
+        // Actualizar el input oculto con el valor seleccionado
+        document.getElementById('nivel').value = nivelSeleccionado;
+    }
+
+    // Escuchar cambios en los selects y actualizar el valor del input oculto
+    document.getElementById('nivel_pc').addEventListener('change', actualizarNivel);
+    document.getElementById('nivel_mobile').addEventListener('change', actualizarNivel);
+
+    // Asegurarse de que el valor del input oculto se actualice al cargar la página también
+    window.addEventListener('load', actualizarNivel);
+    window.addEventListener('resize', actualizarNivel); // En caso de cambio de dispositivo
+</script>
 </x-app-layout>

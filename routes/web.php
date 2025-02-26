@@ -141,6 +141,8 @@ Route::middleware('auth', 'role:Admin')->group(function () {
     Route::post('/usuarios/toggle-status/{id}', [UserController::class, 'toggleStatus'])->name('usuarios.toggleStatus');
     Route::get('/usuarios/create', [UserController::class, 'create'])->name('usuarios.create');
     Route::post('/usuarios/store', [UserController::class, 'store'])->name('usuarios.store');
+    Route::get('/usuarios/edit/{id}', [UserController::class, 'edit'])->name('usuarios.edit');
+    Route::patch('/usuarios/update/{id}', [UserController::class, 'update'])->name('usuarios.update');
 });
 
 Route::get('/creditos', function () {

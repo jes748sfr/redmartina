@@ -195,6 +195,7 @@ class MartianasController extends Controller
         $martiana = martianas::find($id);
 
         $documento_martiana = documentacion_martianas::where('id_martianas', $id)->exists();
+        $documentos_martiana = documentacion_martianas::where('id_martianas', $id)->get();
 
         if ($documento_martiana) {
             $documento = true;
@@ -202,7 +203,7 @@ class MartianasController extends Controller
             $documento = false;
         }
 
-        return view("martianas.edit", compact('martiana','documento'));
+        return view("martianas.edit", compact('martiana','documento','documentos_martiana'));
     }
 
     public function update(Request $request, $id)
