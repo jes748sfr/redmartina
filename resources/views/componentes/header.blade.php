@@ -38,7 +38,7 @@
         <form class="d-flex mt-3" method="POST" action="{{ route('buscar') }}" role="search">
           @csrf
           <div class="input-group">
-            <input name="keyword" type="search" autocomplete="off" class="form-control rounded-pill" placeholder="Buscar..." aria-label="Buscar" minlength="3" required>
+            <input name="keyword" title="Mínimo 3 caracteres" type="search" autocomplete="off" class="form-control rounded-pill" placeholder="Buscar..." aria-label="Buscar" minlength="3" required>
             <button class="btn btn-outline-light rounded-pill ms-2" type="submit">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />

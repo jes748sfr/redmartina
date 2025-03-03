@@ -23,7 +23,11 @@ class ConvocatoriaController extends Controller
 
         // Procesar el cuerpo de las noticias
         foreach ($convocatorias as $convocatoria) {
-            $convocatoria->cuerpo_truncado = $this->truncateHtml($convocatoria->cuerpo, 100);
+            $convocatoria->cuerpo_truncado = $this->truncateHtml($convocatoria->cuerpo, 500);
+        }
+
+        foreach ($convocatorias as $convocatoria) {
+            $convocatoria->cuerpo_truncado2 = $this->truncateHtml($convocatoria->cuerpo, 100);
         }
 
         /* return response()->json([

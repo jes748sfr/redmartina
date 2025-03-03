@@ -15,7 +15,7 @@ class ActividadesController extends Controller
     //
     public function index()
     {
-        $actividades = actividades::orderBy('fecha', 'desc')->paginate(24);
+        $actividades = actividades::orderBy('fecha', 'desc')->paginate(6);
         $noticias = actividades::where('noticia', true)
                     ->orderBy('fecha', 'desc')
                     ->take(3)
@@ -27,7 +27,11 @@ class ActividadesController extends Controller
 
         // Procesar el cuerpo de las noticias
         foreach ($actividades as $actividad) {
-            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
+            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 500);
+        }
+
+        foreach ($actividades as $actividad) {
+            $actividad->cuerpo_truncado2 = $this->truncateHtml($actividad->cuerpo, 100);
         }
                   
         return view("paginas_publicas.actividades_red", compact('actividades','noticias'));

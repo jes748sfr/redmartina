@@ -26,6 +26,18 @@
       border-color: #4DA1A9;
       border-width: 4px;
     }
+
+    .degradado-1 {
+  background: linear-gradient(to bottom right, #2E5077, #4DA1A9);
+}
+
+.degradado-2 {
+  background: linear-gradient(to bottom right, #4DA1A9, #79D7B3);
+}
+
+.degradado-3 {
+  background: linear-gradient(to bottom right, #79D7B3, #F6F4F0);
+}
     </style>
 
 </head>

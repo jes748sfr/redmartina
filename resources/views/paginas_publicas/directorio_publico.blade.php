@@ -18,7 +18,7 @@
                         onclick="mostrarModal(this)">
                             @if ($usuario->imagen)
                                 <div class="content-center">
-                                    <img src="{{ asset('img/directorio/' . $usuario->imagen) }}" class="img-corner" alt="Imagen de {{ $usuario->nombre }}">
+                                    <img src="{{ asset('img/directorio/' . $usuario->imagen) }}" class="img-corner border-dot" alt="Imagen de {{ $usuario->nombre }}">
                                 </div>
                             @endif
                             <h5 class="text-primary">{{ $usuario->nombre }}</h5>
@@ -32,10 +32,9 @@
                 </div>
 
                 <div class="d-flex flex-wrap justify-content-center">
-                    <h2 class="text-center">Catedras de la red</h2>
+                    <h2 class="text-center">Cátedras de la red</h2>
                 </div>
     
-                <!-- Sección de directorios por país -->
                 <div class="d-flex flex-wrap justify-content-center">
                     @foreach ($directorios as $pais => $personas)
                         <div class="w-100">
@@ -43,30 +42,32 @@
                                 {{ $pais }}
                             </button>
                             <div class="collapse" id="collapse-{{ Str::slug($pais) }}">
-                                <div class="card m-2 p-2 border-dot" style="width: 18rem;">
-                                    <ul class="list-group list-group-flush">
-                                        @foreach ($personas as $persona)
-                                            <li class="list-group-item d-flex align-items-center" style="cursor: pointer;" 
-                                                data-nombre="{{ $persona->nombre }}"
-                                                data-imagen="{{ asset('img/directorio/' . $persona->imagen) }}"
-                                                data-area="{{ $persona->area }}"
-                                                data-correo="{{ $persona->correo }}"
-                                                data-descripcion="{{ $persona->descripcion }}"
-                                                onclick="mostrarModal2(this)">
-                                                @if ($persona->imagen)
-                                                    <img src="{{ asset('img/directorio/' . $persona->imagen) }}" class="img-corner" alt="Imagen de {{ $persona->nombre }}">
-                                                @endif
-                                                <div class="ml-3">
-                                                    <br>
-                                                    <strong>{{ $persona->nombre }}</strong>
-                                                    <p class="mb-0 text-muted">{{ $persona->area }}</p>
-                                                    @if ($persona->correo)
-                                                        <p class="mb-0"><a href="mailto:{{ $persona->correo }}">{{ $persona->correo }}</a></p>
+                                <div class="d-flex justify-content-center"> <!-- Centra el card -->
+                                    <div class="card m-2 p-2 border-dot" style="width: 30rem;">
+                                        <ul class="list-group list-group-flush">
+                                            @foreach ($personas as $persona)
+                                                <li class="list-group-item d-flex align-items-center"
+                                                    style="cursor: pointer;"
+                                                    data-nombre="{{ $persona->nombre }}"
+                                                    data-imagen="{{ asset('img/assets/headercm_2.jpg') }}"
+                                                    data-area="{{ $persona->area }}"
+                                                    data-correo="{{ $persona->correo }}"
+                                                    data-descripcion="{{ $persona->descripcion }}"
+                                                    onclick="mostrarModal2(this)">
+                                                    @if ($persona->imagen)
+                                                        <img src="{{ asset('img/assets/headercm_2.jpg') }}" class="img-corner border-dot" alt="Imagen de {{ $persona->nombre }}">
                                                     @endif
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                                    <div class="ml-3">
+                                                        <strong>{{ $persona->nombre }}</strong>
+                                                        <p class="mb-0 text-muted">{{ $persona->area }}</p>
+                                                        @if ($persona->correo)
+                                                            <p class="mb-0"><a href="mailto:{{ $persona->correo }}">{{ Str::limit($persona->correo, 50) }}</a></p>
+                                                        @endif
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -92,10 +93,14 @@
           </button> --}}
         </div>
         <div class="modal-body text-center">
-          <img id="usuarioImagen" src="" class="img-fluid object-fit-cover mb-2 rounded-circle" style="width: 100px; height: 100px;" alt="Imagen del usuario">
-          <p><strong>Área:</strong> <span id="usuarioArea"></span></p>
-          <p><strong>Correo:</strong> <a href="" id="usuarioCorreo"></a></p>
-          <p><strong>Descripción:</strong> <span id="usuarioDescripcion"></span></p>
+            <img id="usuarioImagen" src="" class="img-fluid object-fit-cover mb-2 rounded-circle border-dot" style="width: 100px; height: 100px;" alt="Imagen del usuario">
+            <p><strong>Área:</strong> <span id="usuarioArea"></span></p>
+            <div id="correoContainer">
+                <p><strong>Correo:</strong> <a href="" id="usuarioCorreo"></a></p>
+            </div>
+            <div id="descripcionContainer">
+                <p><strong>Descripción:</strong> <span id="usuarioDescripcion"></span></p>
+            </div>
         </div>
       </div>
     </div>
@@ -113,7 +118,7 @@
 <script>
     function mostrarModal(element) {
         let nombre = element.getAttribute("data-nombre");
-        let imagen = element.getAttribute("data-imagen");
+        let imagen = element.getAttribute("data-imagen") || "{{ asset('img/assets/headercm_2.jpg') }}";
         let area = element.getAttribute("data-area");
         let correo = element.getAttribute("data-correo");
         let descripcion = element.getAttribute("data-descripcion");

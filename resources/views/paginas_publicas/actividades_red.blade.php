@@ -29,7 +29,7 @@
         @endif
 
         {{-- Cuerpo de la actividad --}}
-        <p class="card-text text-justify">{!! $actividad->cuerpo !!}</p>
+        <blockquote class="blockquote"><p class="card-text text-justify">{!! $actividad->cuerpo !!}</p></blockquote>
 
         {{-- Mostrar PDFs abajo del cuerpo --}}
         @php
@@ -55,40 +55,44 @@
   @else
     <div class="container mb-2">
         <div class="row g-5 mt-2">
-          <div class="col-md-8">
-            <div class="container">
-                <div class="row">
-                    @foreach($actividades as $index => $actividad)
-                        <div id="cartas" class="col-12 col-md-4 mb-3">
-                          <a class="link-offset-2 link-underline link-underline-opacity-0" href="{{ route('visualizar_actividades', $actividad->id) }}">
-                            <div class="card mb-3 h-100 d-flex flex-column" style="max-width: 18rem;">
-                                <!-- Asignar un degradado dinámico según el índice -->
-                                <div class="card-header @if($index % 3 == 0) degradado-1
-                                                       @elseif($index % 3 == 1) degradado-2
-                                                       @else degradado-3 @endif">
-                                    {{ $actividad->header }}
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $actividad->titulo }}</h5>
-                                    <p class="card-text text-justify">
-                                      {!! $actividad->cuerpo_truncado !!}
-                                    </p>
-                                </div>
+            <div class="col-md-8">
+                <div class="container">
+                    <div class="row">
+                        @foreach($actividades as $index => $actividad)
+                            <div id="cartas" class="col-12 mb-3" style="height: 13.2rem"> 
+                                <a class="link-offset-2 link-underline link-underline-opacity-0" href="{{ route('visualizar_actividades', $actividad->id) }}">
+                                    <div class="card mb-3 h-100 d-flex flex-column w-100">
+                                        <!-- Asignar un degradado dinámico según el índice -->
+                                        <div class="card-header @if($index % 3 == 0) degradado-1
+                                                                @elseif($index % 3 == 1) degradado-2
+                                                                @else degradado-3 @endif">
+                                            {{ $actividad->header }}
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $actividad->titulo }}</h5>
+                                            <p class="card-text text-justify d-none d-md-block">
+                                                {!! $actividad->cuerpo_truncado !!}
+                                            </p>
+                                            <p class="card-text text-justify d-md-none">
+                                                {!! $actividad->cuerpo_truncado2 !!}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>  
                             </div>
-                          </a>  
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
+                <div class="mt-6">
+                    {{ $actividades->links('pagination::bootstrap-5') }}
+                </div>            
             </div>
-            <div class="mt-6">
-                {{ $actividades->links('pagination::bootstrap-5') }}
-            </div>            
-        </div>
+            
         
             <div class="col-md-4">
               @include('componentes.noticias', ['noticias' => $noticias])
             </div>
-          </div>
+        </div>
     </div>    
   @endif
 </body>
