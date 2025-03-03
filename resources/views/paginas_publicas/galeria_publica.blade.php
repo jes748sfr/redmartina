@@ -4,10 +4,13 @@
     <div class="container mb-2">
         <div class="row g-3 mt-2">
             <div class="col-md-8">
-              @foreach($galerias as $galeria)
+              @foreach($galerias as $index => $galeria)
               <div class="card">
-                <div class="card-header">
-                  {{ $galeria->titulo }}
+                <div class="card-header 
+                      @if($index % 3 == 1) degradado-5
+                      @elseif($index % 3 == 2) degradado-6
+                      @endif">  
+                  <blockquote class="blockquote"><p class="text-center font-weight-bold">{{ $galeria->titulo }}</p></blockquote>
                 </div>
                 <div class="card-body">
                   <div id="carouselGaleria{{ $galeria->id }}" class="carousel slide pb-2" data-bs-ride="carousel">
@@ -20,11 +23,11 @@
                         </div>
                       @endforeach
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleria{{ $galeria->id }}" data-bs-slide="prev" style="background-color: black">
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleria{{ $galeria->id }}" data-bs-slide="prev" style="filter: invert(1);">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                       <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleria{{ $galeria->id }}" data-bs-slide="next" style="background-color: black">
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleria{{ $galeria->id }}" data-bs-slide="next" style="filter: invert(1);">
                       <span class="carousel-control-next-icon" aria-hidden="true"></span>
                       <span class="visually-hidden">Next</span>
                     </button>

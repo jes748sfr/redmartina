@@ -37,7 +37,7 @@
         
 
         {{-- Cuerpo de la actividad --}}
-        <p class="card-text">{!! $convocatoria->cuerpo !!}</p>
+        <blockquote class="blockquote"><p class="card-text">{!! $convocatoria->cuerpo !!}</p></blockquote>
 
         {{-- Mostrar PDFs abajo del cuerpo --}}
         @php
@@ -67,27 +67,31 @@
             <div class="container">
                 <div class="row">
                     @foreach($convocatorias as $index => $convocatoria)
-                        <div id="cartas" class="col-12 col-md-4 mb-3">
-                          <a class="link-offset-2 link-underline link-underline-opacity-0" href="{{ route('visualizar_convocatorias', $convocatoria->id) }}">
-                            <div class="card mb-3 h-100 d-flex flex-column" style="max-width: 18rem;">
-                                <!-- Asignar un degradado dinámico según el índice -->
-                                <div class="card-header @if($index % 3 == 0) degradado-1
-                                                       @elseif($index % 3 == 1) degradado-2
-                                                       @else degradado-3 @endif">
-                                    {{ $convocatoria->header }}
+                        <div id="cartas" class="col-12 mb-3" style="height: 13.2rem"> 
+                            <a class="link-offset-2 link-underline link-underline-opacity-0" href="{{ route('visualizar_convocatorias', $convocatoria->id) }}">
+                                <div class="card mb-3 h-100 d-flex flex-column w-100">
+                                    <!-- Asignar un degradado dinámico según el índice -->
+                                    <div class="card-header @if($index % 3 == 0) degradado-1
+                                                            @elseif($index % 3 == 1) degradado-2
+                                                            @else degradado-3 @endif">
+                                        {{ $convocatoria->header }}
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $convocatoria->titulo }}</h5>
+                                        <p class="card-text text-justify d-none d-md-block">
+                                            {!! $convocatoria->cuerpo_truncado !!}
+                                        </p>
+                                        <p class="card-text text-justify d-md-none">
+                                            {!! $convocatoria->cuerpo_truncado2 !!}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $convocatoria->titulo }}</h5>
-                                    <p class="card-text">
-                                      {!! $convocatoria->cuerpo_truncado !!}
-                                    </p>
-                                </div>
-                            </div>
-                          </a>  
+                            </a>  
                         </div>
                     @endforeach
                 </div>
             </div>
+            
             <div class="mt-6">
                 {{ $convocatorias->links('pagination::bootstrap-5') }}
             </div>   

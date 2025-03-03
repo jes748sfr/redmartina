@@ -14,8 +14,8 @@
     <link href="{{ asset('vendor/lightbox2-2.11.5/dist/css/lightbox.min.css') }}" rel="stylesheet" />
     <style>
         .image-container {
-    width: 200px; /* Ajusta según necesites */
-    height: 200px; /* Mantén proporción cuadrada */
+    width: 400px; /* Ajusta según necesites */
+    height: 400px; /* Mantén proporción cuadrada */
     overflow: hidden;
     border-radius: 10px; /* Bordes redondeados */
     display: flex;

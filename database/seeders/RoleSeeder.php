@@ -60,7 +60,7 @@ class RoleSeeder extends Seeder
 
         // Crear usuario de prueba con el rol "Admin"
         $user = User::firstOrCreate(
-            ['email' => 'hguerreromacias15@gmail.com'], // Evita duplicados
+            ['email' => 'admin@gmail.com'], // Evita duplicados
             [
                 'name' => 'Hector Jesheck Guerrero Macias',
                 'password' => bcrypt('12345678')
@@ -76,7 +76,7 @@ class RoleSeeder extends Seeder
         }
 
         $us = User::firstOrCreate(
-            ['email' => '2121100401@soy.utj.edu.mx'], // Evita duplicados
+            ['email' => 'editor@soy.utj.edu.mx'], // Evita duplicados
             [
                 'name' => 'Jesus Alfonzo Perez Martinez',
                 'password' => bcrypt('12345678')

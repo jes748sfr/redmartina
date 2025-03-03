@@ -14,46 +14,31 @@
                             <h5>Rector</h5>
                         </div>
                         <div class="d-flex justify-content-center">
-                            <p>Dr. Héctor Raúl Solis Gadea</p>
+                            <p>Dr. Juan Manuel Durán Juárez</p>
                         </div>
                         <div class="d-flex justify-content-center">
                             <h5>Secretaria Académica</h5>
                         </div>
                         <div class="d-flex justify-content-center">
-                            <p>Dra. María Guadalupe Moreno González</p>
+                            <p>Dra. Katia Magdalena Lozano Uvario</p>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <h5>Secretaria Administrativa</h5>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <p>Lic. Xóchitl Ferrer Sandoval </p>
                         </div>
                         <div class="d-flex justify-content-center">
                             <h5>Coordinador de Tecnologías para el Aprendizaje</h5>
                         </div>
                         <div class="d-flex justify-content-center">
-                            <p>Ing. Héctor Aceves Shimizu y López</p>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <h5>Jefe de Unidad de Multimedia Instruccional</h5>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <p>Ing. Omar Alberto Andrade Muñoz</p>
+                            <p>Mtro. Víctor Hugo Ramírez Salazar</p>
                         </div>
                         <div class="d-flex justify-content-center">
                             <h5>Diseño, desarrollo y programación</h5>
                         </div>
                         <div class="d-flex justify-content-center">
-                            <p>Lic. Beatriz Idania Gómez Cosio</p>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <p>Ing. Eduardo García Salazar</p>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <h5>Infraestructura Tecnológica</h5>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <p>Lic. Jesús Enrique Vega Coronel</p>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <p>Lic. Octavio Cortázar Rodriguez</p>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <p>Lic. Eduardo Solano Guzmán</p>
+                            <p>Ing. Job Moreno Martínez</p>
                         </div>
                     </div>
             </div>

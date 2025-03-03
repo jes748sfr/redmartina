@@ -80,10 +80,13 @@
         
               <article class="blog-post">
                 <div class="pb-5">
-                  <h2 class="display-5 link-body-emphasis mb-1">Bienvenidos a la página de la Red Internacional de Cátedras Martianas</h2>
-        
-                <p class="text-justify">Hemos creado con la colaboración de la Universidad de Guadalajara el portal de la Red Internacional de Cátedras Martianas con el cual se pretende tener un espacio martiano de enlace en el que se difundirán nuestras actividades, proyectos y textos, así como acuerdos y convenios de nuestra red.</p>
-                <p class="text-justify">La página de la Red Internacional de Cátedras Martianas será una herramienta de comunicación muy adecuada y necesaria, para generar puntos de encuentro. Este nuevo sitio coadyuvará a formar una gran comunidad de cercanía martiana de acuerdo con los valores y postulados sobre la integración latinoamericana y mundial.</p>
+                  <h2 class="display-5 link-body-emphasis mb-1 text-center">Bienvenidos a la página de la Red Internacional de Cátedras Martianas</h2>
+                  <blockquote class="blockquote">
+                    <p class="text-justify">Hemos creado con la colaboración de la Universidad de Guadalajara el portal de la Red Internacional de Cátedras Martianas con el cual se pretende tener un espacio martiano de enlace en el que se difundirán nuestras actividades, proyectos y textos, así como acuerdos y convenios de nuestra red.</p>
+                  </blockquote>
+                  <blockquote class="blockquote">
+                    <p class="text-justify">La página de la Red Internacional de Cátedras Martianas será una herramienta de comunicación muy adecuada y necesaria, para generar puntos de encuentro. Este nuevo sitio coadyuvará a formar una gran comunidad de cercanía martiana de acuerdo con los valores y postulados sobre la integración latinoamericana y mundial.</p>
+                  </blockquote>
                 </div>
                 <div class="d-flex justify-content-center">
                   <h2 id="historia">Nuestra historia</h2>
@@ -96,7 +99,9 @@
                     </svg>                    
                   </div>
                 </div>
-                <p class="text-justify">La Red de Cátedras Martianas se fortalece con los Convenios de colaboración e intercambio firmados entre Universidades y otras instituciones de manera bilateral, y en particular con la Oficina del Programa Martiano, y el Centro de Estudios Martianos, de Cuba, institución esta –única en el espectro académico internacional- que trabaja con una planta de investigadores reconocidos y cuyos hallazgos vienen a revitalizar las investigaciones en marcha de la Red Internacional, a la vez que se estimula la creación de proyectos nuevos y estudios sobre los problemas de nuestro tiempo.</p>
+                <blockquote class="blockquote">
+                  <p class="text-justify">La Red de Cátedras Martianas se fortalece con los Convenios de colaboración e intercambio firmados entre Universidades y otras instituciones de manera bilateral, y en particular con la Oficina del Programa Martiano, y el Centro de Estudios Martianos, de Cuba, institución esta –única en el espectro académico internacional- que trabaja con una planta de investigadores reconocidos y cuyos hallazgos vienen a revitalizar las investigaciones en marcha de la Red Internacional, a la vez que se estimula la creación de proyectos nuevos y estudios sobre los problemas de nuestro tiempo.</p>
+                </blockquote>
                 <div class="d-flex justify-content-center">
                   <div class="p-3">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="75" height="75">
@@ -104,7 +109,9 @@
                     </svg>
                   </div>
                 </div>
-                <p class="text-justify">Hasta el año 2018 se han celebrado quince Encuentros internacionales de Cátedras Martianas. el más reciente, se llevó a cabo en la Universidad de El Salvador, en la ciudad de San Salvador, los días 23, 24 y 25 de noviembre.</p>
+                <blockquote class="blockquote">
+                  <p class="text-justify">Hasta el año 2018 se han celebrado quince Encuentros internacionales de Cátedras Martianas. el más reciente, se llevó a cabo en la Universidad de El Salvador, en la ciudad de San Salvador, los días 23, 24 y 25 de noviembre.</p>
+                </blockquote>
                 <blockquote class="blockquote">
                   <p class="text-justify">La Red Internacional de Cátedras Martianas cuenta con un directorio que ha ido creciendo, el cual facilita la comunicación inmediata. </p>
                 </blockquote>

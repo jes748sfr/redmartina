@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="{{ asset('vendor/lightbox2-2.11.5/dist/css/lightbox.min.css') }}" rel="stylesheet" />
     <style>
     html {
         scroll-behavior: smooth;
@@ -26,6 +27,30 @@
       border-color: #4DA1A9;
       border-width: 4px;
     }
+
+    .degradado-1 {
+  background: linear-gradient(to bottom right, #2E5077, #4DA1A9);
+}
+
+.degradado-2 {
+  background: linear-gradient(to bottom right, #4DA1A9, #79D7B3);
+}
+
+.degradado-3 {
+  background: linear-gradient(to bottom right, #79D7B3, #F6F4F0);
+}
+
+.degradado-4 {
+  background: linear-gradient(to bottom right, #2E5077, #4DA1A9);
+}
+
+.degradado-5 {
+  background: linear-gradient(to bottom right, #4DA1A9, #8cddf4);
+}
+
+.degradado-6 {
+  background: linear-gradient(to bottom right, #79D7B3, #5bc7f1);
+}
     </style>
 
 </head>

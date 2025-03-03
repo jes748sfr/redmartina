@@ -16,7 +16,7 @@ class MartianasController extends Controller
     public function index()
     {
         //$actividades = actividades::all();
-        $martianas = martianas::orderBy('fecha', 'desc')->paginate(24);
+        $martianas = martianas::orderBy('fecha', 'desc')->paginate(5);
         $noticias = actividades::where('noticia', true)
                          ->orderBy('created_at', 'desc')  // Asegúrate de que el campo 'fecha' esté en tu base de datos
                          ->take(3)  // Limitar a 3 resultados
@@ -24,7 +24,11 @@ class MartianasController extends Controller
 
         // Procesar el cuerpo de las noticias
         foreach ($martianas as $martiana) {
-            $martiana->cuerpo_truncado = $this->truncateHtml($martiana->cuerpo, 100);
+            $martiana->cuerpo_truncado = $this->truncateHtml($martiana->cuerpo, 500);
+        }
+
+        foreach ($martianas as $martiana) {
+            $martiana->cuerpo_truncado2 = $this->truncateHtml($martiana->cuerpo, 100);
         }
 
         return view("paginas_publicas.actividades_martianas", compact('martianas','noticias'));

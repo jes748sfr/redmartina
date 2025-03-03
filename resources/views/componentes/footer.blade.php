@@ -8,6 +8,8 @@
                         <img src="{{ asset('img/assets/escudo_footer.png') }}">
                         <p>CENTRO UNIVERSITARIO DE CIENCIAS SOCIALES Y HUMANIDADES <br>
                         Red Internacional de Cátedras Martianas</p>
+                        <p>Los Belenes. Av. José Parres Arias Núm. 150, Edificio J, Nivel 3, San José del Bajío 
+                            C.P. 45132. Zapopan, Jalisco, México, Tel. 33 38 19 33 27 directo, Extensiones: 23327 y 23566</p>
                     </div>
                     <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
                     </div>

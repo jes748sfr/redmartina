@@ -15,7 +15,7 @@ class ConvocatoriaController extends Controller
     //
     public function index()
     {
-        $convocatorias = convocatoria::orderBy('fecha', 'desc')->paginate(24);
+        $convocatorias = convocatoria::orderBy('fecha', 'desc')->paginate(5);
         $noticias = actividades::where('noticia', true)
                          ->orderBy('created_at', 'desc')  // Asegúrate de que el campo 'fecha' esté en tu base de datos
                          ->take(3)  // Limitar a 3 resultados
@@ -23,7 +23,11 @@ class ConvocatoriaController extends Controller
 
         // Procesar el cuerpo de las noticias
         foreach ($convocatorias as $convocatoria) {
-            $convocatoria->cuerpo_truncado = $this->truncateHtml($convocatoria->cuerpo, 100);
+            $convocatoria->cuerpo_truncado = $this->truncateHtml($convocatoria->cuerpo, 500);
+        }
+
+        foreach ($convocatorias as $convocatoria) {
+            $convocatoria->cuerpo_truncado2 = $this->truncateHtml($convocatoria->cuerpo, 100);
         }
 
         /* return response()->json([

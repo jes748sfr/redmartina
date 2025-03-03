@@ -103,7 +103,7 @@
                             <img src="{{ asset('img/directorio/'.$directorio->imagen) }}" width="100" alt="Imagen usuario">
                         @else
                             <label for="imagen" class="block text-lg font-medium text-gray-700">Directorio sin imagen:</label>
-                            <img src="{{ asset('img/assets/icono.jpg') }}" width="100" alt="Imagen usuario">
+                            <img src="{{ asset('img/assets/headercm_2.jpg') }}" width="100" alt="Imagen usuario">
                         @endif
 
                         <label for="imagen" class="block text-lg font-medium text-gray-700">Seleccionar una nueva imagen:</label>
