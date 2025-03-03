@@ -15,7 +15,11 @@ class ActividadesController extends Controller
     //
     public function index()
     {
+<<<<<<< HEAD
         $actividades = actividades::orderBy('fecha', 'desc')->paginate(5);
+=======
+        $actividades = actividades::orderBy('fecha', 'desc')->paginate(6);
+>>>>>>> a79c19dcfffbe56496e216b86eb8a765a9750a37
         $noticias = actividades::where('noticia', true)
                     ->orderBy('fecha', 'desc')
                     ->take(3)

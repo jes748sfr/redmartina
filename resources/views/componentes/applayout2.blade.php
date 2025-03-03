@@ -39,6 +39,7 @@
 .degradado-3 {
   background: linear-gradient(to bottom right, #79D7B3, #F6F4F0);
 }
+<<<<<<< HEAD
 
 .degradado-4 {
   background: linear-gradient(to bottom right, #2E5077, #4DA1A9);
@@ -51,6 +52,8 @@
 .degradado-6 {
   background: linear-gradient(to bottom right, #79D7B3, #5bc7f1);
 }
+=======
+>>>>>>> a79c19dcfffbe56496e216b86eb8a765a9750a37
     </style>
 
 </head>

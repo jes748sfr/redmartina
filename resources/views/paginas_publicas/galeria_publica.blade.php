@@ -7,8 +7,13 @@
               @foreach($galerias as $index => $galeria)
               <div class="card">
                 <div class="card-header 
+<<<<<<< HEAD
                       @if($index % 3 == 1) degradado-5
                       @elseif($index % 3 == 2) degradado-6
+=======
+                      @if($index % 3 == 1) degradado-2
+                      @elseif($index % 3 == 2) degradado-3
+>>>>>>> a79c19dcfffbe56496e216b86eb8a765a9750a37
                       @endif">  
                   <blockquote class="blockquote"><p class="text-center font-weight-bold">{{ $galeria->titulo }}</p></blockquote>
                 </div>
