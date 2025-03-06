@@ -49,22 +49,12 @@
                                                 <li class="list-group-item d-flex align-items-center"
                                                     style="cursor: pointer;"
                                                     data-nombre="{{ $persona->nombre }}"
-<<<<<<< HEAD
                                                     data-imagen="{{ $usuario->imagen ? asset('img/directorio/' . $usuario->imagen) : asset('img/assets/headercm_2.jpg') }}"
-=======
-                                                    data-imagen="{{ asset('img/assets/headercm_2.jpg') }}"
->>>>>>> a79c19dcfffbe56496e216b86eb8a765a9750a37
                                                     data-area="{{ $persona->area }}"
                                                     data-correo="{{ $persona->correo }}"
                                                     data-descripcion="{{ $persona->descripcion }}"
                                                     onclick="mostrarModal2(this)">
-<<<<<<< HEAD
                                                         <img src="{{ asset('img/assets/headercm_2.jpg') }}" class="img-corner border-dot" alt="Imagen de {{ $persona->nombre }}">
-=======
-                                                    @if ($persona->imagen)
-                                                        <img src="{{ asset('img/assets/headercm_2.jpg') }}" class="img-corner border-dot" alt="Imagen de {{ $persona->nombre }}">
-                                                    @endif
->>>>>>> a79c19dcfffbe56496e216b86eb8a765a9750a37
                                                     <div class="ml-3">
                                                         <strong>{{ $persona->nombre }}</strong>
                                                         <p class="mb-0 text-muted">{{ $persona->area }}</p>
@@ -126,17 +116,10 @@
 <script>
     function mostrarModal(element) {
         let nombre = element.getAttribute("data-nombre");
-<<<<<<< HEAD
     let imagen = element.getAttribute("data-imagen") || "{{ asset('img/default-user.png') }}";
     let area = element.getAttribute("data-area");
     let correo = element.getAttribute("data-correo");
     let descripcion = element.getAttribute("data-descripcion");
-=======
-        let imagen = element.getAttribute("data-imagen") || "{{ asset('img/assets/headercm_2.jpg') }}";
-        let area = element.getAttribute("data-area");
-        let correo = element.getAttribute("data-correo");
-        let descripcion = element.getAttribute("data-descripcion");
->>>>>>> a79c19dcfffbe56496e216b86eb8a765a9750a37
 
     $("#usuarioModalLabel").text(nombre);
     $("#usuarioImagen").attr("src", imagen);

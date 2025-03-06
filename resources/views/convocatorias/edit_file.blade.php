@@ -102,7 +102,7 @@
                         <input type="hidden" name="id_convocatoria" value="{{ $convocatoria->id }}">
                     
                         <label for="archivo" class="block text-lg font-medium text-gray-700">Seleccionar imágenes:</label>
-                        <input type="file" id="archivo" name="archivo[]" accept="image/*,application/pdf" multiple 
+                        <input type="file" id="archivo" name="archivo[]" accept="image/jpeg,image/png,image/jpg,application/pdf" multiple 
                             class="mt-2 p-2 border rounded-md w-full">
                     
                         <!-- Contenedor para mostrar las imágenes seleccionadas -->

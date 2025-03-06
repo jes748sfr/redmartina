@@ -196,7 +196,7 @@ class MartianasController extends Controller
 
     public function edit(string $id)
     {
-        $martiana = martianas::find($id);
+        $martiana = martianas::findOrFail($id);
 
         $documento_martiana = documentacion_martianas::where('id_martianas', $id)->exists();
         $documentos_martiana = documentacion_martianas::where('id_martianas', $id)->get();

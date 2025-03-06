@@ -166,6 +166,12 @@ class UserController extends Controller
 
     public function edit($id)
     {
+        $usu = User::find(Auth::id());
+        // Verificar si el ID del usuario autenticado es igual al que intenta editar
+        if ($usu->id == $id) {
+            return redirect()->route('Ver_usuarios');
+        }
+
         $usuario = User::withTrashed()->findOrFail($id);
         $roles = Role::all(); // Obtener todos los roles
         $userRole = $usuario->roles->first()->name ?? ''; // Obtener el rol asignado al usuario

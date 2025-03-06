@@ -167,7 +167,7 @@ class DirectorioController extends Controller
 
     public function edit(string $id)
     {
-        $directorio = directorio::find($id);
+        $directorio = directorio::findOrFail($id);
 
         $ruta = public_path('img/assets/paises.csv');
         $paises = [];

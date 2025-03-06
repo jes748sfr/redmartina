@@ -45,14 +45,22 @@ class DocumentacionMartianasController extends Controller
             'archivo.*' => [
                 'file',
                 function ($attribute, $file, $fail) {
-                    $maxSize = ($file->getClientOriginalExtension() === 'pdf') ? 5120 : 12288; // 5MB para PDF, 12MB para imágenes
+                    $extension = strtolower($file->getClientOriginalExtension());
+                    $mimeType = $file->getMimeType();
+        
+                    // Bloquear específicamente JFIF
+                    if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
+                        return $fail("El formato JFIF no está permitido.");
+                    }
+        
+                    $maxSize = ($extension === 'pdf') ? 5120 : 12288; // 5MB para PDF, 12MB para imágenes
                     if ($file->getSize() > $maxSize * 1024) {
                         return $fail("El archivo {$file->getClientOriginalName()} excede el tamaño permitido.");
                     }
                 },
-                'mimes:jpeg,png,jpg,pdf'
+                'mimes:jpeg,png,jpg,pdf' // Solo estos formatos permitidos
             ],
-        ],$mensajes);
+        ], $mensajes);
 
         if ($validator->fails()) {
             return redirect()->route('documentacion_martiana.crear', ['id' => $request->id_martianas]) // Cambia por la ruta de tu formulario
@@ -140,14 +148,22 @@ class DocumentacionMartianasController extends Controller
             'archivo.*' => [
                 'file',
                 function ($attribute, $file, $fail) {
-                    $maxSize = ($file->getClientOriginalExtension() === 'pdf') ? 5120 : 12288; // 5MB para PDF, 12MB para imágenes
+                    $extension = strtolower($file->getClientOriginalExtension());
+                    $mimeType = $file->getMimeType();
+        
+                    // Bloquear específicamente JFIF
+                    if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
+                        return $fail("El formato JFIF no está permitido.");
+                    }
+        
+                    $maxSize = ($extension === 'pdf') ? 5120 : 12288; // 5MB para PDF, 12MB para imágenes
                     if ($file->getSize() > $maxSize * 1024) {
                         return $fail("El archivo {$file->getClientOriginalName()} excede el tamaño permitido.");
                     }
                 },
-                'mimes:jpeg,png,jpg,pdf'
+                'mimes:jpeg,png,jpg,pdf' // Solo estos formatos permitidos
             ],
-        ],$mensajes);
+        ], $mensajes);
 
         if ($validator->fails()) {
             return redirect()->route('documentacion_martiana.edit', ['id' => $request->id_martianas]) // Cambia por la ruta de tu formulario
@@ -227,9 +243,44 @@ class DocumentacionMartianasController extends Controller
 
     public function update(Request $request, $id)
 {
-    $request->validate([
-        'archivo' => 'required|file|mimes:jpeg,png,jpg,pdf|max:12288', // 12MB para imágenes, 5MB para PDF
-    ]);
+    $mensajes = [
+        'archivo.required' => 'Debe adjuntar al menos un archivo.',
+        'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
+        'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+    ];
+
+    $validator = Validator::make($request->all(), [
+       'archivo' => [
+        'required',
+        'file',
+        function ($attribute, $file, $fail) {
+            $extension = strtolower($file->getClientOriginalExtension());
+            $mimeType = $file->getMimeType();
+
+            // Bloquear específicamente JFIF
+            if ($extension === 'jfif' || ($mimeType === 'image/jpeg' && $extension !== 'jpg' && $extension !== 'jpeg')) {
+                return $fail("El formato JFIF no está permitido.");
+            }
+
+            // Limitar tamaño (5MB para PDF, 12MB para imágenes)
+            $maxSize = ($extension === 'pdf') ? 5120 : 12288; // 5MB = 5120KB, 12MB = 12288KB
+            if ($file->getSize() > $maxSize * 1024) {
+                return $fail("El archivo {$file->getClientOriginalName()} excede el tamaño permitido.");
+            }
+        },
+        'mimes:jpeg,png,jpg,pdf', // Formatos permitidos
+        'max:12288', // 12MB como máximo
+        ],
+    ], $mensajes);
+
+        $doc = documentacion_martianas::find($id);
+        $mar = martianas::find($doc->id_martianas);
+
+        if ($validator->fails()) {
+            return redirect()->route('documentacion_martiana.edit', ['id' => $mar->id]) // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
 
     try {
         $documento = documentacion_martianas::find($id);

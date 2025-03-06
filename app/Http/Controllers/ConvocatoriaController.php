@@ -200,7 +200,7 @@ class ConvocatoriaController extends Controller
 
     public function edit(string $id)
     {
-        $convocatoria = convocatoria::find($id);
+        $convocatoria = convocatoria::findOrFail($id);
 
         $documento_convocatoria = documentacion_convocatorias::where('id_convocatoria', $id)->exists();
         $documentos_convocatoria = documentacion_convocatorias::where('id_convocatoria', $id)->get();

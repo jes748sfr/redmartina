@@ -15,11 +15,9 @@ class ActividadesController extends Controller
     //
     public function index()
     {
-<<<<<<< HEAD
+
         $actividades = actividades::orderBy('fecha', 'desc')->paginate(5);
-=======
-        $actividades = actividades::orderBy('fecha', 'desc')->paginate(6);
->>>>>>> a79c19dcfffbe56496e216b86eb8a765a9750a37
+
         $noticias = actividades::where('noticia', true)
                     ->orderBy('fecha', 'desc')
                     ->take(3)
@@ -226,7 +224,7 @@ class ActividadesController extends Controller
 
     public function edit(string $id)
     {
-        $actividad = actividades::find($id);
+        $actividad = actividades::findOrFail($id);
 
         $documento_actividad = documentacion_actividades::where('id_actividades', $id)->exists();
         $documentos_actividad = documentacion_actividades::where('id_actividades', $id)->get();

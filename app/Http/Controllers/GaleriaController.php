@@ -142,7 +142,7 @@ class GaleriaController extends Controller
 
     public function edit(string $id)
     {
-        $galeria = galeria::find($id);
+        $galeria = galeria::findOrFail($id);
         $documentos_galeria = fotos::where('id_galeria', $id)->get();
 
         return view("galerias.edit", compact('galeria','documentos_galeria'));
