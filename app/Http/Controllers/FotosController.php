@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\fotos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class FotosController extends Controller
 {
@@ -60,7 +61,8 @@ class FotosController extends Controller
                 foreach ($request->file('imagen') as $imagen) {
                     $extension = $imagen->getClientOriginalExtension();
                     $nombreArchivo = 'imagen_' . uniqid() . '.' . $extension;
-                    $ruta = public_path('img/galeria/');
+                    //$ruta = public_path('img/galeria/');
+                    $ruta = Storage::disk('public')->path('galeria/');
                     $imagen->move($ruta, $nombreArchivo);
     
                     $documentacion = new fotos();
@@ -129,7 +131,8 @@ class FotosController extends Controller
             }
 
             // Eliminar el archivo previo si existe
-            $rutaArchivoPrevio = public_path('img/galeria/' . $foto->imagen);
+            //$rutaArchivoPrevio = public_path('img/galeria/' . $foto->imagen);
+            $rutaArchivoPrevio = Storage::disk('public')->path('galeria/' . $foto->imagen);
             if (file_exists($rutaArchivoPrevio)) {
                 unlink($rutaArchivoPrevio);
             }
@@ -137,7 +140,8 @@ class FotosController extends Controller
             if ($request->hasFile('imagen')) {
                 $archivo = $request->file('imagen');
                 $nombreArchivo = 'imagen_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
-                $ruta = public_path('img/galeria/');
+                $ruta = Storage::disk('public')->path('galeria/');
+                //$ruta = public_path('galeria/');
                 $archivo->move($ruta, $nombreArchivo);
                 $archivo_n = $nombreArchivo;
             }
@@ -172,7 +176,8 @@ class FotosController extends Controller
             }
 
             // Eliminar el archivo previo si existe
-            $rutaArchivoPrevio = public_path('img/galeria/' . $foto->imagen);
+            //$rutaArchivoPrevio = public_path('img/galeria/' . $foto->imagen);
+            $rutaArchivoPrevio = Storage::disk('public')->path('galeria/' . $foto->imagen);
             if (file_exists($rutaArchivoPrevio)) {
                 unlink($rutaArchivoPrevio);
             }

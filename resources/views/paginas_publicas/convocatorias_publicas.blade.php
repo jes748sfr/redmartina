@@ -27,8 +27,8 @@
             <div class="mb-3 d-flex flex-wrap justify-content-center gap-2">
                 @foreach ($imagenes as $documento)
                     <div class="image-container">
-                        <a class="optimized-img" href="{{ asset('documentacion_convocatorias/' . $documento->archivo) }}" data-lightbox="documento{{ $documento->id_convocatoria }}">
-                            <img src="{{ asset('documentacion_convocatorias/' . $documento->archivo) }}" class="optimized-img" alt="Imagen">
+                        <a class="optimized-img" href="{{ asset('storage/documentacion_convocatorias/' . $documento->archivo) }}" data-lightbox="documento{{ $documento->id_convocatoria }}">
+                            <img src="{{ asset('storage/documentacion_convocatorias/' . $documento->archivo) }}" class="optimized-img" alt="Imagen">
                         </a>
                     </div>
                 @endforeach
@@ -51,7 +51,7 @@
                 <h5>Documentos adjuntos:</h5>
                 @foreach ($pdfs as $documento)
                     <p>
-                        <a href="{{ asset('documentacion_convocatorias/' . $documento->archivo) }}" target="_blank">
+                        <a href="{{ asset('storage/documentacion_convocatorias/' . $documento->archivo) }}" target="_blank">
                             📄 Ver PDF ({{ $documento->archivo }})
                         </a>
                     </p>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\convocatoria;
 use App\Models\documentacion_convocatorias;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class DocumentacionConvocatoriasController extends Controller
@@ -23,7 +24,7 @@ class DocumentacionConvocatoriasController extends Controller
 
     public function create(string $id)
     {
-        $convocatoria = convocatoria::find($id);
+        $convocatoria = convocatoria::findOrFail($id);
         return view("convocatorias.create_file", compact('convocatoria'));
     }
 
@@ -76,7 +77,7 @@ class DocumentacionConvocatoriasController extends Controller
                 foreach ($request->file('archivo') as $archivo) {
                     $extension = $archivo->getClientOriginalExtension();
                     $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-                    $ruta = public_path('documentacion_convocatorias/');
+                    $ruta = Storage::disk('public')->path('documentacion_convocatorias/');
                     $archivo->move($ruta, $nombreArchivo);
 
                     $documentacion = new documentacion_convocatorias();
@@ -180,7 +181,7 @@ class DocumentacionConvocatoriasController extends Controller
                 foreach ($request->file('archivo') as $archivo) {
                     $extension = $archivo->getClientOriginalExtension();
                     $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-                    $ruta = public_path('documentacion_convocatorias/');
+                    $ruta = Storage::disk('public')->path('documentacion_convocatorias/');
                     $archivo->move($ruta, $nombreArchivo);
     
                     $documentacion = new documentacion_convocatorias();
@@ -237,7 +238,7 @@ class DocumentacionConvocatoriasController extends Controller
 
     public function edit(string $id)
     {
-        $convocatoria = convocatoria::find($id);
+        $convocatoria = convocatoria::findOrFail($id);
         $documentos_convocatoria = documentacion_convocatorias::where('id_convocatoria', $id)->get();
 
         return view("convocatorias.edit_file", compact('convocatoria','documentos_convocatoria'));
@@ -294,7 +295,7 @@ class DocumentacionConvocatoriasController extends Controller
             }
     
             // Eliminar archivo anterior si existe
-            $rutaAnterior = public_path('documentacion_convocatorias/' . $documento->archivo);
+            $rutaAnterior = Storage::disk('public')->path('documentacion_convocatorias/' . $documento->archivo);
             if (file_exists($rutaAnterior)) {
                 unlink($rutaAnterior);
             }
@@ -303,7 +304,7 @@ class DocumentacionConvocatoriasController extends Controller
             $archivo = $request->file('archivo');
             $extension = $archivo->getClientOriginalExtension();
             $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-            $archivo->move(public_path('documentacion_convocatorias/'), $nombreArchivo);
+            $archivo->storeAs('documentacion_convocatorias', $nombreArchivo, 'public');
     
             // Actualizar base de datos
             $documento->archivo = $nombreArchivo;
@@ -333,7 +334,7 @@ class DocumentacionConvocatoriasController extends Controller
                 return response()->json(['message' => 'Documentacion de convocatoria no encontrada'], 404);
             }
 
-            $rutaAnterior = public_path('documentacion_convocatorias/' . $documentacion_convocatorias->archivo);
+            $rutaAnterior = Storage::disk('public')->path('documentacion_convocatorias/' . $documentacion_convocatorias->archivo);
             if (file_exists($rutaAnterior)) {
                 unlink($rutaAnterior);
             }

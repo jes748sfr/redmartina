@@ -80,7 +80,7 @@
                                                 data-index="{{ $index }}">
                                                 @php
                                                     $imagen = $actividad->documentacionAs->isNotEmpty() 
-                                                            ? 'documentacion_actividades/' .$actividad->documentacionAs->first()->archivo 
+                                                            ? 'storage/documentacion_actividades/' .$actividad->documentacionAs->first()->archivo 
                                                             : 'img/assets/icono.jpg';
                                                     $nombreArchivo = pathinfo($imagen, PATHINFO_FILENAME);
                                                     $extension = pathinfo($imagen, PATHINFO_EXTENSION);
@@ -119,7 +119,7 @@
                                 @php
                                     $documentos = $noticia->documentacionAs ?? collect();
                                     $imagen = $documentos->isNotEmpty() 
-                                            ? 'documentacion_actividades/' .$documentos->first()->archivo 
+                                            ? 'storage/documentacion_actividades/' .$documentos->first()->archivo 
                                             : 'img/assets/icono.jpg';
                                     $nombreArchivo = pathinfo($imagen, PATHINFO_FILENAME);
                                     $extension = pathinfo($imagen, PATHINFO_EXTENSION);

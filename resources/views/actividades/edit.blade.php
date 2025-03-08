@@ -104,8 +104,8 @@
                                 <div class="relative flex flex-col items-center justify-center">
                                     @if(in_array(strtolower($extension), $extensionesImagen))
                                         <!-- Imagen -->
-                                        <a href="{{ asset('documentacion_actividades/'.$documento->archivo) }}" data-lightbox="documento">
-                                            <img src="{{ asset('documentacion_actividades/'.$documento->archivo) }}" alt="Documento" class="w-32 h-32 object-cover rounded-md shadow-md">
+                                        <a href="{{ asset('storage/documentacion_actividades/'.$documento->archivo) }}" data-lightbox="documento">
+                                            <img src="{{ asset('storage/documentacion_actividades/'.$documento->archivo) }}" alt="Documento" class="w-32 h-32 object-cover rounded-md shadow-md">
                                         </a>
                                     @else
                                         <!-- Icono si no es imagen -->

@@ -135,6 +135,7 @@ Route::post('search', [BuscadorController::class, 'search'])->name('buscar');
 Route::match(['get', 'post'],'search/actividad', [ActividadesController::class, 'search_actividad'])->name('buscar_actividad');
 Route::post('search/convocatoria', [ConvocatoriaController::class, 'search_convocatoria'])->name('buscar_convocatoria');
 Route::post('search/martiana', [MartianasController::class, 'search_martiana'])->name('buscar_martiana');
+Route::post('search/directorio', [DirectorioController::class, 'search_directorio'])->name('buscar_directorio');
 
 Route::middleware('auth', 'role:Admin')->group(function () {
     Route::get('usuarios', [UserController::class, 'index'])->name('Ver_usuarios');

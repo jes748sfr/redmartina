@@ -8,6 +8,7 @@ use App\Models\galeria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class GaleriaController extends Controller
 {
@@ -90,7 +91,8 @@ class GaleriaController extends Controller
                 foreach ($request->file('imagen') as $imagen) {
                     $extension = $imagen->getClientOriginalExtension();
                     $nombreArchivo = 'imagen_' . uniqid() . '.' . $extension;
-                    $ruta = public_path('img/galeria/');
+                    //$ruta = public_path('img/galeria/');
+                    $ruta = Storage::disk('public')->path('galeria/');
                     $imagen->move($ruta, $nombreArchivo);
 
                     $documentacion = new fotos();

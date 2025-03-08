@@ -7,6 +7,7 @@ use App\Models\directorio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 
 class DirectorioController extends Controller
@@ -109,7 +110,8 @@ class DirectorioController extends Controller
         if ($request->hasFile('imagen')) {
             $imagen = $request->file('imagen');
             $nombreArchivo = 'imagen_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
-            $ruta = public_path('img/directorio/');
+            //$ruta = public_path('img/directorio/');
+            $ruta = Storage::disk('public')->path('directorio/');
             $imagen->move($ruta, $nombreArchivo);
             $archivo_n = $nombreArchivo;
         }
@@ -228,7 +230,8 @@ class DirectorioController extends Controller
                 //Mantener el nombre original
                 //$nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
                 $nombreArchivo = 'archivo_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
-                $ruta = public_path('img/directorio/');
+                //$ruta = public_path('img/directorio/');
+                $ruta = Storage::disk('public')->path('directorio/');
                 $imagen->move($ruta, $nombreArchivo);
                 $archivo_n = $nombreArchivo;
             }
@@ -294,6 +297,11 @@ class DirectorioController extends Controller
                 return response()->json(['message' => 'Directorio no encontrado'], 404);
             }
 
+            $rutaArchivoPrevio = Storage::disk('public')->path('galeria/' . $directorio->imagen);
+            if (file_exists($rutaArchivoPrevio)) {
+                unlink($rutaArchivoPrevio);
+            }
+
             $directorio->delete();
 
             // Respuesta de éxito
@@ -337,6 +345,36 @@ class DirectorioController extends Controller
             ], 500);
         }
         
+    }
+
+    public function search_directorio(Request $request)
+    {
+        $mensajes = [
+            'keyword.required' => 'Se requiere agregar un texto.',
+            'keyword.string' => 'El dato a buscar debe ser un texto.',
+            'keyword.min' => 'Su busqueda debe contener minimo 3 caracteres.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'keyword' => 'required|string|min:3',
+        ],$mensajes);
+
+        if ($validator->fails()) {
+            return redirect()->route('directorios.auth') // Cambia por la ruta de tu formulario
+                ->withErrors($validator) // Enviar errores a la vista
+                ->withInput();
+        }
+
+        // Obtener el término de búsqueda
+        $query = $request->input('keyword');
+
+        // Realizar la búsqueda con Scout
+        $directorios = directorio::search($query)->paginate(24);
+
+        $totalResultados = $directorios->total();
+
+        // Pasar las variables necesarias a la vista
+        return view("directorios.index", compact('directorios', 'totalResultados', 'query'));
     }
 
 }

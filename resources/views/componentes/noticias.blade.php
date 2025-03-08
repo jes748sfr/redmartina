@@ -8,7 +8,7 @@
             <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="{{ route('visualizar_actividades', ['id' => $noticia->id]) }}">
               @php
                 $imagen = $noticia->documentacionAs->isNotEmpty() 
-                          ? 'documentacion_actividades/' .$noticia->documentacionAs->first()->archivo 
+                          ? 'storage/documentacion_actividades/' .$noticia->documentacionAs->first()->archivo 
                           : 'img/assets/icono.jpg'; // Imagen por defecto si no hay imágenes
                 $nombreArchivo = pathinfo($imagen, PATHINFO_FILENAME);
                 $extension = pathinfo($imagen, PATHINFO_EXTENSION);

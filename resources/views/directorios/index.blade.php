@@ -169,6 +169,48 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
 
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <!-- Formulario de búsqueda -->
+                    <form method="POST" action="{{ route('buscar_directorio') }}" class="mb-6">
+                        @csrf
+                        <div class="flex items-center">
+                            
+                            @if(isset($query))
+                                <a href="{{ route('directorios.auth') }}" id="btn_regresar" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center bg-blue-500 hover:bg-blue-600 text-white font-bold mr-4 rounded-full transition-all duration-300 items-center justify-center">
+                                    <span id="btn_regresar_icono" class="transition-all duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                                        </svg>
+                                    </span>
+                                    <span id="btn_regresar_texto"  class="text-content hidden ml-2">Regresar</span>
+                                </a>
+                            @endif
+
+                            <input 
+                                type="text" 
+                                name="keyword" 
+                                value="{{ $query ?? '' }}" 
+                                placeholder="Buscar convocatorias..." 
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            >
+                            <button type="submit" id="btn_buscar" class="ml-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full shadow-lg flex items-center justify-center transition-all duration-300 overflow-hidden">
+                                <span id="btn_buscar_icono" class="transition-all duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                    </svg>
+                                </span>
+                                <span id="btn_buscar_texto" style="user-select: none" class="text-content hidden ml-2">Buscar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                @if(isset($query))
+                    <div class="p-6">
+                        <p class="text-gray-600">Resultados para: <strong>{{ $query }}</strong> ({{ $totalResultados }} encontrados)</p>
+                    </div>
+                @endif
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
                     @forelse($directorios as $directorio)
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col justify-between">
@@ -206,8 +248,15 @@
                     @endforelse
                 </div>
                 <div class="mt-6">
-                    {{ $directorios->links() }}
+                    @if(isset($query))
+                        {{ $directorios->appends(['keyword' => $query])->links() }}
+                    @else
+                        {{ $directorios->links() }}
+                    @endif
                 </div> 
+{{--                 <div class="mt-6">
+                    {{ $directorios->links() }}
+                </div>  --}}
             </div>
         </div>
     </div>

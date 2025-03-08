@@ -72,8 +72,8 @@
                                 @if(in_array(strtolower($extension), $extensionesImagen))
                                     <!-- Si es una imagen, la mostramos -->
                                     <div class="w-20 h-20 flex items-center justify-center rounded-md border">
-                                        <a href="{{ asset('documentacion_convocatorias/'.$documento->archivo) }}" data-lightbox="documento">
-                                            <img src="{{ asset('documentacion_convocatorias/'.$documento->archivo) }}" alt="Documento" class="max-w-full h-auto">
+                                        <a href="{{ asset('storage/documentacion_convocatorias/'.$documento->archivo) }}" data-lightbox="documento">
+                                            <img src="{{ asset('storage/documentacion_convocatorias/'.$documento->archivo) }}" alt="Documento" class="max-w-full h-auto">
                                         </a>
                                     </div>
                                 @else
@@ -135,9 +135,12 @@
                 formData.append("archivo", input.files[0]);
                 formData.append("_method", "PUT"); // Laravel espera un PUT
 
-                let url = `/convocatorias/subir_archivos/update/${id}`;
+                //let url = `/convocatorias/subir_archivos/update/${id}`;
+                let url = "{{ route('documentacion_convocatoria.update', ['id' => '__ID__']) }}";
+                let i = id;
+                let urlFinal = url.replace('__ID__', i);
 
-                fetch(url, {
+                fetch(urlFinal, {
                     method: "POST", // Enviar como POST con _method: "PUT"
                     body: formData,
                     headers: {
@@ -195,7 +198,9 @@
     document.querySelectorAll(".archivoEliminar").forEach(button => {
         button.addEventListener("click", function () {
             let id = this.getAttribute("data-id");
-            let url = `/convocatorias/subir_archivos/delete/${id}`;
+            //let url = `/convocatorias/subir_archivos/delete/${id}`;
+            let url = "{{ route('documentacion_convocatoria.delete', ['id' => '__ID__']) }}";
+            let urlFinal = url.replace('__ID__', id);
 
             Swal.fire({
     title: '¿Estás seguro de eliminar este archivo?',
@@ -215,7 +220,7 @@
         let formData = new FormData();
         formData.append("_method", "DELETE");
 
-        fetch(url, {
+        fetch(urlFinal, {
             method: "POST", // Usamos POST con _method: "DELETE"
             body: formData,
             headers: {

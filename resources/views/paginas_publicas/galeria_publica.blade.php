@@ -17,8 +17,8 @@
                     <div class="carousel-inner">
                       @foreach($galeria->fotos as $index => $foto)
                         <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                          <a href="{{ asset('img/galeria/'.$foto->imagen) }}" data-lightbox="documento{{ $foto->id_galeria }}">
-                            <img src="{{ asset('img/galeria/'.$foto->imagen) }}" class="d-block w-100" alt="Imagen {{ $foto->id }}" style="height: 300px; width: 100%; object-fit: contain;">
+                          <a href="{{ asset('storage/galeria/'.$foto->imagen) }}" data-lightbox="documento{{ $foto->id_galeria }}">
+                            <img src="{{ asset('storage/galeria/'.$foto->imagen) }}" class="d-block w-100" alt="Imagen {{ $foto->id }}" style="height: 300px; width: 100%; object-fit: contain;">
                           </a>
                         </div>
                       @endforeach

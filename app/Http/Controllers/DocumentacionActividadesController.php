@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\actividades;
 use App\Models\documentacion_actividades;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class DocumentacionActividadesController extends Controller
@@ -23,7 +24,7 @@ class DocumentacionActividadesController extends Controller
 
     public function create(string $id)
     {
-        $actividad = actividades::find($id);
+        $actividad = actividades::findOrFail($id);
         return view("actividades.create_file", compact('actividad'));
     }
 
@@ -75,7 +76,8 @@ class DocumentacionActividadesController extends Controller
                 foreach ($request->file('archivo') as $archivo) {
                     $extension = $archivo->getClientOriginalExtension();
                     $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-                    $ruta = public_path('documentacion_actividades/');
+                    //$ruta = public_path('documentacion_actividades/');
+                    $ruta = Storage::disk('public')->path('documentacion_actividades/');
                     $archivo->move($ruta, $nombreArchivo);
 
                     $documentacion = new documentacion_actividades();
@@ -178,7 +180,7 @@ class DocumentacionActividadesController extends Controller
                 foreach ($request->file('archivo') as $archivo) {
                     $extension = $archivo->getClientOriginalExtension();
                     $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-                    $ruta = public_path('documentacion_actividades/');
+                    $ruta = Storage::disk('public')->path('documentacion_actividades/');
                     $archivo->move($ruta, $nombreArchivo);
     
                     $documentacion = new documentacion_actividades();
@@ -248,7 +250,8 @@ class DocumentacionActividadesController extends Controller
                 //Mantener el nombre original
                 //$nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
                 $nombreArchivo = 'archivo_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
-                $ruta = public_path('documentacion_actividades/');
+                //$ruta = public_path('documentacion_actividades/');
+                $ruta = Storage::disk('public')->path('documentacion_actividades/');
                 $archivo->move($ruta, $nombreArchivo);
                 $archivo_n = $nombreArchivo;
             }
@@ -276,7 +279,7 @@ class DocumentacionActividadesController extends Controller
 
     public function edit(string $id)
     {
-        $actividad = actividades::find($id);
+        $actividad = actividades::findOrFail($id);
         $documentos_actividad = documentacion_actividades::where('id_actividades', $id)->get();
 
         return view("actividades.edit_file", compact('actividad','documentos_actividad'));
@@ -331,7 +334,7 @@ class DocumentacionActividadesController extends Controller
         }
 
         // Eliminar archivo anterior si existe
-        $rutaAnterior = public_path('documentacion_actividades/' . $documento->archivo);
+        $rutaAnterior = Storage::disk('public')->path('documentacion_actividades/' . $documento->archivo);
         if (file_exists($rutaAnterior)) {
             unlink($rutaAnterior);
         }
@@ -340,7 +343,10 @@ class DocumentacionActividadesController extends Controller
         $archivo = $request->file('archivo');
         $extension = $archivo->getClientOriginalExtension();
         $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-        $archivo->move(public_path('documentacion_actividades/'), $nombreArchivo);
+        $rutaAnterior = Storage::disk('public')->path('documentacion_actividades/' . $documento->archivo);
+        //$archivo->move(public_path('documentacion_actividades/'), $nombreArchivo);
+        $archivo->storeAs('documentacion_actividades', $nombreArchivo, 'public');
+
 
         // Actualizar base de datos
         $documento->archivo = $nombreArchivo;
@@ -371,7 +377,7 @@ class DocumentacionActividadesController extends Controller
             }
 
             // Eliminar archivo anterior si existe
-            $rutaAnterior = public_path('documentacion_actividades/' . $documentacion_actividades->archivo);
+            $rutaAnterior = Storage::disk('public')->path('documentacion_actividades/' . $documentacion_actividades->archivo);
             if (file_exists($rutaAnterior)) {
                 unlink($rutaAnterior);
             }

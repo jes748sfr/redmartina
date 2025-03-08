@@ -21,7 +21,7 @@
                 @foreach ($imagenes as $documento)
                     <div class="image-container">
                         <a class="optimized-img" href="{{ asset('documentacion_actividades/' . $documento->archivo) }}" data-lightbox="documento{{ $documento->id_galeria }}">
-                            <img src="{{ asset('documentacion_actividades/' . $documento->archivo) }}" class="optimized-img" alt="Imagen">
+                            <img src="{{ asset('storage/documentacion_actividades/' . $documento->archivo) }}" class="optimized-img" alt="Imagen">
                         </a>
                     </div>
                 @endforeach
@@ -43,7 +43,7 @@
                 <h5>Documentos adjuntos:</h5>
                 @foreach ($pdfs as $documento)
                     <p>
-                        <a href="{{ asset('documentacion_actividades/' . $documento->archivo) }}" target="_blank">
+                        <a href="{{ asset('storage/documentacion_actividades/' . $documento->archivo) }}" target="_blank">
                             📄 Ver PDF ({{ $documento->archivo }})
                         </a>
                     </p>

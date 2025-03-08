@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\documentacion_martianas;
 use App\Models\martianas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class DocumentacionMartianasController extends Controller
@@ -23,7 +24,7 @@ class DocumentacionMartianasController extends Controller
 
     public function create(string $id)
     {
-        $martiana = martianas::find($id);
+        $martiana = martianas::findOrFail($id);
         return view("martianas.create_file", compact('martiana'));
     }
 
@@ -75,7 +76,7 @@ class DocumentacionMartianasController extends Controller
                 foreach ($request->file('archivo') as $archivo) {
                     $extension = $archivo->getClientOriginalExtension();
                     $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-                    $ruta = public_path('documentacion_martianas/');
+                    $ruta = Storage::disk('public')->path('documentacion_martianas/');
                     $archivo->move($ruta, $nombreArchivo);
 
                     $documentacion = new documentacion_martianas();
@@ -178,7 +179,7 @@ class DocumentacionMartianasController extends Controller
                 foreach ($request->file('archivo') as $archivo) {
                     $extension = $archivo->getClientOriginalExtension();
                     $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-                    $ruta = public_path('documentacion_martianas/');
+                    $ruta = Storage::disk('public')->path('documentacion_martianas/');
                     $archivo->move($ruta, $nombreArchivo);
     
                     $documentacion = new documentacion_martianas();
@@ -235,7 +236,7 @@ class DocumentacionMartianasController extends Controller
 
     public function edit(string $id)
     {
-        $martiana = martianas::find($id);
+        $martiana = martianas::findOrFail($id);
         $documentos_martiana = documentacion_martianas::where('id_martianas', $id)->get();
 
         return view("martianas.edit_file", compact('martiana','documentos_martiana'));
@@ -290,7 +291,8 @@ class DocumentacionMartianasController extends Controller
         }
 
         // Eliminar archivo anterior si existe
-        $rutaAnterior = public_path('documentacion_martianas/' . $documento->archivo);
+        //$rutaAnterior = public_path('documentacion_martianas/' . $documento->archivo);
+        $rutaAnterior = Storage::disk('public')->path('documentacion_martianas/' . $documento->archivo);
         if (file_exists($rutaAnterior)) {
             unlink($rutaAnterior);
         }
@@ -299,7 +301,8 @@ class DocumentacionMartianasController extends Controller
         $archivo = $request->file('archivo');
         $extension = $archivo->getClientOriginalExtension();
         $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-        $archivo->move(public_path('documentacion_martianas/'), $nombreArchivo);
+        /* $archivo->move(public_path('documentacion_martianas/'), $nombreArchivo); */
+        $archivo->storeAs('documentacion_martianas', $nombreArchivo, 'public');
 
         // Actualizar base de datos
         $documento->archivo = $nombreArchivo;
@@ -329,7 +332,8 @@ public function destroy($id)
             return response()->json(['message' => 'Documentacion de actividad martiana no encontrada'], 404);
         }
 
-        $rutaAnterior = public_path('documentacion_martianas/' . $documentacion_martianas->archivo);
+        //$rutaAnterior = public_path('documentacion_martianas/' . $documentacion_martianas->archivo);
+        $rutaAnterior = Storage::disk('public')->path('documentacion_martianas/' . $documentacion_martianas->archivo);
             if (file_exists($rutaAnterior)) {
                 unlink($rutaAnterior);
             }

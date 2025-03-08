@@ -94,8 +94,8 @@
                                 @if(in_array(strtolower($extension), $extensionesImagen))
                                     <!-- Si es una imagen, la mostramos -->
                                     <div class="w-20 h-20 flex items-center justify-center rounded-md border">
-                                        <a href="{{ asset('img/galeria/'.$documento->imagen) }}" data-lightbox="documento">
-                                            <img src="{{ asset('img/galeria/'.$documento->imagen) }}" alt="Documento" class="max-w-full h-auto">
+                                        <a href="{{ asset('storage/galeria/'.$documento->imagen) }}" data-lightbox="documento">
+                                            <img src="{{ asset('storage/galeria/'.$documento->imagen) }}" alt="Documento" class="max-w-full h-auto">
                                         </a>
                                     </div>
                                 @else
@@ -157,9 +157,12 @@
                 formData.append("imagen", input.files[0]);
                 formData.append("_method", "PUT"); // Laravel espera un PUT
 
-                let url = `/galerias/subir_archivos/update/${id}`;
+                //let url = `/galerias/subir_archivos/update/${id}`;
+                let url = "{{ route('documentacion_galeria.update', ['id' => '__ID__']) }}";
+                let i = id;
+                let urlFinal = url.replace('__ID__', i);
 
-                fetch(url, {
+                fetch(urlFinal, {
                     method: "POST", // Enviar como POST con _method: "PUT"
                     body: formData,
                     headers: {
@@ -217,7 +220,9 @@
     document.querySelectorAll(".archivoEliminar").forEach(button => {
         button.addEventListener("click", function () {
             let id = this.getAttribute("data-id");
-            let url = `/galerias/subir_archivos/delete/${id}`;
+            //let url = `/galerias/subir_archivos/delete/${id}`;
+            let url = "{{ route('documentacion_galeria.delete', ['id' => '__ID__']) }}";
+            let urlFinal = url.replace('__ID__', id);
 
             Swal.fire({
     title: '¿Estás seguro de eliminar este archivo?',
@@ -237,7 +242,7 @@
         let formData = new FormData();
         formData.append("_method", "DELETE");
 
-        fetch(url, {
+        fetch(urlFinal, {
             method: "POST", // Usamos POST con _method: "DELETE"
             body: formData,
             headers: {

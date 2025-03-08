@@ -28,7 +28,7 @@
               {{-- <img src="..." class="card-img-top" alt="..."> --}}
               @php
                 $imagen = $noticia->documentacionAs->isNotEmpty() 
-                          ? 'documentacion_actividades/' .$noticia->documentacionAs->first()->archivo 
+                          ? 'storage/documentacion_actividades/' .$noticia->documentacionAs->first()->archivo 
                           : 'img/assets/icono.jpg'; // Imagen por defecto si no hay imágenes
                 $nombreArchivo = pathinfo($imagen, PATHINFO_FILENAME);
                 $extension = pathinfo($imagen, PATHINFO_EXTENSION);

@@ -67,8 +67,8 @@
                                             <div class="carousel-wrapper flex transition-transform duration-700 ease-in-out">
                                                 @foreach($galeria->fotos as $foto)
                                                     <div class="carousel-item min-w-full flex-shrink-0 flex justify-center items-center h-[200px]">
-                                                        <a href="{{ asset('img/galeria/'.$foto->imagen) }}" data-lightbox="documento{{ $galeria->id }}">
-                                                            <img src="{{ asset('img/galeria/'.$foto->imagen) }}" width="100" alt="Imagen {{ $foto->id }}">
+                                                        <a href="{{ asset('storage/galeria/'.$foto->imagen) }}" data-lightbox="documento{{ $galeria->id }}">
+                                                            <img src="{{ asset('storage/galeria/'.$foto->imagen) }}" width="100" alt="Imagen {{ $foto->id }}">
                                                         </a>
                                                     </div>
                                                 @endforeach

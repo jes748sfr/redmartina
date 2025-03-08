@@ -88,14 +88,13 @@ class ActividadesController extends Controller
             'titulo.regex' => 'El título debe contener al menos dos palabras, una vocal, una consonante y solo puede incluir letras, números, espacios y los siguientes signos permitidos: , . - : ; ( ) \' " ',
             'noticia.required' => 'Especifique si la actividad es una noticia.',
             'fecha.required' => 'Debes ingresar una fecha válido.',
-            'fecha.before_or_equal' => 'La fecha no puede ser posterior a hoy.',
         ];
 
             $validator = Validator::make($request->all(), [
                 'titulo' => 'required|string|max:255|regex:/^(?=.*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])(?=.*[aeiouáéíóúAEIOUÁÉÍÓÚ])[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s,.\-:;()\'"]+$/u',
                 'cuerpo' => 'nullable|string',
                 'noticia' => 'required|boolean',
-                'fecha' => 'required|date|before_or_equal:today',
+                'fecha' => 'required|date',
                 'agregar_file'  => 'required',
             ],$mensajes);
 
@@ -246,14 +245,13 @@ class ActividadesController extends Controller
             'titulo.regex' => 'El título debe contener al menos dos palabras, una vocal, una consonante y solo puede incluir letras, números, espacios y los siguientes signos permitidos: , . - : ; ( ) \' " ',
             'noticia.required' => 'Especifique si la actividad es una noticia.',
             'fecha.required' => 'Debes ingresar una fecha válido.',
-            'fecha.before_or_equal' => 'La fecha no puede ser posterior a hoy.',
         ];
 
             $validator = Validator::make($request->all(), [
                 'titulo' => 'required|string|max:255|regex:/^(?=.*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])(?=.*[aeiouáéíóúAEIOUÁÉÍÓÚ])[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s,.\-:;()\'"]+$/u',
                 'cuerpo' => 'nullable|string',
                 'noticia' => 'required|boolean',
-                'fecha' => 'required|date|before_or_equal:today',
+                'fecha' => 'required|date',
             ],$mensajes);
 
         if ($validator->fails()) {
