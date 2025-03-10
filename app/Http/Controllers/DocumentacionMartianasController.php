@@ -50,9 +50,12 @@ class DocumentacionMartianasController extends Controller
                     $mimeType = $file->getMimeType();
         
                     // Bloquear específicamente JFIF
-                    if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
+                    /* if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
                         return $fail("El formato JFIF no está permitido.");
-                    }
+                    } */
+                    if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
+                        return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
+                    }                    
         
                     $maxSize = ($extension === 'pdf') ? 5120 : 12288; // 5MB para PDF, 12MB para imágenes
                     if ($file->getSize() > $maxSize * 1024) {
@@ -153,9 +156,12 @@ class DocumentacionMartianasController extends Controller
                     $mimeType = $file->getMimeType();
         
                     // Bloquear específicamente JFIF
-                    if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
+                    /* if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
                         return $fail("El formato JFIF no está permitido.");
-                    }
+                    } */
+                    if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
+                        return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
+                    }                    
         
                     $maxSize = ($extension === 'pdf') ? 5120 : 12288; // 5MB para PDF, 12MB para imágenes
                     if ($file->getSize() > $maxSize * 1024) {
@@ -259,9 +265,12 @@ class DocumentacionMartianasController extends Controller
             $mimeType = $file->getMimeType();
 
             // Bloquear específicamente JFIF
-            if ($extension === 'jfif' || ($mimeType === 'image/jpeg' && $extension !== 'jpg' && $extension !== 'jpeg')) {
+            /* if ($extension === 'jfif' || ($mimeType === 'image/jpeg' && $extension !== 'jpg' && $extension !== 'jpeg')) {
                 return $fail("El formato JFIF no está permitido.");
-            }
+            } */
+            if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
+                return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
+            }            
 
             // Limitar tamaño (5MB para PDF, 12MB para imágenes)
             $maxSize = ($extension === 'pdf') ? 5120 : 12288; // 5MB = 5120KB, 12MB = 12288KB
