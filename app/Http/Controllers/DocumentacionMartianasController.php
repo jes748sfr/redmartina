@@ -37,7 +37,8 @@ class DocumentacionMartianasController extends Controller
             'archivo.required' => 'Debe adjuntar al menos un archivo.',
 
             'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
-            'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+            /* 'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.', */
+            'archivo.*.mimes' => 'El formato de imagen no es valido.',
         ];
 
         $validator = Validator::make($request->all(), [
@@ -143,7 +144,8 @@ class DocumentacionMartianasController extends Controller
             'archivo.required' => 'Debe adjuntar al menos un archivo.',
 
             'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
-            'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+            //'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+            'archivo.*.mimes' => 'El formato de imagen no es valido.',
         ];
 
         $validator = Validator::make($request->all(), [
@@ -253,7 +255,8 @@ class DocumentacionMartianasController extends Controller
     $mensajes = [
         'archivo.required' => 'Debe adjuntar al menos un archivo.',
         'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
-        'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+        //'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+        'archivo.*.mimes' => 'El formato de imagen no es valido.',
     ];
 
     $validator = Validator::make($request->all(), [

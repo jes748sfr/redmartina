@@ -150,7 +150,7 @@
                                         class="flex flex-col bg-white border border-blue-200 rounded-lg shadow-sm hover:bg-blue-100 transition">
                                         @php
                                             $imagen = $actividad->documentacionAs->isNotEmpty() 
-                                                    ? 'documentacion_actividades/' .$actividad->documentacionAs->first()->archivo 
+                                                    ? 'storage/documentacion_actividades/' .$actividad->documentacionAs->first()->archivo 
                                                     : 'img/assets/icono.jpg';
                                             $extension = pathinfo($imagen, PATHINFO_EXTENSION);
                                             $imagen = ($extension == 'pdf') 
@@ -208,7 +208,7 @@
                                 @php
                                     $documentos = $martiana->documentacionMs ?? collect();
                                     $imagen = $documentos->isNotEmpty() 
-                                            ? 'documentacion_martianas/' .$documentos->first()->archivo 
+                                            ? 'storage/documentacion_martianas/' .$documentos->first()->archivo 
                                             : 'img/assets/icono.jpg';
                                     $nombreArchivo = pathinfo($imagen, PATHINFO_FILENAME);
                                     $extension = pathinfo($imagen, PATHINFO_EXTENSION);
@@ -240,7 +240,7 @@
                                 @php
                                     $documentos = $convocatoria->documentacionCs ?? collect();
                                     $imagen = $documentos->isNotEmpty() 
-                                            ? 'documentacion_convocatorias/' .$documentos->first()->archivo 
+                                            ? 'storage/documentacion_convocatorias/' .$documentos->first()->archivo 
                                             : 'img/assets/icono.jpg';
                                     $nombreArchivo = pathinfo($imagen, PATHINFO_FILENAME);
                                     $extension = pathinfo($imagen, PATHINFO_EXTENSION);

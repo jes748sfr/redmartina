@@ -58,7 +58,7 @@
                     
                     <!-- Tabla (visible solo en pantallas medianas y grandes) -->
                     <div class="relative overflow-x-auto hidden md:block">
-                        <table class="w-full text-sm text-left text-white dark:text-black border border-gray-300 min-w-max">
+                        <table class="w-full text-sm text-left text-white border border-gray-300 min-w-max">
                             <thead class="text-xs text-white uppercase bg-black dark:bg-gray-50 dark:text-black border-b border-gray-300">
                                 <tr>
                                     <th class="px-4 py-3 border-r border-gray-300 text-center">Nombre</th>
@@ -71,7 +71,7 @@
                             <tbody>
                                 @foreach ($usuarios as $usuario)
                                     <tr class="bg-black border-b dark:bg-gray-50 dark:border-gray-200 border-gray-800">
-                                        <td class="px-4 py-3 font-medium text-white dark:text-gray-900 text-center border-r border-gray-300">
+                                        <td class="px-4 py-3 font-medium text-white text-center border-r border-gray-300">
                                             <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('usuarios.edit', ['id' => $usuario->id]) }}">
                                                 {{ $usuario->name }}
                                             </a>
@@ -166,9 +166,11 @@
         $('.toggle-status').click(function() {
             let button = $(this);
             let userId = button.data('id');
+            let url = "{{ route('usuarios.toggleStatus', ['id' => '__ID__']) }}";
+            let urlFinal = url.replace('__ID__', userId);
 
             $.ajax({
-                url: `/usuarios/toggle-status/${userId}`,
+                url: urlFinal,
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'
