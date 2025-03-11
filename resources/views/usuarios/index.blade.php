@@ -58,8 +58,8 @@
                     
                     <!-- Tabla (visible solo en pantallas medianas y grandes) -->
                     <div class="relative overflow-x-auto hidden md:block">
-                        <table class="w-full text-sm text-left text-white border border-gray-300 min-w-max">
-                            <thead class="text-xs text-white uppercase bg-black dark:bg-gray-50 dark:text-black border-b border-gray-300">
+                        <table class="w-full text-sm text-left text-black border border-gray-300 min-w-max">
+                            <thead class="text-xs uppercase bg-white text-black border-b border-gray-300">
                                 <tr>
                                     <th class="px-4 py-3 border-r border-gray-300 text-center">Nombre</th>
                                     <th class="px-4 py-3 border-r border-gray-300 text-center">Correo</th>
@@ -70,9 +70,9 @@
                             </thead>
                             <tbody>
                                 @foreach ($usuarios as $usuario)
-                                    <tr class="bg-black border-b dark:bg-gray-50 dark:border-gray-200 border-gray-800">
-                                        <td class="px-4 py-3 font-medium text-white text-center border-r border-gray-300">
-                                            <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('usuarios.edit', ['id' => $usuario->id]) }}">
+                                    <tr class="bg-white border-b border-gray-300 text-black">
+                                        <td class="px-4 py-3 font-medium text-black text-center border-r border-gray-300">
+                                            <a class="font-medium text-blue-600 hover:underline" href="{{ route('usuarios.edit', ['id' => $usuario->id]) }}">
                                                 {{ $usuario->name }}
                                             </a>
                                         </td>
@@ -101,6 +101,7 @@
                             </tbody>
                         </table>
                     </div>
+                    
     
                     <!-- Tarjetas (visible solo en pantallas pequeñas) -->
                     <div class="block md:hidden space-y-4">
