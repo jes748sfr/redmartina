@@ -71,9 +71,9 @@
     
                                 @if(in_array(strtolower($extension), $extensionesImagen))
                                     <!-- Si es una imagen, la mostramos -->
-                                    <div class="w-20 h-20 flex items-center justify-center rounded-md border">
-                                        <a href="{{ asset('documentacion_actividades/'.$documento->archivo) }}" data-lightbox="documento">
-                                            <img src="{{ asset('storage/documentacion_actividades/'.$documento->archivo) }}" alt="Documento" class="max-w-full h-auto">
+                                    <div class="w-20 h-20 flex items-center justify-center rounded-md border overflow-hidden">
+                                        <a href="{{ asset('storage/documentacion_actividades/'.$documento->archivo) }}" data-lightbox="documento">
+                                            <img src="{{ asset('storage/documentacion_actividades/'.$documento->archivo) }}" alt="Documento" class="max-w-full h-auto object-cover">
                                         </a>
                                     </div>
                                 @else

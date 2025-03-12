@@ -93,9 +93,9 @@
     
                                 @if(in_array(strtolower($extension), $extensionesImagen))
                                     <!-- Si es una imagen, la mostramos -->
-                                    <div class="w-20 h-20 flex items-center justify-center rounded-md border">
+                                    <div class="w-20 h-20 flex items-center justify-center rounded-md border overflow-hidden">
                                         <a href="{{ asset('storage/galeria/'.$documento->imagen) }}" data-lightbox="documento">
-                                            <img src="{{ asset('storage/galeria/'.$documento->imagen) }}" alt="Documento" class="max-w-full h-auto">
+                                            <img src="{{ asset('storage/galeria/'.$documento->imagen) }}" alt="Documento" class="max-w-full h-auto object-cover">
                                         </a>
                                     </div>
                                 @else
@@ -297,7 +297,7 @@
 });
     </script>
     <script>
-        document.getElementById('archivo').addEventListener('change', function(event) {
+        document.getElementById('imagen').addEventListener('change', function(event) {
     let previewContainer = document.getElementById('preview');
     previewContainer.innerHTML = ''; // Limpiar previas selecciones
 

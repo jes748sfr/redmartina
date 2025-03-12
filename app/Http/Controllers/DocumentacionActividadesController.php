@@ -227,7 +227,7 @@ class DocumentacionActividadesController extends Controller
                 history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
                 setTimeout(() => {
                     // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
+                    //window.location.reload(); // Recargar la página para que se borre la sesión correctamente
                 }, 1200); // 1.2 segundos después de mostrar el mensaje
             });
         </script>";
