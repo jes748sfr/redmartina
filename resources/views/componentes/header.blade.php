@@ -14,7 +14,7 @@
   <div class="container-fluid">
     <!-- Logo -->
     <a class="navbar-brand" href="#">
-      <img src="{{ asset('img/assets/logo-bgNa.png') }}" width="60" height="60" class="d-inline-block align-top" alt="Logo">
+      <img src="{{ asset('img/assets/Logo-bgNa.png') }}" width="60" height="60" class="d-inline-block align-top" alt="Logo">
     </a>
 
     <!-- Botón de menú para móviles -->
