@@ -60,7 +60,7 @@
                                 id="cuerpo" 
                                 name="cuerpo" 
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50"
-                                required>{{ old('cuerpo', $martiana->cuerpo) }}</textarea>
+                                >{{ old('cuerpo', $martiana->cuerpo) }}</textarea>
                         </div>
 
                         <div class="mb-4">

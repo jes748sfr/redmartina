@@ -62,7 +62,8 @@
                                 type="text" 
                                 id="titulo" 
                                 name="titulo" 
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
+                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50"
+                                value="{{ old('titulo') }}"
                                 required>
                         </div>
 
@@ -72,6 +73,7 @@
                                 id="cuerpo" 
                                 name="cuerpo" 
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50">
+                               {{ old('cuerpo') }}
                             </textarea>
                         </div>
 
@@ -83,8 +85,8 @@
                                 class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2" 
                                 required>
                                 <option value="" disabled selected>Selecciona una opción</option>
-                                <option value="1">Sí</option>
-                                <option value="0">No</option>
+                                <option value="1" {{ old('noticia') == "1" ? 'selected' : '' }}>Sí</option>
+                                <option value="0" {{ old('noticia') == "0" ? 'selected' : '' }}>No</option>
                             </select>
                         </div>
 
@@ -95,6 +97,7 @@
                                 id="fecha" 
                                 name="fecha" 
                                 class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2"
+                                value="{{ old('fecha') }}"
                                 required>
                         </div>
 
@@ -131,6 +134,8 @@
             var titulo = document.getElementById('titulo').value;
             var fecha = document.getElementById('fecha').value;
             var noticia = document.getElementById('noticia').value;
+
+            
 
             if (!titulo || !fecha || !noticia) {
                 Swal.fire({

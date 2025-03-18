@@ -62,7 +62,7 @@
                                 id="titulo" 
                                 name="titulo" 
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
-                                required>
+                                required  value="{{ old('titulo') }}">
                         </div>
 
                         <div class="mb-4">
@@ -71,6 +71,7 @@
                                 id="cuerpo" 
                                 name="cuerpo" 
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50">
+                                {{ old('cuerpo') }}
                             </textarea>
                         </div>
 
@@ -81,7 +82,7 @@
                                 id="fecha" 
                                 name="fecha" 
                                 class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50 px-3 py-2"
-                                required>
+                                required  value="{{ old('fecha') }}">
                         </div>
 
                         <input type="hidden" name="agregar_file" id="agregar_file" value="0">

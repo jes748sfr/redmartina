@@ -60,10 +60,10 @@
                             <label for="titulo" class="block text-gray-700 font-bold mb-2">Título:</label>
                             <input 
                                 type="text" 
-                                id="titulo" 
+                                id="titulo"
                                 name="titulo" 
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-opacity-50" 
-                                required>
+                                required value="{{ old('titulo') }}">
                         </div>
 
                         <label for="imagen" class="block text-lg font-medium text-gray-700">Seleccionar imágenes:</label>

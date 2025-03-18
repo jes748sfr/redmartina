@@ -227,7 +227,6 @@ class ConvocatoriaController extends Controller
                 'titulo' => 'required|string|max:255|regex:/^(?=.*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])(?=.*[aeiouáéíóúAEIOUÁÉÍÓÚ])[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s,.\-:;()\'"]+$/u',
                 'cuerpo' => 'nullable|string',
                 'fecha' => 'required|date',
-                'agregar_file'  => 'required',
             ],$mensajes);
 
 
