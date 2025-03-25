@@ -199,7 +199,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Formulario de búsqueda -->
-                    <form method="POST" action="{{ route('buscar_actividad') }}" class="mb-6">
+                    <form method="POST" action="{{ route('buscar_actividad') }}" class="mb-6" autocomplete="off">
                         @csrf
                         <div class="flex items-center">
                             
@@ -239,11 +239,11 @@
                     </div>
                 @endif
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                     @forelse($actividades as $actividad)
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col justify-between">
                             <div>
-                                <a href="{{ route('editar_Actividad', ['id' => $actividad->id]) }}">
+                                <a href="{{ route('editar_Actividad', ['id' => $actividad->id]) }}" title="{{ $actividad->titulo }}">
                                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate min-h-[48px]">
                                         {{ Str::limit($actividad->titulo, 50, '...') }}
                                     </h5>                                    

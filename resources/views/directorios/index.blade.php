@@ -171,7 +171,7 @@
 
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Formulario de búsqueda -->
-                    <form method="POST" action="{{ route('buscar_directorio') }}" class="mb-6">
+                    <form method="POST" action="{{ route('buscar_directorio') }}" class="mb-6" autocomplete="off">
                         @csrf
                         <div class="flex items-center">
                             
@@ -215,7 +215,7 @@
                     @forelse($directorios as $directorio)
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col justify-between">
                             <div>
-                                <a href="{{ route('editar_Directorio', ['id' => $directorio->id]) }}">
+                                <a href="{{ route('editar_Directorio', ['id' => $directorio->id]) }}" title="{{ $directorio->nombre }}">
                                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate min-h-[48px]">
                                         {{ Str::limit($directorio->nombre, 50, '...') }}
                                     </h5>

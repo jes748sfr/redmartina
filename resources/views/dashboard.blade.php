@@ -180,7 +180,7 @@
                                     @php
                                         $documentos = $noticia->documentacionAs ?? collect();
                                         $imagen = $documentos->isNotEmpty() 
-                                                ? 'documentacion_actividades/' .$documentos->first()->archivo 
+                                                ? 'storage/documentacion_actividades/' .$documentos->first()->archivo 
                                                 : 'img/assets/icono.jpg';
                                         $extension = pathinfo($imagen, PATHINFO_EXTENSION);
                                         $imagen = ($extension == 'pdf') 

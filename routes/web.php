@@ -121,6 +121,7 @@ Route::middleware('auth')->group(function () {
     Route::get('directorios/edit/{id}', [DirectorioController::class, 'edit'])->name('editar_Directorio');
     Route::put('directorios/update/{id}', [DirectorioController::class, 'update'])->name('directorios.update');
     Route::delete('directorios/delete/{id}', [DirectorioController::class, 'destroy'])->name('directorios.delete');
+    Route::delete('directorios/delete/img/{id}', [DirectorioController::class, 'destroyImage'])->name('directorios.deleteImg');
 
     Route::get('directorios/auth', [DirectorioController::class, 'index_logeado'])->name('directorios.auth');
 });

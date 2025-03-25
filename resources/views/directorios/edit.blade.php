@@ -35,12 +35,18 @@
                     });
         </script>
     @endif
+    @if(session('script'))
+        {!! session('script') !!}
+        @php
+        session()->forget('script'); // Eliminar el mensaje después de mostrarlo
+        @endphp
+    @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('directorios.update', ['id' => $directorio->id]) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('directorios.update', ['id' => $directorio->id]) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         @method('PUT')
 
@@ -139,13 +145,24 @@
                         <!-- Contenedor para mostrar las imágenes seleccionadas -->
                         <div id="preview" class="mt-4 flex flex-wrap gap-2"></div>
                         
-                        <button 
-                            type="submit"
-                            id="submitButton" 
-                            class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 mb-4">
-                            Guardar
-                        </button>
-                    </form>
+                        <div class="flex items-center gap-2">
+                                <button 
+                                    type="submit"
+                                    id="submitButton" 
+                                    class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 mb-4">
+                                    Guardar
+                                </button>
+                            </form>
+                            @if($directorio->imagen)
+                                <form action="{{ route('directorios.deleteImg', $directorio->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 mb-4">
+                                                Eliminar Imagen
+                                            </button>
+                                </form>
+                            @endif
+                        </div>
                 </div>
             </div>
         </div>

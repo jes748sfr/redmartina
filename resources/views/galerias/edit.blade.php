@@ -60,7 +60,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-4 sm:p-6 text-gray-900">
 
-                    <form id="convocatoriaForm" action="{{ route('galerias.update', ['id' => $galeria->id]) }}" method="POST">
+                    <form id="convocatoriaForm" action="{{ route('galerias.update', ['id' => $galeria->id]) }}" method="POST" autocomplete="off">
                         @csrf
                         @method('PUT') 
                         

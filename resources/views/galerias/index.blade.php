@@ -55,7 +55,7 @@
                     @forelse($galerias as $galeria)
                         <div class="max-w-sm h-[350px] min-h-[350px] p-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col justify-between">
                             <div>
-                                <a href="{{ route('editar_Galeria', ['id' => $galeria->id]) }}">
+                                <a href="{{ route('editar_Galeria', ['id' => $galeria->id]) }}" title="{{ $galeria->titulo }}">
                                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate min-h-[48px]">
                                         {{ Str::limit($galeria->titulo, 50, '...') }}
                                     </h5>

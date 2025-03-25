@@ -297,7 +297,7 @@ class DirectorioController extends Controller
                 return response()->json(['message' => 'Directorio no encontrado'], 404);
             }
 
-            $rutaArchivoPrevio = Storage::disk('public')->path('galeria/' . $directorio->imagen);
+            $rutaArchivoPrevio = Storage::disk('public')->path('directorio/' . $directorio->imagen);
             if (file_exists($rutaArchivoPrevio)) {
                 unlink($rutaArchivoPrevio);
             }
@@ -343,6 +343,97 @@ class DirectorioController extends Controller
                 'message' => 'Hubo un error al eliminar el directorio',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+        
+    }
+
+    public function destroyImage($id)
+    {
+        try {
+            $directorio = directorio::find($id);
+
+            if (!$directorio) {
+                return response()->json(['message' => 'Directorio no encontrado'], 404);
+            }
+
+            $rutaArchivoPrevio = Storage::disk('public')->path('directorio/' . $directorio->imagen);
+            if (file_exists($rutaArchivoPrevio)) {
+                unlink($rutaArchivoPrevio);
+            }
+
+            $directorio = directorio::find($id);
+
+            if (!$directorio) {
+                return response()->json(['message' => 'Directorio no encontrado'], 404);
+            }
+
+            $directorio->imagen = null;
+
+            $directorio->save();
+
+            $script = "<script>
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: '¡Se ha creado un eliminado la imagen del directorio!',
+                    icon: 'success',
+                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
+                    showConfirmButton: false, // Oculta el botón de 'OK'
+                    timer: 1000, // Desaparece en 1 segundo
+                    timerProgressBar: true,
+                    backdrop: false, // No oscurece la pantalla
+                    allowOutsideClick: true,
+                    customClass: {
+                        popup: 'swal-popup', 
+                        title: 'swal-title', 
+                        text: 'swal-text',
+                    },
+                }).then(() => {
+                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
+                setTimeout(() => {
+                    // Borrar el mensaje flash después de la alerta
+                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
+                }, 1200); // 1.2 segundos después de mostrar el mensaje
+            });
+        </script>";
+
+            // Pasar el script a la vista
+            //return redirect()->route('directorios.auth')->with('script', $script);
+            $directorio = directorio::findOrFail($id);
+
+            $ruta = public_path('img/assets/paises.csv');
+            $paises = [];
+        
+            if (($handle = fopen($ruta, 'r')) !== FALSE) {
+                fgetcsv($handle); // Omitir la primera fila (cabecera)
+                while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+                    $paises[] = ['sigla' => $data[0], 'nombre' => $data[1]];
+                }
+                fclose($handle);
+            }
+
+            return view("directorios.edit", compact('directorio', 'paises'))->with('script', $script);
+
+        } catch (\Exception $e) {
+            // Manejo de errores
+            /* return response()->json([
+                'success' => false,
+                'message' => 'Hubo un error al eliminar el directorio',
+                'error' => $e->getMessage(),
+            ], 500); */
+            $directorio = directorio::findOrFail($id);
+
+            $ruta = public_path('img/assets/paises.csv');
+            $paises = [];
+        
+            if (($handle = fopen($ruta, 'r')) !== FALSE) {
+                fgetcsv($handle); // Omitir la primera fila (cabecera)
+                while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+                    $paises[] = ['sigla' => $data[0], 'nombre' => $data[1]];
+                }
+                fclose($handle);
+            }
+
+            return view("directorios.edit", compact('directorio', 'paises'));
         }
         
     }
