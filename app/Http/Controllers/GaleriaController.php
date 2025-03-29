@@ -15,7 +15,6 @@ class GaleriaController extends Controller
     //
     public function index()
     {
-        //$actividades = actividades::all();
         $galerias = galeria::with('fotos')->orderBy('created_at', 'desc')->paginate(3);
         $noticias = actividades::where('noticia', true)
                          ->orderBy('created_at', 'desc')
@@ -23,11 +22,6 @@ class GaleriaController extends Controller
                          ->get();
 
         return view("paginas_publicas.galeria_publica", compact('galerias','noticias'));
-        /* return response()->json([
-            'success' => true,
-            'data' => $galeria,
-            'message' => 'Galerias encontradas exitosamente',
-        ], 201); */
     }
 
     public function index_logeado()
@@ -91,7 +85,6 @@ class GaleriaController extends Controller
                 foreach ($request->file('imagen') as $imagen) {
                     $extension = $imagen->getClientOriginalExtension();
                     $nombreArchivo = 'imagen_' . uniqid() . '.' . $extension;
-                    //$ruta = public_path('img/galeria/');
                     $ruta = Storage::disk('public')->path('galeria/');
                     $imagen->move($ruta, $nombreArchivo);
 

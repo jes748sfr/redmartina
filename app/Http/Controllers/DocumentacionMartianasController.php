@@ -13,7 +13,6 @@ class DocumentacionMartianasController extends Controller
     //
     public function index()
     {
-        //$actividades = actividades::all();
         $documentacion_martianas = documentacion_martianas::all();
         return response()->json([
             'success' => true,
@@ -49,11 +48,7 @@ class DocumentacionMartianasController extends Controller
                 function ($attribute, $file, $fail) {
                     $extension = strtolower($file->getClientOriginalExtension());
                     $mimeType = $file->getMimeType();
-        
-                    // Bloquear específicamente JFIF
-                    /* if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
-                        return $fail("El formato JFIF no está permitido.");
-                    } */
+
                     if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
                         return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
                     }                    
@@ -91,12 +86,6 @@ class DocumentacionMartianasController extends Controller
                     $archivosGuardados[] = $documentacion;
                 }
             }
-
-            /* return response()->json([
-                'success' => true,
-                'data' => $archivosGuardados,
-                'message' => 'Archivos subidos correctamente',
-            ], 201); */
 
             $script = "<script>
                 Swal.fire({
@@ -156,11 +145,7 @@ class DocumentacionMartianasController extends Controller
                 function ($attribute, $file, $fail) {
                     $extension = strtolower($file->getClientOriginalExtension());
                     $mimeType = $file->getMimeType();
-        
-                    // Bloquear específicamente JFIF
-                    /* if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
-                        return $fail("El formato JFIF no está permitido.");
-                    } */
+
                     if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
                         return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
                     }                    
@@ -198,12 +183,6 @@ class DocumentacionMartianasController extends Controller
                     $archivosGuardados[] = $documentacion;
                 }
             }
-    
-            /* return response()->json([
-                'success' => true,
-                'data' => $archivosGuardados,
-                'message' => 'Archivos subidos correctamente',
-            ], 201); */
 
             $script = "<script>
                 Swal.fire({
@@ -251,121 +230,113 @@ class DocumentacionMartianasController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $mensajes = [
-        'archivo.required' => 'Debe adjuntar al menos un archivo.',
-        'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
-        //'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
-        'archivo.*.mimes' => 'El formato de imagen no es valido.',
-    ];
+    {
+        $mensajes = [
+            'archivo.required' => 'Debe adjuntar al menos un archivo.',
+            'archivo.*.file' => 'Cada archivo debe ser un archivo válido.',
+            //'archivo.*.mimes' => 'Solo se permiten archivos en formato: jpeg, png, jpg o pdf.',
+            'archivo.*.mimes' => 'El formato de imagen no es valido.',
+        ];
 
-    $validator = Validator::make($request->all(), [
-       'archivo' => [
-        'required',
-        'file',
-        function ($attribute, $file, $fail) {
-            $extension = strtolower($file->getClientOriginalExtension());
-            $mimeType = $file->getMimeType();
+        $validator = Validator::make($request->all(), [
+        'archivo' => [
+            'required',
+            'file',
+            function ($attribute, $file, $fail) {
+                $extension = strtolower($file->getClientOriginalExtension());
+                $mimeType = $file->getMimeType();
 
-            // Bloquear específicamente JFIF
-            /* if ($extension === 'jfif' || ($mimeType === 'image/jpeg' && $extension !== 'jpg' && $extension !== 'jpeg')) {
-                return $fail("El formato JFIF no está permitido.");
-            } */
-            if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
-                return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
-            }            
+                if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
+                    return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
+                }            
 
-            // Limitar tamaño (5MB para PDF, 12MB para imágenes)
-            $maxSize = ($extension === 'pdf') ? 5120 : 12288; // 5MB = 5120KB, 12MB = 12288KB
-            if ($file->getSize() > $maxSize * 1024) {
-                return $fail("El archivo {$file->getClientOriginalName()} excede el tamaño permitido.");
+                // Limitar tamaño (5MB para PDF, 12MB para imágenes)
+                $maxSize = ($extension === 'pdf') ? 5120 : 12288; // 5MB = 5120KB, 12MB = 12288KB
+                if ($file->getSize() > $maxSize * 1024) {
+                    return $fail("El archivo {$file->getClientOriginalName()} excede el tamaño permitido.");
+                }
+            },
+            'mimes:jpeg,png,jpg,pdf', // Formatos permitidos
+            'max:12288', // 12MB como máximo
+            ],
+        ], $mensajes);
+
+            $doc = documentacion_martianas::find($id);
+            $mar = martianas::find($doc->id_martianas);
+
+            if ($validator->fails()) {
+                return redirect()->route('documentacion_martiana.edit', ['id' => $mar->id]) // Cambia por la ruta de tu formulario
+                    ->withErrors($validator) // Enviar errores a la vista
+                    ->withInput();
             }
-        },
-        'mimes:jpeg,png,jpg,pdf', // Formatos permitidos
-        'max:12288', // 12MB como máximo
-        ],
-    ], $mensajes);
 
-        $doc = documentacion_martianas::find($id);
-        $mar = martianas::find($doc->id_martianas);
+        try {
+            $documento = documentacion_martianas::find($id);
 
-        if ($validator->fails()) {
-            return redirect()->route('documentacion_martiana.edit', ['id' => $mar->id]) // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
-        }
+            if (!$documento) {
+                return response()->json(['message' => 'Documento no encontrado'], 404);
+            }
 
-    try {
-        $documento = documentacion_martianas::find($id);
-
-        if (!$documento) {
-            return response()->json(['message' => 'Documento no encontrado'], 404);
-        }
-
-        // Eliminar archivo anterior si existe
-        //$rutaAnterior = public_path('documentacion_martianas/' . $documento->archivo);
-        $rutaAnterior = Storage::disk('public')->path('documentacion_martianas/' . $documento->archivo);
-        if (file_exists($rutaAnterior)) {
-            unlink($rutaAnterior);
-        }
-
-        // Guardar nuevo archivo
-        $archivo = $request->file('archivo');
-        $extension = $archivo->getClientOriginalExtension();
-        $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-        /* $archivo->move(public_path('documentacion_martianas/'), $nombreArchivo); */
-        $archivo->storeAs('documentacion_martianas', $nombreArchivo, 'public');
-
-        // Actualizar base de datos
-        $documento->archivo = $nombreArchivo;
-        $documento->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Archivo actualizado correctamente',
-            'data' => $documento
-        ], 200);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al actualizar el archivo',
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-}
-
-public function destroy($id)
-{
-    try {
-        $documentacion_martianas = documentacion_martianas::find($id);
-
-        if (!$documentacion_martianas) {
-            return response()->json(['message' => 'Documentacion de actividad martiana no encontrada'], 404);
-        }
-
-        //$rutaAnterior = public_path('documentacion_martianas/' . $documentacion_martianas->archivo);
-        $rutaAnterior = Storage::disk('public')->path('documentacion_martianas/' . $documentacion_martianas->archivo);
+            $rutaAnterior = Storage::disk('public')->path('documentacion_martianas/' . $documento->archivo);
             if (file_exists($rutaAnterior)) {
                 unlink($rutaAnterior);
             }
 
-        $documentacion_martianas->delete();
+            // Guardar nuevo archivo
+            $archivo = $request->file('archivo');
+            $extension = $archivo->getClientOriginalExtension();
+            $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
+            $archivo->storeAs('documentacion_martianas', $nombreArchivo, 'public');
 
-        // Respuesta de éxito
-        return response()->json([
-            'success' => true,
-            'message' => 'Documentacion de Actividad martiana eliminada exitosamente',
-        ], 200);
-    } catch (\Exception $e) {
-        // Manejo de errores
-        return response()->json([
-            'success' => false,
-            'message' => 'Hubo un error al eliminar la documentacion de actividad martiana',
-            'error' => $e->getMessage(),
-        ], 500);
+            // Actualizar base de datos
+            $documento->archivo = $nombreArchivo;
+            $documento->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Archivo actualizado correctamente',
+                'data' => $documento
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el archivo',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-    
-}
+
+    public function destroy($id)
+    {
+        try {
+            $documentacion_martianas = documentacion_martianas::find($id);
+
+            if (!$documentacion_martianas) {
+                return response()->json(['message' => 'Documentacion de actividad martiana no encontrada'], 404);
+            }
+
+            $rutaAnterior = Storage::disk('public')->path('documentacion_martianas/' . $documentacion_martianas->archivo);
+                if (file_exists($rutaAnterior)) {
+                    unlink($rutaAnterior);
+                }
+
+            $documentacion_martianas->delete();
+
+            // Respuesta de éxito
+            return response()->json([
+                'success' => true,
+                'message' => 'Documentacion de Actividad martiana eliminada exitosamente',
+            ], 200);
+        } catch (\Exception $e) {
+            // Manejo de errores
+            return response()->json([
+                'success' => false,
+                'message' => 'Hubo un error al eliminar la documentacion de actividad martiana',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+        
+    }
 
 }

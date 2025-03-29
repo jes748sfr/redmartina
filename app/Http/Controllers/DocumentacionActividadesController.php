@@ -10,10 +10,8 @@ use Illuminate\Support\Facades\Validator;
 
 class DocumentacionActividadesController extends Controller
 {
-    //
     public function index()
     {
-        //$actividades = actividades::all();
         $documentacion_actividades = documentacion_actividades::all();
         return response()->json([
             'success' => true,
@@ -49,11 +47,7 @@ class DocumentacionActividadesController extends Controller
                 function ($attribute, $file, $fail) {
                     $extension = strtolower($file->getClientOriginalExtension());
                     $mimeType = $file->getMimeType();
-        
-                    // Bloquear específicamente JFIF
-                    /* if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
-                        return $fail("El formato JFIF no está permitido.");
-                    } */
+
                     if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
                         return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
                     }
@@ -81,7 +75,6 @@ class DocumentacionActividadesController extends Controller
                 foreach ($request->file('archivo') as $archivo) {
                     $extension = $archivo->getClientOriginalExtension();
                     $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
-                    //$ruta = public_path('documentacion_actividades/');
                     $ruta = Storage::disk('public')->path('documentacion_actividades/');
                     $archivo->move($ruta, $nombreArchivo);
 
@@ -93,12 +86,6 @@ class DocumentacionActividadesController extends Controller
                     $archivosGuardados[] = $documentacion;
                 }
             }
-
-            /* return response()->json([
-                'success' => true,
-                'data' => $archivosGuardados,
-                'message' => 'Archivos subidos correctamente',
-            ], 201); */
 
             $script = "<script>
                 Swal.fire({
@@ -158,10 +145,6 @@ class DocumentacionActividadesController extends Controller
                     $extension = strtolower($file->getClientOriginalExtension());
                     $mimeType = $file->getMimeType();
         
-                    // Bloquear específicamente JFIF
-                    /* if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
-                        return $fail("El formato JFIF no está permitido.");
-                    } */
                     if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
                         return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
                     }
@@ -200,12 +183,6 @@ class DocumentacionActividadesController extends Controller
                     $archivosGuardados[] = $documentacion;
                 }
             }
-    
-            /* return response()->json([
-                'success' => true,
-                'data' => $archivosGuardados,
-                'message' => 'Archivos subidos correctamente',
-            ], 201); */
 
             $script = "<script>
                 Swal.fire({
@@ -256,10 +233,7 @@ class DocumentacionActividadesController extends Controller
 
             if ($request->hasFile('archivo')) {
                 $archivo = $request->file('archivo');
-                //Mantener el nombre original
-                //$nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
                 $nombreArchivo = 'archivo_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
-                //$ruta = public_path('documentacion_actividades/');
                 $ruta = Storage::disk('public')->path('documentacion_actividades/');
                 $archivo->move($ruta, $nombreArchivo);
                 $archivo_n = $nombreArchivo;
@@ -311,10 +285,6 @@ class DocumentacionActividadesController extends Controller
             $extension = strtolower($file->getClientOriginalExtension());
             $mimeType = $file->getMimeType();
 
-            // Bloquear específicamente JFIF
-            /* if ($extension === 'jfif' || ($mimeType === 'image/jpeg' && $extension !== 'jpg' && $extension !== 'jpeg')) {
-                return $fail("El formato JFIF no está permitido.");
-            } */
             if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
                 return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
             }            
@@ -357,7 +327,6 @@ class DocumentacionActividadesController extends Controller
         $extension = $archivo->getClientOriginalExtension();
         $nombreArchivo = 'archivo_' . uniqid() . '.' . $extension;
         $rutaAnterior = Storage::disk('public')->path('documentacion_actividades/' . $documento->archivo);
-        //$archivo->move(public_path('documentacion_actividades/'), $nombreArchivo);
         $archivo->storeAs('documentacion_actividades', $nombreArchivo, 'public');
 
 

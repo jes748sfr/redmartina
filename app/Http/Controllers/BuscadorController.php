@@ -16,9 +16,6 @@ class BuscadorController extends Controller
         // Obtener el término de búsqueda
         $query = $request->input('keyword');
 
-        // Realizar la búsqueda con Scout
-        //$resultados = actividades::search($query)->get();
-
         // Buscar en la tabla 'actividades'
         $actividades = \App\Models\actividades::search($query)->get();
         $martianas = \App\Models\martianas::search($query)->get();
@@ -42,14 +39,7 @@ class BuscadorController extends Controller
             'convocatorias' => $convocatorias,
         ];
 
-        //$totalResultados = $resultados->count();
         $totalResultados = $actividades->count() + $martianas->count() + $convocatorias->count();
-
-        // return response()->json([
-        //     'success' => true,
-        //     'data' => $resultados,
-        //     'message' => 'Resultados encontrados exitosamente',
-        // ], 200);
 
         // Retornar los resultados a la vista (o como JSON)
         return view('paginas_publicas.busqueda_publica', compact('resultados', 'query', 'totalResultados'));

@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ConvocatoriaController extends Controller
 {
-    //
     public function index()
     {
         $convocatorias = convocatoria::orderBy('fecha', 'desc')->paginate(5);
@@ -30,11 +29,6 @@ class ConvocatoriaController extends Controller
             $convocatoria->cuerpo_truncado2 = $this->truncateHtml($convocatoria->cuerpo, 100);
         }
 
-        /* return response()->json([
-            'success' => true,
-            'data' => $convocatorias,
-            'message' => 'Convocatorias encontradas exitosamente',
-        ], 201); */
         return view("paginas_publicas.convocatorias_publicas", compact('convocatorias','noticias'));
     }
 
@@ -95,15 +89,6 @@ class ConvocatoriaController extends Controller
             // Obtener el ID de la actividad recién creada
             $convocatoriaId = $convocatoria->id;
 
-            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
-        
-            foreach ($actividades as $actividad) {
-            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
-            }
-
-            //return view("actividades.index", compact('actividades'));
-            return redirect()->route('actividades.auth')->with('success', 'Actividad creada exitosamente'); */
-
             $AgregarFile = $request->agregar_file;
 
             if ($AgregarFile == 0) {
@@ -140,25 +125,7 @@ class ConvocatoriaController extends Controller
                 return redirect()->route('documentacion_convocatoria.crear', ['id' => $convocatoriaId]);
             }
 
-            /* return response()->json([  documentacion_actividad.crear
-                'success' => true,
-                'data' => $actividad,
-                'message' => 'Actividad creada exitosamente',
-            ], 201); */
         } catch (\Exception $e) {
-            /* return response()->json([
-                'success' => false,
-                'message' => 'Hubo un error al crear la actividad',
-                'error' => $e->getMessage(),
-            ], 500); */
-
-            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
-        
-            foreach ($actividades as $actividad) {
-            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
-            }
-
-            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al crear la actividad'); */
 
             $script = "<script>
             Swal.fire({
@@ -249,15 +216,6 @@ class ConvocatoriaController extends Controller
 
             $convocatoria->save();
 
-            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
-        
-            foreach ($actividades as $actividad) {
-            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
-            }*/
-
-            //return view("actividades.index", compact('actividades'));
-            //return redirect()->route('actividades.auth')->with('success', 'Actividad actualizada exitosamente');
-
             $script = "<script>
             Swal.fire({
                 title: '¡Éxito!',
@@ -286,28 +244,8 @@ class ConvocatoriaController extends Controller
             // Pasar el script a la vista
             session()->flash('script', $script);
             return redirect()->route('convocatorias.auth');
-            //->with('script', $script);
 
-            /* return response()->json([
-                'success' => true,
-                'data' => $actividad,
-                'message' => 'Actividad actualizada exitosamente',
-            ], 201); */
         } catch (\Exception $e) {
-            // Manejo de errores
-           /*  return response()->json([
-                'success' => false,
-                'message' => 'Hubo un error al actualizar la actividad',
-                'error' => $e->getMessage(),
-            ], 500); */
-
-            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
-        
-            foreach ($actividades as $actividad) {
-            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
-            } */
-
-            //return redirect()->route('actividades.auth')->with('error', 'Hubo un error al actualizar la actividad');
 
             $script = "<script>
             Swal.fire({
@@ -337,7 +275,6 @@ class ConvocatoriaController extends Controller
         // Pasar el script a la vista
         session()->flash('script', $script);
         return redirect()->route('convocatorias.auth');
-        //->with('script', $script);
 
         }
     }
@@ -352,15 +289,6 @@ class ConvocatoriaController extends Controller
             }
 
             $convocatoria->delete();
-
-            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
-        
-            foreach ($actividades as $actividad) {
-            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
-            }
-
-            //return view("actividades.index", compact('actividades'));
-            return redirect()->route('actividades.auth')->with('success', 'Actividad eliminada exitosamente'); */
 
             $script = "<script>
                 Swal.fire({
@@ -390,26 +318,7 @@ class ConvocatoriaController extends Controller
             // Pasar el script a la vista
             return redirect()->route('convocatorias.auth')->with('script', $script);
 
-            // Respuesta de éxito
-            /* return response()->json([
-                'success' => true,
-                'message' => 'Actividad eliminada exitosamente',
-            ], 200); */
         } catch (\Exception $e) {
-            // Manejo de errores
-            /* return response()->json([
-                'success' => false,
-                'message' => 'Hubo un error al eliminar la actividad',
-                'error' => $e->getMessage(),
-            ], 500); */
-
-            /* $actividades = actividades::orderBy('fecha', 'desc')->get();
-        
-            foreach ($actividades as $actividad) {
-            $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 100);
-            }
-
-            return redirect()->route('actividades.auth')->with('error', 'Hubo un error al eliminar la actividad'); */
 
             $script = "<script>
             Swal.fire({

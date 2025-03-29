@@ -13,7 +13,6 @@ class DocumentacionConvocatoriasController extends Controller
     //
     public function index()
     {
-        //$actividades = actividades::all();
         $documentacion_convocatorias = documentacion_convocatorias::all();
         return response()->json([
             'success' => true,
@@ -51,10 +50,6 @@ class DocumentacionConvocatoriasController extends Controller
                     $extension = strtolower($file->getClientOriginalExtension());
                     $mimeType = $file->getMimeType();
         
-                    // Bloquear específicamente JFIF
-                    /* if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
-                        return $fail("El formato JFIF no está permitido.");
-                    } */
                     if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
                         return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
                     }                    
@@ -92,12 +87,6 @@ class DocumentacionConvocatoriasController extends Controller
                     $archivosGuardados[] = $documentacion;
                 }
             }
-
-            /* return response()->json([
-                'success' => true,
-                'data' => $archivosGuardados,
-                'message' => 'Archivos subidos correctamente',
-            ], 201); */
 
             $script = "<script>
                 Swal.fire({
@@ -159,10 +148,6 @@ class DocumentacionConvocatoriasController extends Controller
                     $extension = strtolower($file->getClientOriginalExtension());
                     $mimeType = $file->getMimeType();
         
-                    // Bloquear específicamente JFIF
-                    /* if ($extension === 'jfif' || $mimeType === 'image/jpeg' && $file->getClientOriginalName() !== preg_replace('/\.[^.]+$/', '', $file->getClientOriginalName()) . '.jpg') {
-                        return $fail("El formato JFIF no está permitido.");
-                    } */
                     if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
                         return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
                     }                    
@@ -200,12 +185,6 @@ class DocumentacionConvocatoriasController extends Controller
                     $archivosGuardados[] = $documentacion;
                 }
             }
-    
-            /* return response()->json([
-                'success' => true,
-                'data' => $archivosGuardados,
-                'message' => 'Archivos subidos correctamente',
-            ], 201); */
 
             $script = "<script>
                 Swal.fire({
@@ -271,10 +250,6 @@ class DocumentacionConvocatoriasController extends Controller
                 $extension = strtolower($file->getClientOriginalExtension());
                 $mimeType = $file->getMimeType();
     
-                // Bloquear específicamente JFIF
-                /* if ($extension === 'jfif' || ($mimeType === 'image/jpeg' && $extension !== 'jpg' && $extension !== 'jpeg')) {
-                    return $fail("El formato JFIF no está permitido.");
-                } */
                 if (!in_array($extension, ['jpeg', 'jpg', 'png', 'pdf'])) {
                     return $fail("Solo se permiten archivos en formato: jpeg, jpg, png o pdf.");
                 }

@@ -12,7 +12,6 @@ class FotosController extends Controller
     //
     public function index()
     {
-        //$actividades = actividades::all();
         $fotos = fotos::all();
         return response()->json([
             'success' => true,
@@ -61,7 +60,6 @@ class FotosController extends Controller
                 foreach ($request->file('imagen') as $imagen) {
                     $extension = $imagen->getClientOriginalExtension();
                     $nombreArchivo = 'imagen_' . uniqid() . '.' . $extension;
-                    //$ruta = public_path('img/galeria/');
                     $ruta = Storage::disk('public')->path('galeria/');
                     $imagen->move($ruta, $nombreArchivo);
     
@@ -74,12 +72,6 @@ class FotosController extends Controller
                 }
             }
     
-            /* return response()->json([
-                'success' => true,
-                'data' => $archivosGuardados,
-                'message' => 'Archivos subidos correctamente',
-            ], 201); */
-
             $script = "<script>
                 Swal.fire({
                     title: '¡Éxito!',
@@ -130,8 +122,6 @@ class FotosController extends Controller
                 return response()->json(['message' => 'Foto no encontrada'], 404);
             }
 
-            // Eliminar el archivo previo si existe
-            //$rutaArchivoPrevio = public_path('img/galeria/' . $foto->imagen);
             $rutaArchivoPrevio = Storage::disk('public')->path('galeria/' . $foto->imagen);
             if (file_exists($rutaArchivoPrevio)) {
                 unlink($rutaArchivoPrevio);
@@ -141,7 +131,6 @@ class FotosController extends Controller
                 $archivo = $request->file('imagen');
                 $nombreArchivo = 'imagen_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
                 $ruta = Storage::disk('public')->path('galeria/');
-                //$ruta = public_path('galeria/');
                 $archivo->move($ruta, $nombreArchivo);
                 $archivo_n = $nombreArchivo;
             }
@@ -175,8 +164,6 @@ class FotosController extends Controller
                 return response()->json(['message' => 'Foto no encontrada'], 404);
             }
 
-            // Eliminar el archivo previo si existe
-            //$rutaArchivoPrevio = public_path('img/galeria/' . $foto->imagen);
             $rutaArchivoPrevio = Storage::disk('public')->path('galeria/' . $foto->imagen);
             if (file_exists($rutaArchivoPrevio)) {
                 unlink($rutaArchivoPrevio);
