@@ -110,10 +110,8 @@
                   </div>
                 </div>
                 <blockquote class="blockquote">
-                  <p class="text-justify">Hasta el año 2018 se han celebrado quince Encuentros internacionales de Cátedras Martianas. el más reciente, se llevó a cabo en la Universidad de El Salvador, en la ciudad de San Salvador, los días 23, 24 y 25 de noviembre.</p>
-                </blockquote>
-                <blockquote class="blockquote">
-                  <p class="text-justify">La Red Internacional de Cátedras Martianas cuenta con un directorio que ha ido creciendo, el cual facilita la comunicación inmediata. </p>
+                  <p class="text-justify">Hasta el año 2025 se han celebrado veintiún Encuentros internacionales de Cátedras Martianas. el más reciente, se llevó a cabo en la ciudad de La Habana, Cuba, del 28 al 31 de enero del 2025.
+                  La Red Internacional de Cátedras Martianas cuenta con un directorio que ha ido creciendo, el cual facilita la comunicación inmediata.</p>
                 </blockquote>
             </div>
         

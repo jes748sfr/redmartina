@@ -20,7 +20,7 @@
             <div class="mb-3 d-flex flex-wrap justify-content-center gap-2">
                 @foreach ($imagenes as $documento)
                     <div class="image-container">
-                        <a class="optimized-img" href="{{ asset('documentacion_actividades/' . $documento->archivo) }}" data-lightbox="documento{{ $documento->id_galeria }}">
+                        <a class="optimized-img" href="{{ asset('storage/documentacion_actividades/' . $documento->archivo) }}" data-lightbox="documento{{ $documento->id_galeria }}">
                             <img src="{{ asset('storage/documentacion_actividades/' . $documento->archivo) }}" class="optimized-img" alt="Imagen">
                         </a>
                     </div>
