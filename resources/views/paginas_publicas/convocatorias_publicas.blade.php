@@ -78,12 +78,11 @@
                                     </div>
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $convocatoria->titulo }}</h5>
-                                        <p class="card-text text-justify d-none d-md-block">
-                                            {!! $convocatoria->cuerpo_truncado !!}
-                                        </p>
-                                        <p class="card-text text-justify d-md-none">
-                                            {!! $convocatoria->cuerpo_truncado2 !!}
-                                        </p>
+                                        <div class="cuerpo">
+                                            <p class="inner card-text text-justify">
+                                                {!! $convocatoria->cuerpo_truncado !!}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </a>  

@@ -70,12 +70,11 @@
                                     </div>
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $martiana->titulo }}</h5>
-                                        <p class="card-text text-justify d-none d-md-block">
-                                            {!! $martiana->cuerpo_truncado !!}
-                                        </p>
-                                        <p class="card-text text-justify d-md-none">
-                                            {!! $martiana->cuerpo_truncado2 !!}
-                                        </p>
+                                        <div class="cuerpo">
+                                            <p class="inner card-text text-justify">
+                                                {!! $martiana->cuerpo_truncado !!}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </a>  

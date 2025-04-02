@@ -221,45 +221,6 @@ class DocumentacionActividadesController extends Controller
         }
     }
 
-    public function store_file(Request $request)
-    {
-            $request->validate([
-                'id_actividades' => 'required|int',
-                'archivo' => ['required', 'file', 'mimes:pdf','max:5000'],
-            ]);
-
-        try {
-            $documentacion_actividades = new documentacion_actividades();
-
-            if ($request->hasFile('archivo')) {
-                $archivo = $request->file('archivo');
-                $nombreArchivo = 'archivo_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
-                $ruta = Storage::disk('public')->path('documentacion_actividades/');
-                $archivo->move($ruta, $nombreArchivo);
-                $archivo_n = $nombreArchivo;
-            }
-
-            $documentacion_actividades->id_actividades = $request->id_actividades;
-            $documentacion_actividades->archivo = $archivo_n;
-
-
-            $documentacion_actividades->save();
-
-            return response()->json([
-                'success' => true,
-                'data' => $documentacion_actividades,
-                'message' => 'Documento de Actividad agregado exitosamente',
-            ], 201);
-        } catch (\Exception $e) {
-            // Manejo de errores
-            return response()->json([
-                'success' => false,
-                'message' => 'Hubo un error al agregar el documento de actividad',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
     public function edit(string $id)
     {
         $actividad = actividades::findOrFail($id);

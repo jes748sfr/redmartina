@@ -31,10 +31,6 @@ class ActividadesController extends Controller
         foreach ($actividades as $actividad) {
             $actividad->cuerpo_truncado = $this->truncateHtml($actividad->cuerpo, 500);
         }
-
-        foreach ($actividades as $actividad) {
-            $actividad->cuerpo_truncado2 = $this->truncateHtml($actividad->cuerpo, 100);
-        }
                   
         return view("paginas_publicas.actividades_red", compact('actividades','noticias'));
     }

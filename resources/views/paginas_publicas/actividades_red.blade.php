@@ -70,12 +70,11 @@
                                         </div>
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $actividad->titulo }}</h5>
-                                            <p class="card-text text-justify d-none d-md-block">
+                                            <div class="cuerpo">
+                                            <p class="inner card-text text-justify">
                                                 {!! $actividad->cuerpo_truncado !!}
                                             </p>
-                                            <p class="card-text text-justify d-md-none">
-                                                {!! $actividad->cuerpo_truncado2 !!}
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </a>  

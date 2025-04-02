@@ -30,5 +30,20 @@
     object-fit: cover; /* Recorta la imagen sin deformarla */
     border-radius: 10px;
 }
+.cuerpo {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Número de líneas en móviles */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 4.5em; /* Ajusta esto según el tamaño de la fuente */
+}
+
+@media (min-width: 768px) {
+    .cuerpo {
+        -webkit-line-clamp: 6; /* Más líneas en pantallas grandes */
+        max-height: 9em; /* Ajusta según el diseño */
+    }
+}
     </style>
 </head>

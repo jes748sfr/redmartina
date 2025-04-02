@@ -25,10 +25,6 @@ class ConvocatoriaController extends Controller
             $convocatoria->cuerpo_truncado = $this->truncateHtml($convocatoria->cuerpo, 500);
         }
 
-        foreach ($convocatorias as $convocatoria) {
-            $convocatoria->cuerpo_truncado2 = $this->truncateHtml($convocatoria->cuerpo, 100);
-        }
-
         return view("paginas_publicas.convocatorias_publicas", compact('convocatorias','noticias'));
     }
 
