@@ -15,6 +15,7 @@ class galeria extends Model
     protected $fillable = [
         'id_usu',
         'titulo',
+        'descripcion',
     ];
 
     protected $dates = ['deleted_at'];

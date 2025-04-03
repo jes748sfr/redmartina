@@ -66,6 +66,11 @@
                                 required value="{{ old('titulo') }}">
                         </div>
 
+                        <div class="mb-4">
+                            <label for="descripcion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripcion:</label>
+                            <textarea id="descripcion" name="descripcion" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Describa el evento">{{ old('descripcion') }}</textarea>
+                        </div>
+
                         <label for="imagen" class="block text-lg font-medium text-gray-700">Seleccionar imágenes:</label>
                         <input type="file" id="imagen" name="imagen[]" accept="image/*" multiple 
                             class="mt-2 p-2 border rounded-md w-full" required>
@@ -93,6 +98,7 @@
 
             var titulo = document.getElementById('titulo').value;
             var imagen = document.getElementById('imagen').value;
+            var descripcion = document.getElementById('descripcion').value;
 
             if (!titulo || !imagen) {
                 Swal.fire({

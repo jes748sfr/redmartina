@@ -86,6 +86,7 @@ class DirectorioController extends Controller
             'nombre' => 'required|string|max:255|regex:/^(?=.{3,})(?!.*\d)(?!.*[^A-Za-zÁÉÍÓÚáéíóúÑñ\s\'-.]).*$/u',
             'correo' => 'nullable|email|unique:directorios,correo|max:255',
             'descripcion' => 'nullable|string|max:255',
+            'visualfoto' => 'boolean',
         ], $mensajes);
 
         if ($validator->fails()) {
@@ -123,6 +124,7 @@ class DirectorioController extends Controller
             $directorio->nombre = $request->nombre;
             $directorio->correo = $request->correo;
             $directorio->descripcion = $request->descripcion;
+            $directorio->visualfoto = $request->visualfoto;
             $directorio->save();
 
             $script = "<script>
@@ -203,6 +205,7 @@ class DirectorioController extends Controller
             'nombre' => 'required|string|max:255|regex:/^(?=.{3,})(?!.*\d)(?!.*[^A-Za-zÁÉÍÓÚáéíóúÑñ\s\'-.]).*$/u',
             'correo' => 'nullable|email|max:255|unique:directorios,correo,' . $id,
             'descripcion' => 'nullable|string|max:255',
+            'visualfoto' => 'boolean',
         ], $mensajes);
 
         if ($validator->fails()) {
@@ -234,6 +237,7 @@ class DirectorioController extends Controller
             $directorio->nombre = $request->nombre;
             $directorio->correo = $request->correo;
             $directorio->descripcion = $request->descripcion;
+            $directorio->visualfoto =  $request->visualfoto;
 
             $directorio->save();
 

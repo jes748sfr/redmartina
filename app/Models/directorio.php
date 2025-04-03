@@ -22,6 +22,7 @@ class directorio extends Model
         'nombre',
         'correo',
         'descripcion',
+        'visualfoto',
     ];
 
     protected $dates = ['deleted_at'];

@@ -51,6 +51,7 @@ class GaleriaController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'titulo' => 'required|string|max:255|regex:/^(?=.*[A-Za-zÁÉÍÓÚáéíóúÑñ])[\wÁÉÍÓÚáéíóúÑñ\s.,&\-():;\'"]+$/u',
+                'descripcion' => 'nullable|string|max:255',
                 'imagen' => ['required'],
                 'imagen.*' => [
                     'file',
@@ -76,6 +77,7 @@ class GaleriaController extends Controller
 
             $galeria->id_usu = Auth::id();
             $galeria->titulo = $request->titulo;
+            $galeria->descripcion = $request->descripcion;
 
             $galeria->save();
 
@@ -158,6 +160,7 @@ class GaleriaController extends Controller
 
         $validator = Validator::make($request->all(), [
             'titulo' => 'required|string|max:255|regex:/^(?=.*[A-Za-zÁÉÍÓÚáéíóúÑñ])[\wÁÉÍÓÚáéíóúÑñ\s.,&\-():;\'"]+$/u',
+            'descripcion' => 'nullable|string|max:255',
         ], $mensajes);
 
         if ($validator->fails()) {
@@ -174,6 +177,7 @@ class GaleriaController extends Controller
             }
 
             $galeria->titulo = $request->titulo;
+            $galeria->descripcion = $request->descripcion;
 
             $galeria->save();
 

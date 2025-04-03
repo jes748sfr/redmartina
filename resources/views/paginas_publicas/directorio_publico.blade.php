@@ -11,12 +11,12 @@
                     @foreach ($usuariosDestacados as $usuario)
                         <div class="card m-2 p-3 border-dot text-center" style="width: 20rem; cursor: pointer;"
                         data-nombre="{{ $usuario->nombre }}"
-                        data-imagen="{{ $usuario->imagen ? asset('storage/directorio/' . $usuario->imagen) : asset('img/assets/headercm_2.jpg') }}"
+                        data-imagen="{{ ($usuario->imagen && $usuario->visualfoto) ? asset('storage/directorio/' . $usuario->imagen) : asset('img/assets/headercm_2.jpg') }}"
                         data-area="{{ $usuario->area }}"
                         data-correo="{{ $usuario->correo }}"
                         data-descripcion="{{ $usuario->descripcion }}"
                         onclick="mostrarModal(this)">
-                            @if ($usuario->imagen)
+                            @if ($usuario->imagen && $usuario->visualfoto)
                                 <div class="content-center">
                                     <img src="{{ asset('storage/directorio/' . $usuario->imagen) }}" class="img-corner border-dot" alt="Imagen de {{ $usuario->nombre }}">
                                 </div>
@@ -49,7 +49,7 @@
                                                 <li class="list-group-item d-flex align-items-center"
                                                     style="cursor: pointer;"
                                                     data-nombre="{{ $persona->nombre }}"
-                                                    data-imagen="{{ $usuario->imagen ? asset('storage/directorio/' . $usuario->imagen) : asset('img/assets/headercm_2.jpg') }}"
+                                                    data-imagen="{{ ($persona->imagen && $persona->visualfoto) ? asset('storage/directorio/' . $persona->imagen) : asset('img/assets/headercm_2.jpg') }}"
                                                     data-area="{{ $persona->area }}"
                                                     data-correo="{{ $persona->correo }}"
                                                     data-descripcion="{{ $persona->descripcion }}"

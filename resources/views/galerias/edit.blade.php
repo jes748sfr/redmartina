@@ -75,6 +75,11 @@
                                 required>
                         </div>
 
+                        <div class="mb-4">
+                            <label for="descripcion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripcion:</label>
+                            <textarea id="descripcion" name="descripcion" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Describa el evento">{{ $galeria->descripcion }}</textarea>
+                        </div>
+
                         <button 
                             type="submit"
                             class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600">

@@ -144,6 +144,19 @@
                     
                         <!-- Contenedor para mostrar las imágenes seleccionadas -->
                         <div id="preview" class="mt-4 flex flex-wrap gap-2"></div>
+
+                        <div class="mb-4">
+                            <div class="flex">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="visualfoto" value="0">
+                                    <input id="visualfoto" name="visualfoto" type="checkbox" value="1" {{ $directorio->visualfoto ? 'checked' : '' }}>
+                                </div>
+                                <div class="ms-2 text-sm">
+                                    <label for="helper-checkbox" class="font-medium text-gray-800">Imagen Visible</label>
+                                    <p id="helper-checkbox-text" class="text-xs font-normal text-gray-600">Al desmarcar esta casilla, la imagen no será visible en las páginas públicas.</p>
+                                </div>
+                            </div>
+                        </div>
                         
                         <div class="flex items-center gap-2">
                                 <button 
