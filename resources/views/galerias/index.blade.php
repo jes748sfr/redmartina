@@ -45,6 +45,15 @@
         </style>
     </x-slot>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('script'))
+        {!! session('script') !!}
+        @php
+        session()->forget('script'); // Eliminar el mensaje después de mostrarlo
+        @endphp
+    @endif
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
