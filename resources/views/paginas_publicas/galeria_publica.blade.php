@@ -34,6 +34,11 @@
                   </div>
                   {{-- <a href="#" class="btn btn-primary">Visualizar</a> --}}
                 </div>
+                <div class="text-wrap p-2 m-2" style="text-align: justify;">
+    {{ $galeria->descripcion }}
+</div>
+
+
               </div>
               @endforeach
               <div class="mt-6">

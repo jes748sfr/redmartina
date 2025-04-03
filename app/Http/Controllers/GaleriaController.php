@@ -47,6 +47,7 @@ class GaleriaController extends Controller
 
             'imagen.*.file' => 'Cada imagen debe ser un imagen válido.',
             'imagen.*.mimes' => 'Solo se permiten imagen en formato: jpeg, png, jpg o pdf.',
+            'descripcion.max' => 'El titulo de la galeria no debe sobrepasar los 255 caracteres.',
         ];
 
             $validator = Validator::make($request->all(), [
@@ -156,6 +157,7 @@ class GaleriaController extends Controller
 
             'imagen.*.file' => 'Cada imagen debe ser un imagen válido.',
             'imagen.*.mimes' => 'Solo se permiten imagen en formato: jpeg, png, jpg o pdf.',
+            'descripcion.max' => 'El titulo de la galeria no debe sobrepasar los 255 caracteres.',
         ];
 
         $validator = Validator::make($request->all(), [
