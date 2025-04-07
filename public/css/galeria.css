@@ -1,0 +1,23 @@
+#btn_agregar, #btn_buscar, #btn_regresar {
+    width: 48px;
+}
+
+#btn_agregar:hover, #btn_buscar:hover, #btn_regresar:hover {
+    width: 140px;
+    background-color: white;
+    color: cadetblue;
+    border-color: cadetblue;
+    border-width: 2px;
+}
+
+@media (max-width: 640px) {
+    /* Ocultar carrusel de imágenes en móviles */
+    #carrusel {
+        display: none;
+    }
+
+    /* Asegurar que el botón de agregar y otros botones estén centrados */
+    #btn_agregar:hover, #btn_buscar:hover, #btn_regresar:hover {
+        justify-content: center;
+    }
+}

@@ -4,52 +4,7 @@
             {{ __('Usuarios') }}
         </h2>
     </x-slot>
-    <style>
-        #btn_agregar {
-                width: 48px;
-            }
-        
-            /* Expansión del botón al pasar el mouse */
-            #btn_agregar:hover {
-                width: 140px; /* Espacio suficiente para el texto */
-                background-color: white;
-                color: cadetblue;
-                border-color: cadetblue;
-                border-width: 2px;
-            }
-        
-            /* Mostrar texto al hacer hover */
-            #btn_agregar:hover #btn_texto {
-                display: inline;
-            }
-        
-            /* Ocultar ícono al mostrar texto */
-            #btn_agregar:hover #btn_icono {
-                opacity: 0;
-            }
-
-            #btn_agregar:hover .text-content {
-                opacity: 1;
-            }
-
-            @media (max-width: 640px) {
-                #btn_agregar:hover {
-                    justify-content: center;
-                }
-            }
-
-            #btn_agregar:hover #btn_icono{
-                display: none;
-            }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @if(session('script'))
-        {!! session('script') !!}
-        @php
-        session()->forget('script'); // Eliminar el mensaje después de mostrarlo
-        @endphp
-    @endif
+    <link rel="stylesheet" href="{{ asset('css/usuarios_pass.css') }}">
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

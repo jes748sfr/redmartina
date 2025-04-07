@@ -1,0 +1,50 @@
+#btn_agregar {
+    width: 48px;
+}
+
+/* Expansión del botón al pasar el mouse */
+#btn_agregar:hover {
+    width: 140px; /* Espacio suficiente para el texto */
+    background-color: white;
+    color: cadetblue;
+    border-color: cadetblue;
+    border-width: 2px;
+}
+
+/* Mostrar texto al hacer hover */
+#btn_agregar:hover #btn_texto {
+    display: inline;
+}
+
+/* Ocultar ícono al mostrar texto */
+#btn_agregar:hover #btn_icono {
+    opacity: 0;
+}
+
+#btn_agregar:hover .text-content {
+    opacity: 1;
+}
+
+@media (max-width: 640px) {
+    #btn_agregar:hover {
+        justify-content: center;
+    }
+}
+
+#btn_agregar:hover #btn_icono{
+    display: none;
+}
+
+.password-wrapper {
+    position: relative;
+}
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.password-input {
+    padding-right: 40px; /* Ajuste el padding para que no se superponga el ícono con el texto */
+}

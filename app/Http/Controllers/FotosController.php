@@ -48,9 +48,13 @@ class FotosController extends Controller
         ], $mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('editar_Galeria', ['id' => $request->id_galeria]) // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al actualizar la foto');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('editar_Galeria', $request->id_galeria)
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
     
         try {
@@ -72,40 +76,15 @@ class FotosController extends Controller
                 }
             }
     
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha agregado la foto a la galeria correctamente!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    //window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            return redirect()->route('editar_Galeria', ['id' => $request->id_galeria])->with('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha agregado la foto a la galeria correctamente!');
+            return redirect()->route('editar_Galeria', $request->id_galeria);
     
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al subir los archivos',
-                'error' => $e->getMessage(),
-            ], 500);
+
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al actualizar la foto de la galeria');
+            return redirect()->route('editar_Galeria', $request->id_galeria);
         }
     }
 

@@ -4,55 +4,8 @@
             {{ __('Galería') }}
         </h2>
         <link href="{{ asset('vendor/lightbox2-2.11.5/dist/css/lightbox.min.css') }}" rel="stylesheet" />
-        <style>
-
-            .swal-popup {
-                @apply bg-white shadow-lg rounded-xl p-6;
-            }
-
-            .swal-title {
-                @apply text-2xl font-bold text-gray-800;
-            }
-
-            .swal-text {
-                @apply text-lg text-gray-600;
-            }
-
-            /* Botón estilo */
-            #btn_agregar, #btn_buscar, #btn_regresar {
-                width: 48px;
-            }
-
-            #btn_agregar:hover, #btn_buscar:hover, #btn_regresar:hover {
-                width: 140px;
-                background-color: white;
-                color: cadetblue;
-                border-color: cadetblue;
-                border-width: 2px;
-            }
-
-            @media (max-width: 640px) {
-                /* Ocultar carrusel de imágenes en móviles */
-                #carrusel {
-                    display: none;
-                }
-
-                /* Asegurar que el botón de agregar y otros botones estén centrados */
-                #btn_agregar:hover, #btn_buscar:hover, #btn_regresar:hover {
-                    justify-content: center;
-                }
-            }
-        </style>
+        <link rel="stylesheet" href="{{ asset('css/galeria.css') }}">
     </x-slot>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @if(session('script'))
-        {!! session('script') !!}
-        @php
-        session()->forget('script'); // Eliminar el mensaje después de mostrarlo
-        @endphp
-    @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

@@ -66,9 +66,13 @@ class MartianasController extends Controller
             ], $mensajes);
 
             if ($validator->fails()) {
-                return redirect()->route('crear_Martiana') // Cambia por la ruta de tu formulario
-                    ->withErrors($validator) // Enviar errores a la vista
-                    ->withInput();
+                session()->flash('alert_type', 'error');
+                    session()->flash('alert_message', 'Hubo un error al crear la actividad martiana');
+                    session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                    
+                    return redirect()->route('crear_Martiana')
+                                     ->withErrors($validator)
+                                     ->withInput();
             }
 
         try {
@@ -88,33 +92,9 @@ class MartianasController extends Controller
 
             if ($AgregarFile == 0) {
 
-                $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha creado la actividad martiana correctamente!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            return redirect()->route('martianas.auth')->with('script', $script);
+                session()->flash('alert_type', 'success');
+                session()->flash('alert_message', '¡Se ha creado la actividad martiana correctamente!');
+                return redirect()->route('martianas.auth');
 
             }else{
                 return redirect()->route('documentacion_martiana.crear', ['id' => $martianaId]);
@@ -122,32 +102,9 @@ class MartianasController extends Controller
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al crear la actividad martiana',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-        return redirect()->route('martianas.auth')->with('script', $script);
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al crear la actividad martiana');
+            return redirect()->route('martianas.auth');
 
         }
     }
@@ -192,9 +149,13 @@ class MartianasController extends Controller
         ], $mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('editar_Martiana', ['id' => $id]) // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al actualizar la actividad martiana');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('editar_Martiana',$id)
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
 
@@ -211,65 +172,15 @@ class MartianasController extends Controller
 
             $martiana->save();
 
-            $script = "<script>
-            Swal.fire({
-                title: '¡Éxito!',
-                text: '¡Los datos fueron actualizados correctamente!',
-                icon: 'success',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup',
-                    title: 'swal-title',
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            session()->flash('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha actualizado la informacion de la actividad martiana correctamente!');
             return redirect()->route('martianas.auth');
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al actualizar la actividad martiana',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-        // Pasar el script a la vista
-        session()->flash('script', $script);
-        return redirect()->route('martianas.auth');
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al actualizar la informacion de la actividad martiana');
+            return redirect()->route('martianas.auth');
 
         }
     }
@@ -285,63 +196,15 @@ class MartianasController extends Controller
 
             $martiana->delete();
 
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha eliminado correctamente la actividad martiana!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            return redirect()->route('martianas.auth')->with('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha eliminado la actividad martiana correctamente!');
+            return redirect()->route('martianas.auth');
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al eliminar la actividad martiana',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-        // Pasar el script a la vista
-        return redirect()->route('martianas.auth')->with('script', $script);
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al eliminar la actividad martiana');
+            return redirect()->route('martianas.auth');
         }
         
     }
@@ -359,9 +222,13 @@ class MartianasController extends Controller
         ],$mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('martianas.auth') // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Espera...');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('martianas.auth')
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         // Obtener el término de búsqueda

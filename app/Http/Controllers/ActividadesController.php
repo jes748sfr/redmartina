@@ -94,11 +94,15 @@ class ActividadesController extends Controller
                 'agregar_file'  => 'required',
             ],$mensajes);
 
-        if ($validator->fails()) {
-            return redirect()->route('crear_Actividad') // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
-        }
+            if ($validator->fails()) {
+                session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al crear la actividad');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('crear_Actividad')
+                                 ->withErrors($validator)
+                                 ->withInput();
+            }
 
         try {
             $actividad = new actividades();
@@ -118,33 +122,9 @@ class ActividadesController extends Controller
 
             if ($AgregarFile == 0) {
 
-                $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha creado la actividad correctamente!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            return redirect()->route('actividades.auth')->with('script', $script);
+                session()->flash('alert_type', 'success');
+                session()->flash('alert_message', '¡Se ha creado la actividad correctamente!');
+                return redirect()->route('actividades.auth');
 
             }else{
                 return redirect()->route('documentacion_actividad.crear', ['id' => $actividadId]);
@@ -152,32 +132,9 @@ class ActividadesController extends Controller
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al crear la actividad',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-        return redirect()->route('actividades.auth')->with('script', $script);
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al crear la actividad');
+            return redirect()->route('actividades.auth');
 
         }
     }
@@ -224,9 +181,13 @@ class ActividadesController extends Controller
             ],$mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('editar_Actividad', ['id' => $id]) // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al actualizar la actividad');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('editar_Actividad',$id)
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         try {
@@ -243,66 +204,15 @@ class ActividadesController extends Controller
 
             $actividad->save();
 
-            $script = "<script>
-            Swal.fire({
-                title: '¡Éxito!',
-                text: '¡Los datos fueron actualizados correctamente!',
-                icon: 'success',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup',
-                    title: 'swal-title',
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            session()->flash('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha actualizado la informacion de la actividad correctamente!');
             return redirect()->route('actividades.auth');
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al actualizar la actividad',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-        // Pasar el script a la vista
-        session()->flash('script', $script);
-        return redirect()->route('actividades.auth');
-        //->with('script', $script);
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al actualizar la informacion de la actividad');
+            return redirect()->route('actividades.auth');
 
         }
     }
@@ -318,63 +228,15 @@ class ActividadesController extends Controller
 
             $actividad->delete();
 
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha eliminado correctamente la actividad!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            return redirect()->route('actividades.auth')->with('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha eliminado la actividad correctamente!');
+            return redirect()->route('actividades.auth');
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al eliminar la actividad',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-        // Pasar el script a la vista
-        return redirect()->route('actividades.auth')->with('script', $script);
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al eliminar la actividad');
+            return redirect()->route('actividades.auth');
         }
         
     }
@@ -392,9 +254,13 @@ class ActividadesController extends Controller
         ],$mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('actividades.auth') // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Espera...');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('actividades.auth')
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         // Obtener el término de búsqueda

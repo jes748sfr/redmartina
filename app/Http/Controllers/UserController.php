@@ -89,9 +89,13 @@ class UserController extends Controller
         ], $mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('usuarios.create') // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al crear el usuario');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('usuarios.create')
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         try{
@@ -105,62 +109,15 @@ class UserController extends Controller
             // Asignar el rol
             $user->assignRole($request->role);
 
-            $script = "<script>
-                    Swal.fire({
-                        title: '¡Éxito!',
-                        text: 'Se ha creado el usuario correctamente.',
-                        icon: 'success',
-                        position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                        showConfirmButton: false, // Oculta el botón de 'OK'
-                        timer: 1000, // Desaparece en 1 segundo
-                        timerProgressBar: true,
-                        backdrop: false, // No oscurece la pantalla
-                        allowOutsideClick: true,
-                        customClass: {
-                            popup: 'swal-popup', 
-                            title: 'swal-title', 
-                            text: 'swal-text',
-                        },
-                    }).then(() => {
-                    history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                    setTimeout(() => {
-                        // Borrar el mensaje flash después de la alerta
-                        window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                    }, 1200); // 1.2 segundos después de mostrar el mensaje
-                });
-            </script>";
-
-        return redirect()->route('Ver_usuarios')->with('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha creado el usuario correctamente!');
+            return redirect()->route('Ver_usuarios');
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Hubo un error al modificar el estado del usuario.',
-                    icon: 'error',
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1000,
-                    timerProgressBar: true,
-                    backdrop: false,
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                    history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                    setTimeout(() => {
-                        // Borrar el mensaje flash después de la alerta
-                        window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                    }, 1200); // 1.2 segundos después de mostrar el mensaje
-                });
-            </script>";
-
-            return redirect()->route('Ver_usuarios')->with('script', $script);
-
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al crear el usuario');
+            return redirect()->route('Ver_usuarios');
         }
     }
 
@@ -213,9 +170,13 @@ class UserController extends Controller
     ], $mensajes);
 
     if ($validator->fails()) {
-        return redirect()->route('usuarios.edit', $id)
-            ->withErrors($validator)
-            ->withInput();
+        session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al actualizar la informacion del usuario');
+            session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+            
+            return redirect()->route('usuarios.edit',$id)
+                             ->withErrors($validator)
+                             ->withInput();
     }
 
     try {
@@ -234,58 +195,15 @@ class UserController extends Controller
         $usuario->syncRoles([$request->role]);
 
         // Script de éxito con SweetAlert
-        $script = "<script>
-            Swal.fire({
-                title: '¡Éxito!',
-                text: 'El usuario ha sido actualizado correctamente.',
-                icon: 'success',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1200);
-            });
-        </script>";
+        session()->flash('alert_type', 'success');
+        session()->flash('alert_message', '¡Se ha actualizado la informacion de del usuario correctamente!');
+        return redirect()->route('Ver_usuarios');
 
-        return redirect()->route('Ver_usuarios')->with('script', $script);
     } catch (\Exception $e) {
-        // Script de error con SweetAlert
-        $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al actualizar el usuario.',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1200);
-            });
-        </script>";
 
-        return redirect()->route('Ver_usuarios')->with('script', $script);
+        session()->flash('alert_type', 'error');
+        session()->flash('alert_message', 'Hubo un error al actualizar la informacion deñ usuario.');
+        return redirect()->route('Ver_usuarios');
     }
 }
 

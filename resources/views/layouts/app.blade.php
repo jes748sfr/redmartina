@@ -11,6 +11,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link rel="icon" type="image/x-icon" href="{{ asset('img/assets/icono.jpg') }}">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -18,6 +19,56 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
+
+            @if(session('alert_type') && session('alert_message'))
+                <script>
+                    Swal.fire({
+                        title: '{{ session("alert_type") == "success" ? "¡Éxito!" : "Error" }}',
+                        text: '{{ session("alert_message") }}',
+                        icon: '{{ session("alert_type") }}',
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        backdrop: false,
+                        allowOutsideClick: true,
+                        customClass: {
+                            popup: 'swal-popup',
+                            title: 'swal-title',
+                            text: 'swal-text',
+                        },
+                    });
+                </script>
+            @endif
+
+            @if (session('validation_errors'))
+                <script>
+                    const errores = {!! json_encode(session('validation_errors')) !!};
+
+                    let listaErrores = "<ul style='text-align: left;'>";
+                    errores.forEach(error => {
+                        listaErrores += `<li>• ${error}</li>`;
+                    });
+                    listaErrores += "</ul>";
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: '{{ session('alert_message') }}',
+                        html: listaErrores,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        backdrop: false,
+                        allowOutsideClick: true,
+                        customClass: {
+                            popup: 'swal-popup',
+                            title: 'swal-title',
+                            text: 'swal-text',
+                        },
+                    });
+                </script>
+            @endif
 
             <!-- Page Heading -->
             @isset($header)

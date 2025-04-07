@@ -5,64 +5,7 @@
         </h2>
         <link rel="stylesheet" href="@sweetalert2/theme-material-ui/material-ui.css">
     </x-slot>
-    <style>
-        .swal-popup {
-            @apply bg-white shadow-lg rounded-xl p-6; /* Fondo blanco con sombra y bordes redondeados */
-        }
-
-        .swal-title {
-            @apply text-2xl font-bold text-gray-800; /* Texto grande y negrita */
-        }
-
-        .swal-text {
-            @apply text-lg text-gray-600; /* Texto mediano y gris */
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-        .password-toggle {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            cursor: pointer;
-        }
-        .password-input {
-            padding-right: 40px; /* Ajuste el padding para que no se superponga el ícono con el texto */
-        }
-    </style>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-@if ($errors->any())
-        <script>
-            let errorMessages = `
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li class="text-sm">• {{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        `;
-
-            Swal.fire({
-                        title: 'Espera...',
-                        html: errorMessages,
-                        icon: 'error',
-                        position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                        showConfirmButton: false, // Oculta el botón de 'OK'
-                        timer: 3000,
-                        timerProgressBar: true,
-                        backdrop: false, // No oscurece la pantalla
-                        allowOutsideClick: true,
-                        customClass: {
-                            popup: 'swal-popup', 
-                            title: 'swal-title', 
-                            text: 'swal-text',
-                        },
-                    });
-        </script>
-    @endif
+    <link rel="stylesheet" href="{{ asset('css/usuarios_pass.css') }}">
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

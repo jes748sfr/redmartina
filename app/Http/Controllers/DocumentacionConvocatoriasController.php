@@ -64,9 +64,13 @@ class DocumentacionConvocatoriasController extends Controller
         ], $mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('documentacion_convocatoria.crear', ['id' => $request->id_convocatoria]) // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al crear la convocatoria');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('documentacion_convocatoria.crear', $request->id_convocatoria)
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         try {
@@ -88,40 +92,16 @@ class DocumentacionConvocatoriasController extends Controller
                 }
             }
 
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha creado la convocatoria correctamente!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            return redirect()->route('convocatorias.auth')->with('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha creado la convocatoria correctamente!');
+            return redirect()->route('convocatorias.auth');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al subir los archivos',
-                'error' => $e->getMessage(),
-            ], 500);
+
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al crear la convocatoria');
+            return redirect()->route('convocatorias.auth');
+
         }
     }
 
@@ -162,9 +142,13 @@ class DocumentacionConvocatoriasController extends Controller
         ], $mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('documentacion_convocatoria.edit', ['id' => $request->id_convocatoria]) // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al actualizar la convocatoria');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('documentacion_convocatoria.edit', $request->id_convocatoria)
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
     
         try {
@@ -186,40 +170,15 @@ class DocumentacionConvocatoriasController extends Controller
                 }
             }
 
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha creado la convocatoria correctamente!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    //window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            return redirect()->route('documentacion_convocatoria.edit', ['id' => $request->id_convocatoria])->with('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha agregado el archivo a la convocatoria correctamente!');
+            return redirect()->route('documentacion_convocatoria.edit', $request->id_convocatoria);
     
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al subir los archivos',
-                'error' => $e->getMessage(),
-            ], 500);
+
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al actualizar la informacion de la convocatoria');
+            return redirect()->route('documentacion_convocatoria.edit', $request->id_convocatoria);
         }
     }
 
@@ -270,9 +229,13 @@ class DocumentacionConvocatoriasController extends Controller
             $con = convocatoria::find($doc->id_convocatoria);
 
             if ($validator->fails()) {
-                return redirect()->route('documentacion_convocatoria.edit', ['id' => $con->id]) // Cambia por la ruta de tu formulario
-                    ->withErrors($validator) // Enviar errores a la vista
-                    ->withInput();
+                session()->flash('alert_type', 'error');
+                    session()->flash('alert_message', 'Hubo un error al actualizar la actividad');
+                    session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                    
+                    return redirect()->route('documentacion_convocatoria.edit', $con->id)
+                                     ->withErrors($validator)
+                                     ->withInput();
             }
     
         try {

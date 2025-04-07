@@ -5,55 +5,6 @@
         </h2>
         <link href="{{ asset('vendor/lightbox2-2.11.5/dist/css/lightbox.min.css') }}" rel="stylesheet" />
     </x-slot>
-    <style>
-        .swal-popup {
-            @apply bg-white shadow-lg rounded-xl p-6; /* Fondo blanco con sombra y bordes redondeados */
-        }
-
-        .swal-title {
-            @apply text-2xl font-bold text-gray-800; /* Texto grande y negrita */
-        }
-
-        .swal-text {
-            @apply text-lg text-gray-600; /* Texto mediano y gris */
-        }
-    </style>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @if(session('script'))
-        {!! session('script') !!}
-        @php
-            session()->forget('script'); // Eliminar el mensaje después de mostrarlo
-        @endphp
-    @endif
-
-    @if ($errors->any())
-<script>
-    let errorMessages = `
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li class="text-sm">• {{ $error }}</li>
-                        @endforeach
-                    </ul>
-                `;
-
-    Swal.fire({
-                title: 'Espera...',
-                html: errorMessages,
-                icon: 'error',
-                position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                showConfirmButton: false, // Oculta el botón de 'OK'
-                timer: 3000,
-                timerProgressBar: true,
-                backdrop: false, // No oscurece la pantalla
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            });
-</script>
-@endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

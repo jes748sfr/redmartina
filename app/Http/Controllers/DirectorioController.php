@@ -90,9 +90,13 @@ class DirectorioController extends Controller
         ], $mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('crear_Directorio') // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al crear la entrada en el directorio');
+            session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+            return redirect()->route('crear_Directorio')
+                             ->withErrors($validator)
+                             ->withInput();
         }
 
         // Verificar si el correo ya está registrado antes del try
@@ -127,39 +131,16 @@ class DirectorioController extends Controller
             $directorio->visualfoto = $request->visualfoto;
             $directorio->save();
 
-            $script = "<script>
-                    Swal.fire({
-                        title: '¡Éxito!',
-                        text: '¡Se ha creado un nuevo apartado en el directorio!',
-                        icon: 'success',
-                        position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                        showConfirmButton: false, // Oculta el botón de 'OK'
-                        timer: 1000, // Desaparece en 1 segundo
-                        timerProgressBar: true,
-                        backdrop: false, // No oscurece la pantalla
-                        allowOutsideClick: true,
-                        customClass: {
-                            popup: 'swal-popup', 
-                            title: 'swal-title', 
-                            text: 'swal-text',
-                        },
-                    }).then(() => {
-                    history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                    setTimeout(() => {
-                        // Borrar el mensaje flash después de la alerta
-                        window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                    }, 1200); // 1.2 segundos después de mostrar el mensaje
-                });
-            </script>";
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha creado la entrada en el directorio correctamente!');
+            return redirect()->route('directorios.auth');
 
-                // Pasar el script a la vista
-                return redirect()->route('directorios.auth')->with('script', $script);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Hubo un error al crear el directorio',
-                'error' => $e->getMessage(),
-            ], 500);
+
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al crear la entrada en el directorio.');
+            return redirect()->route('actividades.auth');
+
         }
     }
 
@@ -209,9 +190,13 @@ class DirectorioController extends Controller
         ], $mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('editar_Directorio', ['id' => $id]) // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al actualizar la informacion del directorio.');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('editar_Directorio',$id)
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         try {
@@ -241,40 +226,16 @@ class DirectorioController extends Controller
 
             $directorio->save();
 
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha actualizado apartado en el directorio!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha actualizado la informacion de la entrada del directorio correctamente!');
+            return redirect()->route('directorios.auth');
 
-            // Pasar el script a la vista
-            return redirect()->route('directorios.auth')->with('script', $script);
         } catch (\Exception $e) {
-            // Manejo de errores
-            return response()->json([
-                'success' => false,
-                'message' => 'Hubo un error al actualizar el directorio',
-                'error' => $e->getMessage(),
-            ], 500);
+
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al actualizar la informacion de la entrada del directorio.');
+            return redirect()->route('directorios.auth');
+
         }
     }
 
@@ -294,40 +255,15 @@ class DirectorioController extends Controller
 
             $directorio->delete();
 
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha creado un eliminado apartado en el directorio!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha eliminado la entrada del directorio correctamente!');
+            return redirect()->route('directorios.auth');
 
-            // Pasar el script a la vista
-            return redirect()->route('directorios.auth')->with('script', $script);
         } catch (\Exception $e) {
-            // Manejo de errores
-            return response()->json([
-                'success' => false,
-                'message' => 'Hubo un error al eliminar el directorio',
-                'error' => $e->getMessage(),
-            ], 500);
+            
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al eliminar la entrada del directorio');
+            return redirect()->route('directorios.auth');
         }
         
     }
@@ -394,7 +330,9 @@ class DirectorioController extends Controller
                 fclose($handle);
             }
 
-            return view("directorios.edit", compact('directorio', 'paises'))->with('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha eliminado la imagen de la entrada del directorio correctamente!');
+            return view('directorios.edit', compact('directorio', 'paises'));
 
         } catch (\Exception $e) {
             $directorio = directorio::findOrFail($id);
@@ -410,6 +348,8 @@ class DirectorioController extends Controller
                 fclose($handle);
             }
 
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al eliminar la actividad');
             return view("directorios.edit", compact('directorio', 'paises'));
         }
         
@@ -428,9 +368,13 @@ class DirectorioController extends Controller
         ],$mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('directorios.auth') // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Espera...');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('directorios.auth')
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         // Obtener el término de búsqueda

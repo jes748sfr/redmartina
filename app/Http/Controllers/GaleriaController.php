@@ -67,9 +67,13 @@ class GaleriaController extends Controller
             ], $mensajes);
 
             if ($validator->fails()) {
-                return redirect()->route('crear_Galeria') // Cambia por la ruta de tu formulario
-                    ->withErrors($validator) // Enviar errores a la vista
-                    ->withInput();
+                session()->flash('alert_type', 'error');
+                    session()->flash('alert_message', 'Hubo un error al crear la galeria');
+                    session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                    
+                    return redirect()->route('crear_Galeria')
+                                     ->withErrors($validator)
+                                     ->withInput();
             }
 
         try {
@@ -100,41 +104,15 @@ class GaleriaController extends Controller
                 }
             }
 
-            $script = "<script>
-            Swal.fire({
-                title: '¡Éxito!',
-                text: '¡Se ha creado la galeria correctamente!',
-                icon: 'success',
-                position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                showConfirmButton: false, // Oculta el botón de 'OK'
-                timer: 1000, // Desaparece en 1 segundo
-                timerProgressBar: true,
-                backdrop: false, // No oscurece la pantalla
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-            history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-            setTimeout(() => {
-                // Borrar el mensaje flash después de la alerta
-                window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-            }, 1200); // 1.2 segundos después de mostrar el mensaje
-        });
-    </script>";
-
-        // Pasar el script a la vista
-        return redirect()->route('galerias.auth')->with('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha creado la galeria correctamente!');
+            return redirect()->route('galerias.auth');
 
         } catch (\Exception $e) {
-            // Manejo de errores
-            return response()->json([
-                'success' => false,
-                'message' => 'Hubo un error al crear la Galeria',
-                'error' => $e->getMessage(),
-            ], 500);
+
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al crear la galeria');
+            return redirect()->route('galerias.auth');
         }
     }
 
@@ -166,9 +144,13 @@ class GaleriaController extends Controller
         ], $mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('editar_Galeria', ['id' => $id]) // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al actualizar la galeria');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('editar_Galeria', $id)
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         try {
@@ -183,40 +165,15 @@ class GaleriaController extends Controller
 
             $galeria->save();
 
-            $script = "<script>
-            Swal.fire({
-                title: '¡Éxito!',
-                text: '¡Se ha actualizado el titulo de la galeria correctamente!',
-                icon: 'success',
-                position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                showConfirmButton: false, // Oculta el botón de 'OK'
-                timer: 1000, // Desaparece en 1 segundo
-                timerProgressBar: true,
-                backdrop: false, // No oscurece la pantalla
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-            history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-            setTimeout(() => {
-                // Borrar el mensaje flash después de la alerta
-                window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-            }, 1200); // 1.2 segundos después de mostrar el mensaje
-        });
-    </script>";
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha actualizado la galeria correctamente!');
+            return redirect()->route('galerias.auth');
 
-        // Pasar el script a la vista
-        return redirect()->route('galerias.auth')->with('script', $script);
         } catch (\Exception $e) {
-            // Manejo de errores
-            return response()->json([
-                'success' => false,
-                'message' => 'Hubo un error al actualizar la galeria',
-                'error' => $e->getMessage(),
-            ], 500);
+
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al actualizar la informacion de la actividad');
+            return redirect()->route('galerias.auth');
         }
     }
 
@@ -231,62 +188,15 @@ class GaleriaController extends Controller
 
             $galeria->delete();
 
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha eliminado correctamente la galeria!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha eliminado la galeria correctamente!');
+            return redirect()->route('galerias.auth');
 
-            // Pasar el script a la vista
-            return redirect()->route('galerias.auth')->with('script', $script);
         } catch (\Exception $e) {
-            // Manejo de errores
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al eliminar la galeria',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
 
-        // Pasar el script a la vista
-        return redirect()->route('galerias.auth')->with('script', $script);
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al eliminar la galeria');
+            return redirect()->route('galerias.auth');
         }
         
     }

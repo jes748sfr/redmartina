@@ -67,9 +67,13 @@ class ConvocatoriaController extends Controller
             ],$mensajes);
 
             if ($validator->fails()) {
-                return redirect()->route('crear_Convocatoria') // Cambia por la ruta de tu formulario
-                    ->withErrors($validator) // Enviar errores a la vista
-                    ->withInput();
+                session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al crear la convocatoria');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('crear_Convocatoria')
+                                 ->withErrors($validator)
+                                 ->withInput();
             }
 
         try {
@@ -89,33 +93,9 @@ class ConvocatoriaController extends Controller
 
             if ($AgregarFile == 0) {
 
-                $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha creado la convocatoria correctamente!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            return redirect()->route('convocatorias.auth')->with('script', $script);
+                session()->flash('alert_type', 'success');
+                session()->flash('alert_message', '¡Se ha creado la convocatoria correctamente!');
+                return redirect()->route('convocatorias.auth');
 
             }else{
                 return redirect()->route('documentacion_convocatoria.crear', ['id' => $convocatoriaId]);
@@ -123,32 +103,9 @@ class ConvocatoriaController extends Controller
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al crear la convocatoria',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-        return redirect()->route('convocatorias.auth')->with('script', $script);
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al crear la convocatoria');
+            return redirect()->route('convocatorias.auth');
 
         }
     }
@@ -194,9 +151,13 @@ class ConvocatoriaController extends Controller
 
 
         if ($validator->fails()) {
-            return redirect()->route('editar_Convocatoria', ['id' => $id]) // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+            session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Hubo un error al actualizar la actividad');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('editar_Convocatoria',$id)
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         try {
@@ -212,65 +173,15 @@ class ConvocatoriaController extends Controller
 
             $convocatoria->save();
 
-            $script = "<script>
-            Swal.fire({
-                title: '¡Éxito!',
-                text: '¡Los datos fueron actualizados correctamente!',
-                icon: 'success',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup',
-                    title: 'swal-title',
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            session()->flash('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha actualizado la informacion de la convocatoria correctamente!');
             return redirect()->route('convocatorias.auth');
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al actualizar la convocatoria',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-        // Pasar el script a la vista
-        session()->flash('script', $script);
-        return redirect()->route('convocatorias.auth');
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al actualizar la informacion de la convocatoria');
+            return redirect()->route('convocatorias.auth');
 
         }
     }
@@ -286,63 +197,16 @@ class ConvocatoriaController extends Controller
 
             $convocatoria->delete();
 
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha eliminado correctamente la convocatoria!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
-            // Pasar el script a la vista
-            return redirect()->route('convocatorias.auth')->with('script', $script);
+            session()->flash('alert_type', 'success');
+            session()->flash('alert_message', '¡Se ha eliminado la convocatoria correctamente!');
+            return redirect()->route('convocatorias.auth');
 
         } catch (\Exception $e) {
 
-            $script = "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al eliminar la convocatoria',
-                icon: 'error',
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1000,
-                timerProgressBar: true,
-                backdrop: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'swal-popup', 
-                    title: 'swal-title', 
-                    text: 'swal-text',
-                },
-            }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
+            session()->flash('alert_type', 'error');
+            session()->flash('alert_message', 'Hubo un error al eliminar la convocatoria');
+            return redirect()->route('convocatorias.auth');
 
-        // Pasar el script a la vista
-        return redirect()->route('convocatorias.auth')->with('script', $script);
         }
         
     }
@@ -360,9 +224,13 @@ class ConvocatoriaController extends Controller
         ],$mensajes);
 
         if ($validator->fails()) {
-            return redirect()->route('convocatorias.auth') // Cambia por la ruta de tu formulario
-                ->withErrors($validator) // Enviar errores a la vista
-                ->withInput();
+                session()->flash('alert_type', 'error');
+                session()->flash('alert_message', 'Espera...');
+                session()->flash('validation_errors', $validator->errors()->all()); // <-- Array de errores
+                
+                return redirect()->route('convocatorias.auth')
+                                 ->withErrors($validator)
+                                 ->withInput();
         }
 
         // Obtener el término de búsqueda
