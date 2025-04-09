@@ -291,31 +291,6 @@ class DirectorioController extends Controller
 
             $directorio->save();
 
-            $script = "<script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '¡Se ha creado un eliminado la imagen del directorio!',
-                    icon: 'success',
-                    position: 'top-end', // Coloca la alerta en la esquina superior derecha
-                    showConfirmButton: false, // Oculta el botón de 'OK'
-                    timer: 1000, // Desaparece en 1 segundo
-                    timerProgressBar: true,
-                    backdrop: false, // No oscurece la pantalla
-                    allowOutsideClick: true,
-                    customClass: {
-                        popup: 'swal-popup', 
-                        title: 'swal-title', 
-                        text: 'swal-text',
-                    },
-                }).then(() => {
-                history.replaceState({}, document.title, window.location.pathname); // Limpiar el mensaje de la URL
-                setTimeout(() => {
-                    // Borrar el mensaje flash después de la alerta
-                    window.location.reload(); // Recargar la página para que se borre la sesión correctamente
-                }, 1200); // 1.2 segundos después de mostrar el mensaje
-            });
-        </script>";
-
             $directorio = directorio::findOrFail($id);
 
             $ruta = public_path('img/assets/paises.csv');
