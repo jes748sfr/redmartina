@@ -248,9 +248,8 @@ class DirectorioController extends Controller
                 return response()->json(['message' => 'Directorio no encontrado'], 404);
             }
 
-            $rutaArchivoPrevio = Storage::disk('public')->path('directorio/' . $directorio->imagen);
-            if (file_exists($rutaArchivoPrevio)) {
-                unlink($rutaArchivoPrevio);
+            if (!empty($directorio->imagen) && Storage::disk('public')->exists('directorio/' . $directorio->imagen)) {
+                Storage::disk('public')->delete('directorio/' . $directorio->imagen);
             }
 
             $directorio->delete();

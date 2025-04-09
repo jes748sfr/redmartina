@@ -31,7 +31,7 @@
                                 type="text" 
                                 name="keyword" 
                                 value="{{ $query ?? '' }}" 
-                                placeholder="Buscar convocatorias..." 
+                                placeholder="Buscar en el directorio..." 
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
                             >
                             <button type="submit" id="btn_buscar" class="ml-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full shadow-lg flex items-center justify-center transition-all duration-300 overflow-hidden">
